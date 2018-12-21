@@ -7,10 +7,16 @@ The aim of DVSA is to **practice some of the most common serverless vulnerabilit
 
 Please note, there are **both documented and undocumented vulnerabilities** with this software. This is intentional. You are encouraged to try and discover as many issues as possible.
 
+
+
+
 - - - 
 ## Disclaimer
 
 We do not take responsibility for the way in which any one uses this application (DVSA). We have made the purposes of the application clear and it should not be used maliciously. We have given warnings and taken measures to prevent users from installing DVSA on to production accounts.
+
+
+
 
 - - -
 ## License
@@ -24,12 +30,21 @@ Damn Vulnerable Serverless Application (DVSA) is distributed in the hope that it
 You should have received a copy of the GNU General Public License along with Damn Vulnerable Web Application (DVWA).  If not, see http://www.gnu.org/licenses/.
 
 
+
+
+
 - - -
 ## Installation
 TBD.
 
+
+
+
 - - - 
 ## Documentation
+
+
+
 
 - - - 
 ## Links
