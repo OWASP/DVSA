@@ -1,6 +1,6 @@
-## LESSON #1: Event Injection
+# LESSON #1: Event Injection
 
-### (1.1) Code Injection via API Gateway
+## (1.1) Code Injection via API Gateway
 The application sends all request to an API GW (*https://{string}.execute-api.{region}.amazonaws.com/{stage}/order*). 
 All reqursts end up being handled by Lambda function, which invokes another lambda based on the incoming request.
 
@@ -28,8 +28,11 @@ The above exmaple is the least of problems you can do with such an attack. Notic
 
 
 
+
+
+
 - - - 
-### (1.2) Command Injection via S3 bucket
+## (1.2) Command Injection via S3 bucket
 Event injections are not all about API calls and in serverless application, the source of the injection could be an email (file, subject, etc.), an MQTT pub/sub or any other cloud-resource event.
 
 In this case, the DVSA is vulnerable to Command Injection via file name. The file is processed when uploaded to an S3 bucket. Since the bucket is configured insecurely, we can exploit it. 
