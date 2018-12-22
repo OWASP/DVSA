@@ -1,6 +1,6 @@
 ## LESSON #1: Event Injection
 
-### Code Injection via API Gateway
+### (1.1) Code Injection via API Gateway
 The application sends all request to an API GW (*https://{string}.execute-api.{region}.amazonaws.com/{stage}/order*). 
 All reqursts end up being handled by Lambda function, which invokes another lambda based on the incoming request.
 
@@ -23,7 +23,8 @@ After decode it, we get a JSON with the user orders. For example:
 {"StatusCode":200,"ExecutedVersion":"$LATEST","Payload":"{\"status\": \"ok\", \"orders\": [{\"date\": 0, \"status\": \"100\", \"total\": 0, \"order-id\": \"37e149f9-7fd5-4eff-8214-39ed05305d29\"}, {\"date\": 0, \"status\": \"100\", \"total\": 0, \"order-id\": \"01c9f783-1ddd-42b4-b6e4-d8dfe18b7807\"}, {\"date\": 0, \"status\": \"100\", \"total\": 0, \"order-id\": \"5679749f-7a44-4c15-b8db-360a988e82e7\"}, {\"date\": 0, \"status\": \"100\", \"total\": 0, \"order-id\": \"fff385ef-0000-fafa-0000-87ee1047dfff\"}]}"}
 ```
 
-
 The above exmaple is the least of problems you can do with such an attack. Notice that there also admin functions :)
 
-### Command Injection via S3 bucket
+
+
+### (1.2) Command Injection via S3 bucket
