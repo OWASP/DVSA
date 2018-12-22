@@ -1,5 +1,5 @@
 
-## LESSION #4: Insecure Cloud Configuration
+# LESSON #4: Insecure Cloud Configuration
 
 The DVSA is using cloud storage (i.e. S3 bucket) to upload order receipts. After a payment is processed successfully, a receipts is issued and uploaded to the bucket. When the order is processed for shipment, the file is downloaded from the bucket, modified and uploaded back as a final format receipt that is sent to the user via email.
 
