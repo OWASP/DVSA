@@ -22,6 +22,6 @@ But, if we take the middle part, decode it with base, replace the username with 
 
 Sending the request now, will give us the orders of the victim:
 
-![alt victim-orders](https://i.imgur.com/BSq2HPs.png)
+![alt victim-orders](https://i.imgur.com/Vr9eufx.png)
 
 
