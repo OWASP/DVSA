@@ -34,6 +34,6 @@ Event injections are not all about API calls and in serverless application, the 
 
 In this case, the DVSA is vulnerable to Command Injection via file name. The file is processed when uploaded to an S3 bucket. Since the bucket is configured insecurely, we can exploit it. 
 
-To learn about this exploit, visit [Lesson #3: Insecure Cloud Configuration]{/LESSON_03.md
+To learn about this exploit, visit [Lesson #3: Insecure Cloud Configuration]{/LESSIONS/LESSON_03.md)
 }
 
