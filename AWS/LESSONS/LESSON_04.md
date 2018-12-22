@@ -38,6 +38,7 @@ We now have the code in Base64 (I cut out most of it for a better screenshot).
 
 
 Let's decode: ```echo <BASE64_STRING> | base64 --decode > /tmp/lambda.py```
+
 ![alt code](https://i.imgur.com/GD3YwJg.png)
 
 We can now see the vulnerable code - os.system() - which uses the name of the uploaded file as part of the command. 
