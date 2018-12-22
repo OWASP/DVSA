@@ -15,13 +15,8 @@ For example, to get the orders of another user, we can send the payload:
 ```
 Where the *12312312-1233-1233-1233-123123123123* is the user-id of the user we want to steal the data from, and *<ATTACKER_REMOTE_ADDRESS>* is any address that we can send the data to. E.g. [ngrok](https://ngrok.com/).
 
-The result will be a url-encoded json with the order information we stole:
-![alt ngrok](https://i.imgur.com/RjT10B4.png)
-
-After decode it, we get a JSON with the user orders. For example:
-```
-{"StatusCode":200,"ExecutedVersion":"$LATEST","Payload":"{\"status\": \"ok\", \"orders\": [{\"date\": 0, \"status\": \"100\", \"total\": 0, \"order-id\": \"37e149f9-7fd5-4eff-8214-39ed05305d29\"}, {\"date\": 0, \"status\": \"100\", \"total\": 0, \"order-id\": \"01c9f783-1ddd-42b4-b6e4-d8dfe18b7807\"}, {\"date\": 0, \"status\": \"100\", \"total\": 0, \"order-id\": \"5679749f-7a44-4c15-b8db-360a988e82e7\"}, {\"date\": 0, \"status\": \"100\", \"total\": 0, \"order-id\": \"fff385ef-0000-fafa-0000-87ee1047dfff\"}]}"}
-```
+As a result, we now have the user ordrs. 
+![alt ngrok](https://i.imgur.com/CAcywDz.png)
 
 The above exmaple is the least of problems you can do with such an attack. Notice that there also admin functions :)
 
