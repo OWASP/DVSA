@@ -17,6 +17,7 @@ For example, to get the orders of another user, we can send the payload:
 Where the *12312312-1233-1233-1233-123123123123* is the user-id of the user we want to steal the data from, and *<ATTACKER_REMOTE_ADDRESS>* is any address that we can send the data to. E.g. [ngrok](https://ngrok.com/).
 
 As a result, we now have the user ordrs:
+
 ![alt ngrok](https://i.imgur.com/CAcywDz.png)
 
 The above exmaple is the least of problems you can do with such an attack. Notice that there also admin functions :)
