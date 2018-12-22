@@ -1,4 +1,4 @@
-## LESSON #6: Denial of Service (DoS)
+# LESSON #6: Denial of Service (DoS)
 
 To avoid flooding the 3rd party payment processing (its not really 3rd-party, but think about it as a STIPE) the DVSA is configured to allow only 10 concurrent invocation of the billing processing.
 
