@@ -1,4 +1,10 @@
 # LESSONS
+This tutorial assumes the reader has basic knowledge of serverless and security concepts. It is recommended to first review the [OWASP Serverless Top 10 project](https://www.owasp.org/index.php?title=OWASP_Serverless_Top_10_Project) and the [report](https://github.com/OWASP/Serverless-Top-10-Project/), reviewing common weaknesses in serverless architecture.
+
+Please also note that this tutorial covers only a small portion of the vulnerabilities that exist in the DVSA and that you are encouraged to find **and document** more vulnerabilities that you find.
+
+Good luck!
+
 
 ## LESSON #1: Event Injection
 
