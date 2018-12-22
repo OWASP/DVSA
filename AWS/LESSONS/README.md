@@ -14,5 +14,5 @@ Good luck!
 ### [LESSON #6: Over-Privileged Functions](../LESSONS/LESSON_06.md)
 ### [LESSON #7: Access Control ](../LESSONS/LESSON_07.md)
 ### [LESSON #8: Logic vulnerabilities](../LESSONS/LESSON_08.md)
-### [LESSON #9: Vulnerable Dependencies]../(LESSONS/LESSON_09.md)
+### [LESSON #9: Vulnerable Dependencies](../LESSONS/LESSON_09.md)
 ### [LESSON #10: Unhandles Exceptions](../LESSONS/LESSON_10.md)
