@@ -25,8 +25,6 @@ The above exmaple is the least of problems you can do with such an attack. Notic
 
 
 
-
-
 - - - 
 ## (1.2) Command Injection via S3 bucket
 Event injections are not all about API calls and in serverless application, the source of the injection could be an email (file, subject, etc.), an MQTT pub/sub or any other cloud-resource event.
