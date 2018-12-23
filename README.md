@@ -1,4 +1,6 @@
-# DVSA: a Damn Vulnerable Serverless Application
+![alt DVSA](https://i.imgur.com/ONjlFli.png) 
+
+# DVSA: a Damn Vulnerable Serverless Application ![alt DVSA](https://i.imgur.com/ONjlFli.png) 
 
 
 Damn Vulnerable Serverless Application (DVSA) is a deliberately vulnerable application aiming to be an aid for security professionals to test their skills and tools in a legal environment, help developers better understand the processes of securing serverless applications and to aid both students & teachers to learn about serverless application security in a controlled class room environment.
