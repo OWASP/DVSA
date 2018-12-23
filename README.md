@@ -60,10 +60,13 @@ You should have received a copy of the GNU General Public License along with Dam
 - - - 
 ## Links
 [OWASP Top 10 - Serverless Interpretation](https://github.com/OWASP/Serverless-Top-10-Project/blob/master/README.md)
+
 [Deep-Dive into Serverless Attacks - Series](https://www.protego.io/category/a-deep-dive-into-serverless-attacks/)
+
 [OWASP Serverless Top 10 Project](https://www.owasp.org/index.php/OWASP_Serverless_Top_10_Project)
+
 [Slack Channel](https://twitter.com/DVSAowasp)
 
 - - -
 ## Acknowledgements
-DVSA was created and contributed to OWASP by [Protego Labs](https://protego.io)
+DVSA was created and contributed to OWASP by Tal Melamed, [Protego Labs](https://protego.io)
