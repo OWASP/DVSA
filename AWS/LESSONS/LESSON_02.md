@@ -1,7 +1,16 @@
 # LESSON #2: Broken Authentication
 
 ### (2.1) Open API
-The DVSA uses a designated API call to process billing requests. However, the API is open to any call without authentication. This allows malicious users to brute-force credit card numbers using the payment processing API:
+The DVSA uses a designated API call to process billing requests. However, the API is open to any call without authentication. 
+
+This allows malicious users to brute-force credit card numbers using the payment processing API:
+
+![alt payment](https://i.imgur.com/YMquTz4.png)
+
+
+
+![alt bf](https://i.imgur.com/FVxjwLR.png)
+
 
 
 
