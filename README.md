@@ -27,7 +27,7 @@ Damn Vulnerable Serverless Application (DVSA) is free software: you can redistri
 
 Damn Vulnerable Serverless Application (DVSA) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with Damn Vulnerable Web Application (DVWA).  If not, see http://www.gnu.org/licenses/.
+You should have received a copy of the GNU General Public License along with Damn Vulnerable Serverless Application (DVSA).  If not, see http://www.gnu.org/licenses/.
 
 
 
