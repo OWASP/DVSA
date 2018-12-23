@@ -34,6 +34,19 @@ You should have received a copy of the GNU General Public License along with Dam
 - - -
 ## Deployment
 
+- `clone`
+
+- `npm install`
+
+#### Deploy Backend
+- `sls deploy` 
+
+#### Build Client
+- `npm run-script client:build` 
+
+#### Deploy Client
+- `sls client deploy` 
+
 
 
 
