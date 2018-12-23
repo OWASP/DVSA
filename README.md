@@ -41,7 +41,7 @@ You should have received a copy of the GNU General Public License along with Dam
 - - - 
 ## Documentation
 
-**AWS**: See [LESSONS](AWS/LESSONS/README.md) for more information.
+**AWS**: see [LESSONS](AWS/LESSONS/README.md) for more information.
 
 
 - - - 
