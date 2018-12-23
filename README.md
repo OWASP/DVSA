@@ -65,7 +65,7 @@ You should have received a copy of the GNU General Public License along with Dam
 
 [OWASP Serverless Top 10 Project](https://www.owasp.org/index.php/OWASP_Serverless_Top_10_Project)
 
-[Twitter](https://twitter.com/DVSAowasp)
+[Twitter account ](https://twitter.com/DVSAowasp) (hackable)
 
 [Slack Channel #project-sls-top-10](https://owasp.slack.com/join/shared_invite/enQtNDI5MzgxMDQ2MTAwLTEyNzIzYWQ2NDZiMGIwNmJhYzYxZDJiNTM0ZmZiZmJlY2EwZmMwYjAyNmJjNzQxNzMyMWY4OTk3ZTQ0MzFhMDY)
 
