@@ -26,5 +26,13 @@ while True:
 
 As a result, any other user that will try to invoke this service will receice:
 ```
-{"message":"Rate Exceeded.","code":"TooManyRequestsException","time":"2018-12-22T23:25:29.935Z","requestId":"deec6aa7-0640-11e9-9e02-a529a60fefd1","statusCode":429,"retryable":false,"retryDelay":17.57835303415325}
+{
+  "message": "Rate Exceeded.",
+  "code": "TooManyRequestsException",
+  "time": "2018-12-22T23:25:29.935Z",
+  "requestId": "deec6aa7-0640-11e9-9e02-a529a60fefd1",
+  "statusCode": 429,
+  "retryable": false,
+  "retryDelay": 17.57835303415325
+}
 ```
