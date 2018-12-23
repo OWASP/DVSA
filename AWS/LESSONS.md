@@ -12,7 +12,7 @@ Good luck!
 ### [LESSON #4: Insecure Cloud Configurations](LESSONS/LESSON_04.md)
 ### [LESSON #5: Broken Access Control](LESSONS/LESSON_05.md)
 ### [LESSON #6: Denial of Service (DoS)](LESSONS/LESSON_06.md)
-### [LESSON #7: Access Control ](LESSONS/LESSON_07.md)
+### [LESSON #7: Over Privilged Functions ](LESSONS/LESSON_07.md)
 ### [LESSON #8: Logic vulnerabilities](LESSONS/LESSON_08.md)
 ### [LESSON #9: Vulnerable Dependencies](LESSONS/LESSON_09.md)
 ### [LESSON #10: Unhandles Exceptions](LESSONS/LESSON_10.md)
