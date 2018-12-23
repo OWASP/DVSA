@@ -11,7 +11,7 @@ Good luck!
 ### [LESSON #3: Sensitive Data Exposure](LESSONS/LESSON_03.md)
 ### [LESSON #4: Insecure Cloud Configurations](LESSONS/LESSON_04.md)
 ### [LESSON #5: Broken Access Control](LESSONS/LESSON_05.md)
-### [LESSON #6: Over-Privileged Functions](LESSONS/LESSON_06.md)
+### [LESSON #6: Denial of Service (DoS)](LESSONS/LESSON_06.md)
 ### [LESSON #7: Access Control ](LESSONS/LESSON_07.md)
 ### [LESSON #8: Logic vulnerabilities](LESSONS/LESSON_08.md)
 ### [LESSON #9: Vulnerable Dependencies](LESSONS/LESSON_09.md)
