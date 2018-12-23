@@ -49,3 +49,7 @@ See [LESSONS](AWS/LESSONS/README.md) for more information.
 - - - 
 ## Links
 TBD.
+
+- - -
+## Acknowledgements
+DVSA was created and contributed to OWASP by [Protego Labs](https://protego.io)
