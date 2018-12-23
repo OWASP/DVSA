@@ -7,5 +7,16 @@ for example, using the partial payload:
 
 We will receive an error that reveils vode from the invoked function:
 ```
-{"StatusCode":200,"FunctionError":"Unhandled","ExecutedVersion":"$LATEST","Payload":"{\"stackTrace\": [[\"/var/task/lambda_function.py\", 29, \"lambda_handler\", \"orderId = event[\\\"orderId\\\"]\"]], \"errorType\": \"KeyError\", \"errorMessage\": \"'orderId'\"}"}
+{
+  "stackTrace": [
+    [
+      "/var/task/lambda_function.py",
+      29,
+      "lambda_handler",
+      "orderId = event[\"orderId\"]"
+    ]
+  ],
+  "errorType": "KeyError",
+  "errorMessage": "'orderId'"
+}
 ```
