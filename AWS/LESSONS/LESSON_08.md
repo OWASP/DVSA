@@ -23,4 +23,21 @@ We will now send a *billing* request, and right after it an *update* request:
 
 
 As a result, we paid $25, as can be seen in the billing request. However, the receipt shows that we ordered 5 items, instead of one:
-![alt receipt]()
+
+```
+
+                Order: iEOXZ1jFEde8,
+                
+                To: 
+                    Elisabeth Morty,
+                    199 Square st., Oxford, UK
+                
+                Items:
+                    Adidas DRI		25 (5)
+		
+                
+                Total: $25
+
+            	----------------------
+		          Date: 2018-12-18 14:56
+```
