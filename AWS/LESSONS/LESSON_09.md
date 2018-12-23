@@ -7,6 +7,8 @@ The function that is triggered by the REST API calls uses two vulnerable librari
 (2) node-jose
 
 Here are the vulnerabilities with the highest risk. 
+
+```
 ┌───────────────┬──────────────────────────────────────────────────────────────┐
 │ High          │ Invalid Curve Attack                                         │
 ├───────────────┼──────────────────────────────────────────────────────────────┤
@@ -56,6 +58,7 @@ Here are the vulnerabilities with the highest risk.
 ├───────────────┼──────────────────────────────────────────────────────────────┤
 │ More info     │ https://nodesecurity.io/advisories/311                       │
 └───────────────┴──────────────────────────────────────────────────────────────┘
+```
 
 You can refer to [Lesson #1: Code Injection](../LESSONS/LESSON_01.md), as a practical exploit of the **node-serialize** library.
 
