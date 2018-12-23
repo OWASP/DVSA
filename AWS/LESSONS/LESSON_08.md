@@ -12,4 +12,15 @@ However, re-submitting the "update" request right after the "billing" request, m
 Let's try:
 
 Assuming that we already completed all the relevant data. We have only (1) item in our cart that costs $25:
-ke
+![alt cart](https://i.imgur.com/8H60Bym.png)
+
+We will now send a *billing* request, and right after it an *update* request:
+
+![alt billing](https://i.imgur.com/pNHnDM5.png)
+
+
+![alt update](https://i.imgur.com/zuKCYDb.png)
+
+
+As a result, we paid $25, as can be seen in the billing request. However, the receipt shows that we ordered 5 items, instead of one:
+![alt receipt]()
