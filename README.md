@@ -1,5 +1,3 @@
-![alt DVSA](https://i.imgur.com/ONjlFli.png) 
-
 # DVSA: a Damn Vulnerable Serverless Application ![alt DVSA](https://i.imgur.com/ONjlFli.png) 
 
 
