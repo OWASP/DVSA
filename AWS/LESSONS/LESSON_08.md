@@ -39,5 +39,5 @@ As a result, we paid $25, as can be seen in the billing request. However, the re
                 Total: $25
 
             	----------------------
-		          Date: 2018-12-18 14:56
+		Date: 2018-12-18 14:56
 ```
