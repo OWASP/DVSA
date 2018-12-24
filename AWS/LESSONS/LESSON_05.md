@@ -4,11 +4,11 @@ The DVSA applicaiton has some admin functions. Although these functions are not 
 
 This means that by invoking the right funciton at the right time, we can skip the payment. But, first, we start with the normal flow:
 
-- ```{"action": "new", "cart-id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", "items": { "<item-id>":<qty>, "<item-id>":<qty>, ... }}```
+- `{"action": "new", "cart-id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", "items": { "<item-id>":<qty>, "<item-id>":<qty>, ... }}`
 
-- ```{"action": "shipping", "order-id": "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy", "data": {"address":"<address>", "email":"<email>", "name":"<name>"}}```
+- `{"action": "shipping", "order-id": "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy", "data": {"address":"<address>", "email":"<email>", "name":"<name>"}}`
 
-- ```{"action": "billing", "order-id": "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy", "data": {"ccn":"4242424242424242", "exp":"11/22", "cvv":"123 }}```
+- `{"action": "billing", "order-id": "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy", "data": {"ccn":"4242424242424242", "exp":"11/22", "cvv":"123 }}`
 
 Now that we have an order that is missing only the payment, let's exploit.
 
@@ -53,3 +53,8 @@ Which eventually looks like that:
 ![alt stealing](https://i.imgur.com/8NXyXlQ.png)
 
 We got an error from the API function. But the database was updated with the new data. Since we did not issue a SQS notification for the payment, the receipts will be proccessed with a daily cron-job function. However, it is already possible to see it in the orders page.
+
+- - - 
+[<- Lesson #4](../LESSONS/LESSON_04.md)
+
+[Lesson #6 ->](../LESSONS/LESSON_06.md)
