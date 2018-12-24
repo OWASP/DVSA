@@ -47,10 +47,7 @@ We can now see the vulnerable code - os.system() - which uses the name of the up
 
 You now have all the information further exploit it, [stealing keys](../LESSONS/LESSON_05.md) or executing any other command.
 
-- - - 
-[<- Lesson #3](../LESSONS/LESSON_03.md)
 
-[Lesson #5 ->](../LESSONS/LESSON_05.md)
-
-
+- - -
+[ToC](../LESSONS/README.md) | [1](../LESSONS/LESSON_01.md) | [2](../LESSONS/LESSON_02.md) | [3](../LESSONS/LESSON_03.md) | [4](../LESSONS/LESSON_04.md) | [5](../LESSONS/LESSON_05.md) | [6](../LESSONS/LESSON_06.md) | [7](../LESSONS/LESSON_07.md) | [8](../LESSONS/LESSON_08.md) | [9](../LESSONS/LESSON_09.md) | [10](../LESSONS/LESSON_10.md)
 
