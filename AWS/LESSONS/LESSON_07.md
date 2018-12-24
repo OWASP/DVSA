@@ -70,6 +70,9 @@ And many more. I'll leave that to you to explore.
 
 
 
+- - - 
+[<- Lesson #6](../LESSONS/LESSON_06.md)
 
+[Lesson #8 ->](../LESSONS/LESSON_08.md)
 
 
