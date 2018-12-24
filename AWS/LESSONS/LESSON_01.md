@@ -7,7 +7,8 @@ All reqursts end up being handled by Lambda function, which invokes another lamb
 **This function is vulnerable to Code Injection**. The function uses an insecure de-/serialization for the data in the request.
 
 Using the following payload, it is possible to inject code that will be executed by the functioin.
-```$$ND_FUNC$$_function (){}()```
+
+`$$ND_FUNC$$_function (){}()`
 
 For example, to get the orders of another user, we can send the payload:
 ```
@@ -23,9 +24,6 @@ As a result, we now have the user ordrs:
 The above exmaple is the least of problems you can do with such an attack. Notice that there also admin functions :)
 
 
-
-
-
 - - - 
 ## (1.2) Command Injection via S3 bucket
 Event injections are not all about API calls and in serverless application, the source of the injection could be an email (file, subject, etc.), an MQTT pub/sub or any other cloud-resource event.
@@ -34,3 +32,7 @@ In this case, the DVSA is vulnerable to Command Injection via file name. The fil
 
 To learn about this exploit, visit [Lesson #4: Insecure Cloud Configuration](../LESSONS/LESSON_04.md).
 
+- - - 
+[<- ToC](../LESSONS/README.md)
+
+[Lesson #2 ->](../LESSONS/LESSON_02.md)
