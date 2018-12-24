@@ -35,4 +35,7 @@ Sending the request now, will give us the orders of the victim:
 
 ![alt victim-orders](https://i.imgur.com/Vr9eufx.png)
 
+- - - 
+[<- Lesson #1](../LESSONS/LESSON_01.md)
 
+[Lesson #3 ->](../LESSONS/LESSON_03.md)
