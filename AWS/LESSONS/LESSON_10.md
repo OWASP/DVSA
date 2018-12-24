@@ -21,7 +21,5 @@ We will receive an error that reveils vode from the invoked function:
 }
 ```
 
-- - - 
-[<- Lesson #9](../LESSONS/LESSON_09.md)
-
-[ToC->](../LESSONS/README.md)
+- - -
+[ToC](../LESSONS/README.md) | [1](../LESSONS/LESSON_01.md) | [2](../LESSONS/LESSON_02.md) | [3](../LESSONS/LESSON_03.md) | [4](../LESSONS/LESSON_04.md) | [5](../LESSONS/LESSON_05.md) | [6](../LESSONS/LESSON_06.md) | [7](../LESSONS/LESSON_07.md) | [8](../LESSONS/LESSON_08.md) | [9](../LESSONS/LESSON_09.md) | [10](../LESSONS/LESSON_10.md)
