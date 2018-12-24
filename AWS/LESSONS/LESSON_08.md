@@ -9,9 +9,8 @@ In a normal scenario, the user will arrive at the billing stage on which payment
 
 However, re-submitting the "update" request right after the "billing" request, might end up with paying for less than what we managed to order.
 
-Let's try:
+Let's try. Assuming that we already completed all the relevant data. We have only (1) item in our cart that costs $25:
 
-Assuming that we already completed all the relevant data. We have only (1) item in our cart that costs $25:
 ![alt cart](https://i.imgur.com/8H60Bym.png)
 
 We will now send a *billing* request, and right after it an *update* request:
@@ -41,3 +40,8 @@ As a result, we paid $25, as can be seen in the billing request. However, the re
             	----------------------
 		Date: 2018-12-18 14:56
 ```
+
+- - - 
+[<- Lesson #7](../LESSONS/LESSON_07.md)
+
+[Lesson #9 ->](../LESSONS/LESSON_09.md)
