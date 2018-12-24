@@ -62,3 +62,7 @@ Here are the vulnerabilities with the highest risk.
 
 You can refer to [Lesson #1: Code Injection](../LESSONS/LESSON_01.md), as a practical exploit of the **node-serialize** library.
 
+- - - 
+[<- Lesson #8](../LESSONS/LESSON_08.md)
+
+[Lesson #10 ->](../LESSONS/LESSON_10.md)
