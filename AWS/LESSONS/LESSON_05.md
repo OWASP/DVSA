@@ -1,8 +1,8 @@
 # LESSON #5: Broken Access Control
 
-The DVSA applicaiton has some admin functions. Although these functions are not available through the standard API calls, the function that receives the API calls has permissions to invoke any function. Since the function is vulnerable to [code injection](../LESSONS/LESSON_01.md) is it possible to invoke admin function using the standard API calls.
+The DVSA application has some admin functions. Although these functions are not available through the standard API calls, the function that receives the API calls has permissions to invoke any function. Since the function is vulnerable to [code injection](../LESSONS/LESSON_01.md) it is possible to invoke admin function using the standard API calls.
 
-This means that by invoking the right funciton at the right time, we can skip the payment. But, first, we start with the normal flow:
+This means that by invoking the right function at the right time, we can skip the payment. But, first, we start with the normal flow:
 
 - `{"action": "new", "cart-id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", "items": { "<item-id>":<qty>, "<item-id>":<qty>, ... }}`
 
@@ -52,7 +52,7 @@ Which eventually looks like that:
 
 ![alt stealing](https://i.imgur.com/8NXyXlQ.png)
 
-We got an error from the API function. But the database was updated with the new data. Since we did not issue a SQS notification for the payment, the receipts will be proccessed with a daily cron-job function. However, it is already possible to see it in the orders page.
+We got an error from the API function. But the database was updated with the new data. Since we did not issue a SQS notification for the payment, the receipt will be proccessed with a daily cron-job function. However, it is already possible to see it in the orders page.
 
 - - -
 [ToC](../LESSONS/README.md) | [1](../LESSONS/LESSON_01.md) | [2](../LESSONS/LESSON_02.md) | [3](../LESSONS/LESSON_03.md) | [4](../LESSONS/LESSON_04.md) | [5](../LESSONS/LESSON_05.md) | [6](../LESSONS/LESSON_06.md) | [7](../LESSONS/LESSON_07.md) | [8](../LESSONS/LESSON_08.md) | [9](../LESSONS/LESSON_09.md) | [10](../LESSONS/LESSON_10.md)
