@@ -1,6 +1,6 @@
 # LESSON #9: Vulnerable Dependencies
 
-DVSA uses mutiple dependencies. 
+DVSA has multiple dependencies. 
 
 The function that is triggered by the REST API calls uses two vulnerable libraries:
 (1) node-serialize
