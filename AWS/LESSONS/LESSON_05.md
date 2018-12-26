@@ -54,6 +54,14 @@ Which eventually looks like that:
 
 We got an error from the API function. But the database was updated with the new data. Since we did not issue a SQS notification for the payment, the receipt will be proccessed with a daily cron-job function. However, it is already possible to see it in the orders page.
 
+
+Before:
+![alt before](https://i.imgur.com/9nENtUW.png)
+
+After
+![alt after](https://i.imgur.com/czspPpV.png)
+
+
 - - -
 [ToC](../LESSONS/README.md) | [1](../LESSONS/LESSON_01.md) | [2](../LESSONS/LESSON_02.md) | [3](../LESSONS/LESSON_03.md) | [4](../LESSONS/LESSON_04.md) | [5](../LESSONS/LESSON_05.md) | [6](../LESSONS/LESSON_06.md) | [7](../LESSONS/LESSON_07.md) | [8](../LESSONS/LESSON_08.md) | [9](../LESSONS/LESSON_09.md) | [10](../LESSONS/LESSON_10.md)
 
