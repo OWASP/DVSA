@@ -1,5 +1,5 @@
 # LESSON #8: Logic vulnerabilities
-Logic vulnerabiliies are usually a result of a poor or insecure design. 
+Logic vulnerabilities are usually a result of a poor or insecure design. 
 
 ## (8.1) Race Condition
 

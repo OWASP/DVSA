@@ -1,6 +1,6 @@
 # LESSON #7: Over-Privileged Function
 
-Maybe one of the most fundamental security vulnerabilities in serverless applicaiton are over-privileged functions. [Previous research](https://www.protego.io/protego-labs-finds-nearly-all-serverless-application-functions-at-risk/) has found that almost all functions are configured with more permissions than what they actually need.
+Maybe one of the most fundamental security vulnerabilities in serverless applications is over-privileged functions. [Previous research](https://www.protego.io/protego-labs-finds-nearly-all-serverless-application-functions-at-risk/) has found that almost all functions are configured with more permissions than what they actually need.
 
 Let's see what we can do with that:
 
@@ -14,7 +14,7 @@ It's not hard to find the relevant keys in the base64 string that we got:
 
 ![alt base64-keys](https://i.imgur.com/ig8iV2J.png)
 
-Decoding them (```echo <BASE64> | base64 --decode```) will reveal (partial info):
+Decoding them (`echo <BASE64> | base64 --decode`) will reveal (partial info):
 ```
 AWS_LAMBDA_FUNCTION_VERSION=$LATEST
 AWS_SESSION_TOKEN=FQXXXXXXXXXXXXXXXPJnxYa8D85UCLwAXXXXXXXXXXXXXXXRUkQWDwu4NMqrE+dcRXXXXXXXXXXXXXXXrTB6PxZzyfw0pDFUJHXXXXXXXXXXXXXXXAFfF6kR5AjFSQd/SkjymXXXXXXXXXXXXXXXO+1JfHtJBFqwI7VnaHMcCoDp4O/WcXXXXXXXXXXXXXXXCNW886DrHxciDCXXXXXXXXXXXXXXXZt3k9f3WuwI/FfXXXXXXXXXXXXXXXp43gtQYe3IV1sCpPs/kUneXXXXXXXXXXXXXXXiZGU63V79bpu/Dt3fzO0eSHAO6ii4t9/gBQ==
@@ -45,14 +45,14 @@ export AWS_ACCESS_KEY_ID = "..."
 export AWS_SESSION_TOKEN = "..."
 ```
 
-Or, into our AWS credentials - ~/.aws/credentials (which is my preferit):
+Or, into our AWS credentials - `~/.aws/credentials` (which is the default location):
 ![alt stolen-keys](https://i.imgur.com/tFXFZEj.png)
 
 By default, temporary security credentials for an IAM user are valid for a maximum of 12 hours (and therefore, long gone in the screenshot). In this time frame, we can use these keys to run any AWS command that is aligned with the functions permissions. Since the function is (way) over-privileged, we can start stealing sensitive data and performing actions on the account.
 
 For example:
 
-(1) lisitng all files on s3:
+(1) listing all files on s3:
 ![alt ls-bucket](https://i.imgur.com/Cg8cBYs.png)
 
 (2) downloading a file from the bucket:

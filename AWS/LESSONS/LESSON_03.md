@@ -1,6 +1,6 @@
 # LESSON #3: Sensitive Information Disclosure
 
-An attcker can leverage the [code injection vulnerability](../LESSONS/LESSON_01.md) to invoke an admin functionality that will disclosure all the receipts from the S3 bucket.
+An attacker can leverage the [code injection vulnerability](../LESSONS/LESSON_01.md) to invoke an admin functionality that will disclose all the receipts from the S3 bucket.
 
 Sending the following payload will invoke an admin function that will pack all the receipts within the specified year and month and will created a signed url to download them.
 ```
@@ -12,7 +12,7 @@ As a result:
 ![alt signed-url](https://i.imgur.com/yMkJhKi.png)
 
 
-Pasting the url in the browser will download the receipts form the S3 bucket:
+Pasting the url in the browser will download the receipts from the S3 bucket:
 
 ![alt receipts](https://i.imgur.com/OXDQC9K.png)
 
