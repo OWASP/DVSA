@@ -58,7 +58,7 @@ We got an error from the API function. But the database was updated with the new
 Before:
 ![alt before](https://i.imgur.com/9nENtUW.png)
 
-After
+After:
 ![alt after](https://i.imgur.com/czspPpV.png)
 
 
