@@ -66,6 +66,8 @@ You should have received a copy of the GNU General Public License along with Dam
 
 [Slack Channel #project-sls-top-10](https://owasp.slack.com/join/shared_invite/enQtNDI5MzgxMDQ2MTAwLTEyNzIzYWQ2NDZiMGIwNmJhYzYxZDJiNTM0ZmZiZmJlY2EwZmMwYjAyNmJjNzQxNzMyMWY4OTk3ZTQ0MzFhMDY)
 
+[In the News](/news.md)
+
 - - -
 ## Acknowledgements
 DVSA was created and contributed to OWASP by Tal Melamed, [Protego Labs](https://protego.io)
