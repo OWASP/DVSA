@@ -47,18 +47,6 @@ You should have received a copy of the GNU General Public License along with Dam
 #### Deploy Client
 - `sls client deploy` 
 
-#### Receving emails
-
-DVSA sends receipts in the email (which will help you in hacking it).
-- In order to receive an email you should first verity it, by running the command
-
-
-`aws ses verify-email-identity --email-address <your_email>`
-
-- You will receive a verificaiton email with a link. Click on it, and you're all set.
-
-- Alternatively, use the Inbox page within the application (coming soon!)
-
 
 - - - 
 ## Documentation
