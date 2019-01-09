@@ -48,7 +48,7 @@ You must run serverless deploy commands with an environemant variable profile (e
 - - - 
 ## Email subscription
 
-DVSA sends receipts in the email (which will help you in hacking it). You can use the build-in **Inbox** page within the application to get the emails and obtain the receipts.
+DVSA sends receipts in the email (which will help you in hacking it). You can use the built-in **Inbox** page within the application to get the emails and obtain the receipts.
 
 **_Note_**: each user will be assigned an email from `mailsac.com` which will be automatically verified. Real emails will be sent to their account and will appear in the applicaiton Inbox page. All this is **transparent** to the user and the deployer).
 
