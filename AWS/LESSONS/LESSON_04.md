@@ -28,7 +28,7 @@ aws s3 cp ~/empty 's3://dvsa-receipts-bucket/2020/20/20/null_;curl 0c971764.ngro
 (The *echo x.raw* at the end of the file name is used to trigger the function, which is only triggered when a .raw file is created).
 
 If we follow the path (_cd;_ your way in), eventually we will get:
-![alt ls](https://i.imgur.com/h9mw2qV.png)
+![alt ls](https://i.imgur.com/mu2ky2O.png)
 
 
 3. We know the file's name, let's extract its code:
