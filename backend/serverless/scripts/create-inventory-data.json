@@ -1,0 +1,570 @@
+{
+  "DVSA-INVENTORY-DB": [{
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "1"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "item #1"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "item-x-1"
+          },
+          "price": {
+            "N": "12"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "10"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "EA"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Double Dragon"
+          },
+          "price": {
+            "N": "38"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "11"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "EA"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Dune 2000"
+          },
+          "price": {
+            "N": "42"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "12"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "EA"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Ring King"
+          },
+          "price": {
+            "N": "32"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "13"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "Atari"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Pac-Man"
+          },
+          "price": {
+            "N": "33"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "14"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "Rampage"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Nintendo"
+          },
+          "price": {
+            "N": "40"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "15"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "EA"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Rampart"
+          },
+          "price": {
+            "N": "48"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "16"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "Nintendo"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Super Mario"
+          },
+          "price": {
+            "N": "28"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "17"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "Nintendo"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Super Mario 2"
+          },
+          "price": {
+            "N": "45"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "18"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "Nintendo"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Super Mario 3"
+          },
+          "price": {
+            "N": "35"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "19"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "Atari"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Mrs. Pac-Man"
+          },
+          "price": {
+            "N": "28"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "2"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "item #1"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "item-x-1"
+          },
+          "price": {
+            "N": "12"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "20"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "Nintendo"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Zelda"
+          },
+          "price": {
+            "N": "25"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "21"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "EA"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Emperor"
+          },
+          "price": {
+            "N": "44"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "3"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "item #1"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "item-x-1"
+          },
+          "price": {
+            "N": "3"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "4"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "item #1"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "item-x-1"
+          },
+          "price": {
+            "N": "12"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "5"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "item #1"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "item-x-1"
+          },
+          "price": {
+            "N": "12"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "6"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "item #1"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "item-x-1"
+          },
+          "price": {
+            "N": "12"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "7"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "RA"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Jungle Strike"
+          },
+          "price": {
+            "N": "38"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "8"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "Nintendo"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Donkey Kong"
+          },
+          "price": {
+            "N": "68"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "itemId": {
+            "S": "9"
+          },
+          "category": {
+            "S": "A"
+          },
+          "description": {
+            "S": "Atari"
+          },
+          "imgUrl": {
+            "S": "0"
+          },
+          "name": {
+            "S": "Space Invaders"
+          },
+          "price": {
+            "N": "51"
+          },
+          "quantity": {
+            "N": "99"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+Resources:
+  OrdersTable:
+   Type: AWS::DynamoDB::Table
+   Properties:
+     TableName: DVSA-ORDERS-DB
+     AttributeDefinitions:
+       - AttributeName: orderId
+         AttributeType: S
+       - AttributeName: userId
+         AttributeType: S
+     KeySchema:
+       - AttributeName: orderId
+         KeyType: HASH
+       - AttributeName: userId
+         KeyType: RANGE
+     # Set the capacity based on the stage
+     ProvisionedThroughput:
+       ReadCapacityUnits: 5
+       WriteCapacityUnits: 5
+
+  InventoryTable:
+   Type: AWS::DynamoDB::Table
+   Properties:
+     TableName: DVSA-INVENTORY-DB
+     AttributeDefinitions:
+       - AttributeName: itemId
+         AttributeType: S
+       - AttributeName: category
+         AttributeType: S
+     KeySchema:
+       - AttributeName: itemId
+         KeyType: HASH
+       - AttributeName: category
+         KeyType: RANGE
+     # Set the capacity based on the stage
+     ProvisionedThroughput:
+       ReadCapacityUnits: 5
+       WriteCapacityUnits: 5
+  
+  UsersTable:
+   Type: AWS::DynamoDB::Table
+   Properties:
+     TableName: DVSA-USERS-DB
+     AttributeDefinitions:
+       - AttributeName: userId
+         AttributeType: S
+     KeySchema:
+       - AttributeName: userId
+         KeyType: HASH
+     # Set the capacity based on the stage
+     ProvisionedThroughput:
+       ReadCapacityUnits: 5
+       WriteCapacityUnits: 5
