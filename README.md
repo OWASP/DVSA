@@ -1,5 +1,5 @@
 
-# ![alt DVSA](https://i.imgur.com/25k8dtv.png) DVSA
+# ![alt DVSA](https://i.imgur.com/RUxkBKA.png) DVSA
 
 ## a Damn Vulnerable Serverless Application 
 
