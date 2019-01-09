@@ -7,7 +7,7 @@ However, since the S3 is configured insecurely, it is possible to upload files t
 
 `aws s3 cp /path/to/local/file s3://DVSA-RECEIPTS-BUCKET-{id}`
 
-![alt s3-upload](https://i.imgur.com/K3sE1pf.png)
+![alt s3-upload](https://i.imgur.com/ClSnqeX.png)
 
 *Note, that you won't be able to run `ls` with an account different than the account where the DVSA is deployed, since it is misconfigured with WRITE permissions, and not with READ. At least not yet :)*
 
