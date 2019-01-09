@@ -1,0 +1,48 @@
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 200px;
+    border-radius: 5px;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    @media (max-width: $desktop-breakpoint) {
+        width: 165px;
+    }
+    @media (min-width: $desktop-breakpoint) {
+        height: 300px;
+    }
+}
+
+.card:hover {
+    box-shadow: 0 25px 50px 0 rgba(0,0,0,0.2);
+}
+
+.card-image {
+    border-radius: 5px 5px 0 0;
+    width: 100%;
+}
+
+.card-container {
+    padding: 2px 16px;
+}
+
+.products-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    
+    
+}
+
+.card-rating {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.card-heart {
+    padding: 5px;
+}

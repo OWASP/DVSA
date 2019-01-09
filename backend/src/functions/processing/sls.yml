@@ -1,0 +1,176 @@
+provider:
+  name: aws
+  runtime: python2.7
+  versionFunctions: false
+  stage: dev
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  accountId: ${file(backend/serverless/scripts/vars.js):accountId}
+ 
+functions:
+  CreateReceipt:
+    name: DVSA-CREATE-RECEIPT
+    handler: backend/src/functions/processing/create-receipt.lambda_handler
+    role: dvsaCreateReceiptRole
+    environment:
+      INVENTORY_TABLE: DVSA-INVENTORY-DB
+      ORDERS_TABLE: DVSA-ORDERS-DB
+      RECEIPTS_BUCKET: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
+    timeout: 10
+    memorySize: 128
+    package: 
+      include: 
+        - backend/src/functions/processing/create-receipt.py
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - SQSQueue
+              - Arn
+          batchSize: 1
+  PaymentProcessor:
+    name: DVSA-PAYMENT-PROCESSOR
+    handler: backend/src/functions/processing/payment-processing.lambda_handler
+    role: dvsaPaymentProcessingRole
+    timeout: 30
+    memorySize: 128
+    events:
+    - http:
+        path: DVSA-PAYMENT-PROCESSOR
+        method: POST
+        cors: true
+    package:
+      include:
+        - backend/src/functions/processing/payment-processing.py
+  GetTotal:
+    name: DVSA-GET-CART-TOTAL
+    handler: backend/src/functions/processing/get-cart-total.lambda_handler
+    role: dvsaCartTotalRole
+    environment:
+      INVENTORY_TABLE: DVSA-INVENTORY-DB
+    timeout: 10
+    memorySize: 128
+    events:
+    - http:
+        path: DVSA-GET-CART-TOTAL
+        method: POST
+        cors: true
+    package: 
+      include: 
+        - backend/src/functions/processing/get-cart-total.py
+  SendReceipt:
+    name: DVSA-SEND-RECEIPT-EMAIL
+    handler: backend/src/functions/processing/send-receipt-email.lambda_handler
+    role: dvsaCreateReceiptRole
+    environment:
+      ORDERS_TABLE: DVSA-ORDERS-DB
+      SOURCE_EMAIL: dvsa.noreply@mailsac.com
+    timeout: 10
+    memorySize: 128
+    events:
+    - s3:
+        bucket: ReceiptsBucket
+        event: s3:ObjectCreated:*
+        rules:
+        - suffix: .raw
+    package: 
+      include: 
+        - backend/src/functions/processing/send-receipt-email.py
+
+resources:
+  Resources:
+    SQSQueue:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: "dvsa-order-paid-sqs"
+    #--------------------------
+    # Role: dvsaCreateReceiptRole
+    #--------------------------
+    dvsaCreateReceiptRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:custom.stage}DVSACreateReceiptRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: ${self:custom.stage}DVSACreateReceiptRolePolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: {'Fn::Join': [':', ['arn:aws:logs', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'log-group:/aws/lambda/*:*:*']]}
+                - Effect: "Allow"
+                  Action:
+                    - sqs:*
+                    - ses:*
+                    - s3:*
+                    - dynamodb:*
+                    - sts:*
+                  Resource: "*"
+    #--------------------------
+    # Role: dvsaPaymentProcessingRole
+    #--------------------------
+    dvsaPaymentProcessingRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:custom.stage}DVSAPaymentProcessingRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: ${self:custom.stage}DVSAPaymentProcessingRolePolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: {'Fn::Join': [':', ['arn:aws:logs', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'log-group:/aws/lambda/*:*:*']]}
+    #--------------------------
+    # Role: dvsaCartTotalRole
+    #--------------------------
+    dvsaCartTotalRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:custom.stage}DVSACartTotalRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: ${self:custom.stage}DVSACartTotalRolePolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: {'Fn::Join': [':', ['arn:aws:logs', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'log-group:/aws/lambda/*:*:*']]}
+                - Effect: Allow
+                  Action:
+                    - dynamodb:*
+                  Resource: {'Fn::Join': [':', ['arn:aws:dynamodb', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'table/*']]}

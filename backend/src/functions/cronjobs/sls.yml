@@ -1,0 +1,60 @@
+provider:
+  name: aws
+  runtime: python2.7
+  versionFunctions: false
+  stage: dev
+
+functions:
+  CronProcessor:
+    name: DVSA-CRON-PROCESSOR
+    handler: backend/src/functions/cronjobs/cron-processor.lambda_handler
+    role: dvsaCronjobsRole
+    environment:
+      ORDERS_TABLE: DVSA-ORDERS-DB
+    timeout: 30
+    memorySize: 128
+    package: 
+      include: 
+        - backend/src/functions/cronjobs/cron-processor.py
+    events:
+    - schedule:
+        name: daily_process_orders_status
+        description: 'acts as an order proccess (daily change of order status... processed->shipped->delivered)'
+        rate: rate(1 day)
+        enabled: true
+  CronOrderCleaner:
+    name: DVSA-CRON-ORDER-CLEANER
+    handler: backend/src/functions/cronjobs/cron-cleaner.lambda_handler
+    role: dvsaCronjobsRole
+    environment:
+      ORDERS_TABLE: DVSA-ORDERS-DB
+    timeout: 30
+    memorySize: 128
+    package: 
+      include: 
+        - backend/src/functions/cronjobs/cron-cleaner.py
+    events:
+    - schedule:
+        name: daily_clean_incomplete_orders
+        description: 'clean all empty unpaid orders, once a day'
+        rate: rate(1 day)
+        enabled: true
+  CronJobUpdate:
+    name: DVSA-CRON-JOB-UPDATE
+    handler: backend/src/functions/cronjobs/cron-update.lambda_handler
+    role: dvsaCronjobsRole
+    environment:
+      ORDERS_TABLE: DVSA-ORDERS-DB
+    timeout: 30
+    memorySize: 128
+    package: 
+      include: 
+        - backend/src/functions/cronjobs/cron-update.py
+    events:
+    - schedule:
+        name: daily_process_paid_orders
+        description: 'creates a receipt for paid, unprocessed orders'
+        rate: rate(1 day)
+        enabled: true
+
+

@@ -1,0 +1,38 @@
+.footer-bg {
+    background: #1B1C1D;
+    width: 100%;
+    height: 120px;
+    margin-top: 30px;
+    color: $off-white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media (max-width: $desktop-breakpoint) {
+        height: 140px;
+        text-align: center;
+    }
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    // align-content: center;
+    @media (max-width: $desktop-breakpoint) {
+        flex-direction: column;
+    }
+}
+
+.footer-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @media (max-width: $desktop-breakpoint) {
+        margin: 15px 0;
+    }
+    >a {
+        color: $off-white;
+    }
+    >a:hover {
+        color: #54FFFF;
+    }
+}

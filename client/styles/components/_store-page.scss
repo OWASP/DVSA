@@ -1,0 +1,34 @@
+
+@media (min-width: $desktop-breakpoint) {
+    .store-page {
+    display: flex;
+    }
+}
+
+.filter-sidebar{
+    top: 57px !important;
+    @media (min-width: $desktop-breakpoint) {
+        position: relative !important;
+        top: 10px !important;
+        width: 180px !important;
+    }
+}
+
+.store-page_filter {
+    @media (min-width: $desktop-breakpoint) {
+        margin: 0 20px;
+    }
+}
+
+.store-products {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-button {
+    position: relative;
+    right: 20px;
+    @media (min-width: $desktop-breakpoint) {
+        display: none !important;
+    }
+}

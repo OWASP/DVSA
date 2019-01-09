@@ -1,0 +1,64 @@
+provider:
+  name: aws
+  runtime: python2.7
+  versionFunctions: false
+  stage: dev
+
+functions:
+  AdminGetOrders:
+    name: DVSA-ADMIN-GET-ORDERS
+    handler: backend/src/functions/admin/admin-get-orders.lambda_handler
+    role: dvsaAdminRole
+    environment:
+      ORDERS_TABLE: DVSA-ORDERS-DB
+    timeout: 10
+    memorySize: 128
+    package: 
+      include: 
+        - backend/src/functions/admin/admin-get-orders.py
+  AdminGetReceipt:
+    name: DVSA-ADMIN-GET-RECEIPT
+    handler: backend/src/functions/admin/admin-get-receipts.lambda_handler
+    role: dvsaAdminRole
+    environment:
+      RECEIPTS_BUCKET: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
+    timeout: 10
+    memorySize: 128
+    package: 
+      include: 
+        - backend/src/functions/admin/admin-get-receipts.py
+  AdminUpdateOrders:
+    name: DVSA-ADMIN-UPDATE-ORDERS
+    handler: backend/src/functions/admin/admin-update-orders.lambda_handler
+    role: dvsaAdminRole
+    environment:
+      ORDERS_TABLE: DVSA-ORDERS-DB
+    timeout: 10
+    memorySize: 128
+    package: 
+      include: 
+        - backend/src/functions/admin/admin-update-orders.py
+  AdminUpdateInventory:
+    name: DVSA-ADMIN-UPDATE-INVENTORY
+    handler: backend/src/functions/admin/admin-update-inventory.lambda_handler
+    role: dvsaAdminRole
+    environment:
+      INVENTORY_TABLE: DVSA-INVENTORY-DB
+    timeout: 10
+    memorySize: 128
+    package: 
+      include: 
+        - backend/src/functions/admin/admin-update-inventory.py
+  AdminTweet:
+    name: DVSA-ADMIN-TWEET
+    handler: backend/src/functions/admin/admin-tweet.lambda_handler
+    role: dvsaAdminRole
+    environment:
+      TWITTER_ACCESS_TOKEN: grGmA8YH4KID2JquF10n6GFEG
+      TWITTER_API: https://api.twitter.com/
+      TWITTER_TOKEN_SECRET: zOZ5pc8ndrSZGwetFnBUGCr5O8kF69vEU6p1FiYOFpfJuWBjlm
+    timeout: 10
+    memorySize: 128
+    package: 
+      include: 
+        - backend/src/functions/admin/admin-tweet.py

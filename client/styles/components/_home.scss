@@ -1,0 +1,28 @@
+.home-bg {
+    background: #1B1C1D;
+    width: 100%;
+    height: 210px;
+    margin-top: 30px;
+}
+
+.home-main{
+    >h2 {
+        color: $off-white;
+        word-spacing: 3px;
+    }
+}
+
+.home-content {
+    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.home-text {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.home-desc {
+    margin: 12px 0;
+}

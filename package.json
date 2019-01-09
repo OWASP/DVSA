@@ -1,0 +1,32 @@
+{
+  "name": "dvsa",
+  "version": "1.0.0",
+  "description": "DVSA - Damn Vulneravle SERVERLESSS Application",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "cd client && npm i && cd ../backend/src/functions/order-api && npm i",
+    "client:build": "cd client && npm run-script build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/protegolabs/DVSA.git"
+  },
+  "keywords": [
+    "DVSA",
+    "serverless",
+    "vulnerable",
+    "spa"
+  ],
+  "author": "Protego Labs",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/protegolabs/DVSA/issues"
+  },
+  "homepage": "https://github.com/protegolabs/DVSA#readme",
+  "devDependencies": {
+    "serverless-finch": "2.3.2",
+    "serverless-scriptable-plugin": "^0.8.0",
+    "serverless-stack-output": "0.2.3"
+  }
+}

@@ -1,0 +1,63 @@
+##################################################
+# DVSA: a Damn Vulnerable Serverless Application #
+##################################################
+service: dvsa
+
+provider:
+  name: aws
+  runtime: python2.7
+  stage: ${env:USER}
+  versionFunctions: false
+  region: us-east-1
+  timeout: 30
+  memorySize: 128
+  
+package:
+  individually: true
+  excludeDevDependencies: false
+  exclude:
+    - ./**
+
+plugins:
+  - serverless-finch
+  - serverless-stack-output
+  - serverless-scriptable-plugin
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  accountId: ${file(backend/serverless/scripts/vars.js):accountId}
+  
+  client:
+    bucketName: ${self:custom.stage}-dvsa-app-${self:custom.accountId}
+    distributionFolder: client/dist
+    errorDocument: index.html
+
+  output:
+    file: ./client/src/be-stack.json
+
+  scriptHooks:
+    before:package:cleanup:  python backend/serverless/scripts/onstart.py 
+    after:package:finalize:  python backend/serverless/scripts/verifysesaccount.py --verify
+    after:deploy:finalize:   aws dynamodb batch-write-item --request-items file://backend/serverless/scripts/create-inventory-data.json
+    after:remove:remove:     python backend/serverless/scripts/verifysesaccount.py --remove
+
+functions:
+  - ${file(backend/src/functions/order-api/sls.yml):functions}
+  - ${file(backend/src/functions/order/sls.yml):functions}
+  - ${file(backend/src/functions/processing/sls.yml):functions}
+  - ${file(backend/src/functions/admin/sls.yml):functions}
+  - ${file(backend/src/functions/cronjobs/sls.yml):functions}
+  - ${file(backend/src/functions/user/sls.yml):functions}
+
+resources:
+  # Resources:
+  - ${file(backend/serverless/resources/cognito-user-pool.yml)}
+  - ${file(backend/serverless/resources/cognito-identity-pool.yml)}
+  - ${file(backend/serverless/resources/api-gateway.yml)}
+  - ${file(backend/serverless/resources/dynamodb-tables.yml)}
+  - ${file(backend/serverless/resources/s3-buckets.yml)}
+  - ${file(backend/serverless/resources/function-roles.yml)}
+
+  # Function Resources
+  - ${file(backend/src/functions/order-api/sls.yml):resources}
+  - ${file(backend/src/functions/processing/sls.yml):resources}

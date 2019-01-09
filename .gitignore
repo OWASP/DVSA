@@ -1,0 +1,10 @@
+.idea
+client/dist
+node_modules
+be-stack.json
+COPYING.txt
+favicon.ico
+LICENSE
+README.md
+news.md
+
