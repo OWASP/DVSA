@@ -64,7 +64,11 @@ DVSA sends receipts in the email (which will help you in hacking it). You can us
 - - - 
 ## Documentation
 
-**AWS**: see [LESSONS](AWS/LESSONS/README.md) for more information.
+#### AWS ####
+
+see [LESSONS](AWS/LESSONS/README.md) for information about hacking DVSA.
+
+see [VIDEOS](AWS/VIDEOS) for how to deploy, use and hack DVSA.
 
 
 - - - 
