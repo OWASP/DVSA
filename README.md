@@ -22,7 +22,7 @@ We do not take responsibility for the way in which any one uses this application
 
 
 - - -
-## Deployment
+## [Deployment](AWS/VIDEOS/deploy.mp4)
 
 You must run serverless deploy commands with an environemant variable profile (e.g. `AWS_PROFILE=<aws-profile-name>`) instead of the serverless argument.
   
