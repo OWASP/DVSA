@@ -30,6 +30,9 @@ You must run serverless deploy commands with an environemant variable profile (e
 #### Clone Project
 - `clone`
 
+#### Install Serverless
+- `npm install -g serverless`
+
 #### Install AWS-CLI
 - `pip install awscli --upgrade --user`
 
