@@ -1,5 +1,5 @@
 
-# ![alt DVSA](https://i.imgur.com/25k8dtv.png) DVSA
+# ![alt DVSA](https://i.imgur.com/Z4L7MqL.png)
 
 ## a Damn Vulnerable Serverless Application 
 
@@ -16,27 +16,28 @@ Please note, there are **both documented and undocumented vulnerabilities** with
 - - - 
 ## Disclaimer
 
+**Do no install DVSA on a production account**
+
 We do not take responsibility for the way in which any one uses this application (DVSA). We have made the purposes of the application clear and it should not be used maliciously. We have given warnings and taken measures to prevent users from installing DVSA on to production accounts.
 
 
-
-
 - - -
-## License
-Damn Vulnerable Serverless Application (DVSA) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+## [Deployment](AWS/VIDEOS/deploy.mp4)
 
-Damn Vulnerable Serverless Application (DVSA) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+You must run serverless deploy commands with an environemant variable profile (e.g. `AWS_PROFILE=<aws-profile-name>`) instead of the serverless argument.
+  
 
-You should have received a copy of the GNU General Public License along with Damn Vulnerable Serverless Application (DVSA).  If not, see http://www.gnu.org/licenses/.
-
-
-
-- - -
-## Deployment
-
+#### Clone Project
 - `clone`
 
-- `npm install`
+#### Install Serverless
+- `npm install -g serverless`
+
+#### Install AWS-CLI
+- `pip install awscli --upgrade --user`
+
+#### Install dependencies
+- `npm i`
 
 #### Deploy Backend
 - `sls deploy` 
@@ -47,11 +48,32 @@ You should have received a copy of the GNU General Public License along with Dam
 #### Deploy Client
 - `sls client deploy` 
 
+- - - 
+## Email subscription
+
+DVSA sends receipts in the email (which will help you in hacking it). You can use the built-in **Inbox** page within the application to get the emails and obtain the receipts.
+
+**_Note_**: each user will be assigned an email from `mailsac.com` which will be automatically verified. Real emails will be sent to their account and will appear in the applicaiton Inbox page. All this is **transparent** to the user and the deployer).
+
+**_Note_**: to make the email verification script work your dafault AWS region has to be "US East (N. Virginia)", for example by setting `region = us-east-1` in your ~/.aws/config file 
+
+**Alternatively**, if you want users to receive emails to their registered email account (e.g. gmail), use one of the followings:
+
+- Send an email verification link to email address, by running the following command (after clicking on the received link, emails will **also** be sent to their actual email addrss):
+
+`aws ses verify-email-identity --email-address <your_email>`
+
+- [Request a sending limit increase](https://console.aws.amazon.com/support/v1#/case/create?issueType=service-limit-increase&limitType=service-code-ses). This will allow your entire cloud account to send emails to any address.
+
 
 - - - 
 ## Documentation
 
-**AWS**: see [LESSONS](AWS/LESSONS/README.md) for more information.
+#### AWS ####
+
+see [LESSONS](AWS/LESSONS/README.md) for information about hacking DVSA.
+
+see [VIDEOS](AWS/VIDEOS) for how to deploy, use and hack DVSA.
 
 
 - - - 
@@ -66,8 +88,21 @@ You should have received a copy of the GNU General Public License along with Dam
 
 [Slack Channel #project-sls-top-10](https://owasp.slack.com/join/shared_invite/enQtNDI5MzgxMDQ2MTAwLTEyNzIzYWQ2NDZiMGIwNmJhYzYxZDJiNTM0ZmZiZmJlY2EwZmMwYjAyNmJjNzQxNzMyMWY4OTk3ZTQ0MzFhMDY)
 
-[In the News](/news.md)
+[DVSA blog post](https://www.protego.io/level-up-on-security-with-the-new-damn-vulnerable-serverless-app/)
+
+[**In the News**](news.md)
+
 
 - - -
 ## Acknowledgements
-DVSA was created and contributed to OWASP by Tal Melamed, [Protego Labs](https://protego.io)
+DVSA was created and contributed to OWASP by [Protego Labs](https://protego.io)
+
+
+- - -
+## License
+Damn Vulnerable Serverless Application (DVSA) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+Damn Vulnerable Serverless Application (DVSA) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with Damn Vulnerable Serverless Application (DVSA).  If not, see http://www.gnu.org/licenses/.
+
