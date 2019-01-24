@@ -16,37 +16,48 @@ Please note, there are **both documented and undocumented vulnerabilities** with
 - - - 
 ## Disclaimer
 
-**Do no install DVSA on a production account**
+***Do no install DVSA on a production account***
 
 We do not take responsibility for the way in which any one uses this application (DVSA). We have made the purposes of the application clear and it should not be used maliciously. We have given warnings and taken measures to prevent users from installing DVSA on to production accounts.
 
 
 - - -
-## [Deployment](AWS/VIDEOS/deploy.mp4)
+## Deployment
+
+#### [Application Repository](AWS/VIDEOS/reo_deploy.mp4)
+- Deploy DVSA from the [AWS Serverless Applicaiton Repository](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:889485553959:applications~DVSA)
+
+- After deployment is complete. Click on 'View CloudFormation Stack'
+
+- Under 'Outputs' you will find the URL for the application (DVSA Website URL)
+
+
+![](https://i.imgur.com/ZfjEyiM.png)
+#### [Serverless Framework](AWS/VIDEOS/serverless_deploy.mp4)
 
 You must run serverless deploy commands with an environemant variable profile (e.g. `AWS_PROFILE=<aws-profile-name>`) instead of the serverless argument.
-  
 
-#### Clone Project
+##### Clone Project
 - `clone`
 
-#### Install Serverless
+##### Install Serverless
 - `npm install -g serverless`
 
-#### Install AWS-CLI
+##### Install AWS-CLI
 - `pip install awscli --upgrade --user`
 
-#### Install dependencies
+##### Install dependencies
 - `npm i`
 
-#### Deploy Backend
+##### Deploy Backend
 - `sls deploy` 
 
-#### Build Client
+##### Build Client
 - `npm run-script client:build` 
 
-#### Deploy Client
+##### Deploy Client
 - `sls client deploy` 
+
 
 - - - 
 ## Email subscription
