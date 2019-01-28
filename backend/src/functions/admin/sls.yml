@@ -54,9 +54,9 @@ functions:
     handler: backend/src/functions/admin/admin-tweet.lambda_handler
     role: dvsaAdminRole
     environment:
-      TWITTER_ACCESS_TOKEN: grGmA8YH4KID2JquF10n6GFEG
+      TWITTER_ACCESS_TOKEN: zzzzzzzzzzzzzzzzzzzzzzz
       TWITTER_API: https://api.twitter.com/
-      TWITTER_TOKEN_SECRET: zOZ5pc8ndrSZGwetFnBUGCr5O8kF69vEU6p1FiYOFpfJuWBjlm
+      TWITTER_TOKEN_SECRET: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     timeout: 10
     memorySize: 128
     package: 
