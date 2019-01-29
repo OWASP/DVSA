@@ -6,7 +6,7 @@ All requests end up being handled by a Lambda function, which invokes another La
 
 **This function is vulnerable to Code Injection**. The function uses an insecure de-serialization for the data in the request.
 
-Using the following payload, it is possible to inject code that will be executed by the functioin.
+Using the following payload, it is possible to inject code that will be executed by the function.
 
 `$$ND_FUNC$$_function (){}()`
 
