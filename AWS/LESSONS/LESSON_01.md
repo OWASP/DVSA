@@ -2,7 +2,7 @@
 
 ## (1.1) Code Injection via API Gateway
 The application sends all request to an API GW (*`https://{string}.execute-api.{region}.amazonaws.com/{stage}/order`*). 
-All requests end up being handled by Lambda function, which invokes another lambda based on the incoming request.
+All requests end up being handled by a Lambda function, which invokes another Lambda function based on the incoming request.
 
 **This function is vulnerable to Code Injection**. The function uses an insecure de-serialization for the data in the request.
 
@@ -21,12 +21,12 @@ As a result, we now have the user orders:
 
 ![alt ngrok](https://i.imgur.com/CAcywDz.png)
 
-The above example is the least of problems you can do with such an attack. Notice that there are also admin functions :)
+The above example is the least of problems you can cause with such an attack. Notice that there are also admin functions :)
 
 
 - - - 
 ## (1.2) Command Injection via S3 bucket
-Event injections are not all about API calls and in serverless application, the source of the injection could be an email (file, subject, etc.), an MQTT pub/sub or any other cloud-resource event.
+Event injections are not all about API calls and in serverless applications the source of the injection could be an: email (file, subject, etc.), an MQTT pub/sub, or any other cloud-resource event.
 
 In this case, the DVSA is vulnerable to Command Injection via file name. The file is processed when uploaded to an S3 bucket. Since the bucket is configured insecurely, we can exploit it. 
 
