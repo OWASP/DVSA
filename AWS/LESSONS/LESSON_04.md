@@ -46,7 +46,7 @@ Let's decode: `echo <BASE64_STRING> | base64 --decode > /tmp/lambda.py`
 
 We can now see the vulnerable code - os.system() - which uses the name of the uploaded file as part of the command. 
 
-You now have all the information further exploit it, [stealing keys](../LESSONS/LESSON_05.md) or executing any other command.
+You now have all the information to further exploit it, [stealing keys](../LESSONS/LESSON_05.md) or executing any other command.
 
 
 - - -
