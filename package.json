@@ -6,6 +6,9 @@
   "scripts": {
     "postinstall": "cd client && npm i && cd ../backend/src/functions/order-api && npm i",
     "client:build": "cd client && npm run-script build",
+    "client:start": "cd client && npm start",
+    "client:start:local": "cd client && npm run-script start:local",
+    "start": "serverless offline",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,5 +31,8 @@
     "serverless-finch": "2.3.2",
     "serverless-scriptable-plugin": "^0.8.0",
     "serverless-stack-output": "0.2.3"
+  },
+  "dependencies": {
+    "serverless-offline": "^4.3.0"
   }
 }

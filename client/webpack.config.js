@@ -1,16 +1,10 @@
-const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CSSExtract = new ExtractTextPlugin('styles.css');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    // entry: {
-    //     javascript: "./src/app.js",
-    //     html: "./public/index.html",
-    // },
-
-    entry: "./src/app.js",
+    entry: ['babel-polyfill', './src/app.js'],
 
     module: {
         rules: [

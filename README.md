@@ -25,7 +25,7 @@ We do not take responsibility for the way in which any one uses this application
 ## Deployment
 
 #### [Application Repository](AWS/VIDEOS/reo_deploy.mp4)
-- Deploy DVSA from the [AWS Serverless Applicaiton Repository](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:889485553959:applications~DVSA)
+- Deploy DVSA from the [AWS Serverless Application Repository](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:889485553959:applications~DVSA)
 
 - After deployment is complete. Click on 'View CloudFormation Stack'
 
@@ -38,13 +38,21 @@ We do not take responsibility for the way in which any one uses this application
 You must run serverless deploy commands with an environemant variable profile (e.g. `AWS_PROFILE=<aws-profile-name>`) instead of the serverless argument.
 
 ##### Clone Project
-- `clone`
+- `git clone git@github.com:OWASP/DVSA.git`
 
 ##### Install Serverless
 - `npm install -g serverless`
 
 ##### Install AWS-CLI
 - `pip install awscli --upgrade --user`
+
+##### Verify AWS-CLI Installation
+- `aws --version`
+
+If you get a "command not found" error, see the "Steps to Take after Installation" section [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html#install-tool-pip).
+
+##### Configure AWS-CLI for your Account
+- `aws configure`
 
 ##### Install dependencies
 - `npm i`
@@ -58,13 +66,28 @@ You must run serverless deploy commands with an environemant variable profile (e
 ##### Deploy Client
 - `sls client deploy` 
 
+- - -
+## Running locally
+
+If you would like to run the DVSA on your local machine instead of deploying it to a cloud provider, first complete the [Serverless Framework](#serverless-framework) instructions up to and including *Install dependencies*. Then:
+
+#### Run Backend
+- `npm start` 
+
+#### Run Client
+- `npm run-script client:start:local` 
+
+#### Run Client Against Deployed Backend
+- `npm run-script client:start` 
+
+**_Note_**: This will only work if you previously deployed the backend. If this fails, confirm you still have a `be-stack.json` file at the root of this project.
 
 - - - 
 ## Email subscription
 
 DVSA sends receipts in the email (which will help you in hacking it). You can use the built-in **Inbox** page within the application to get the emails and obtain the receipts.
 
-**_Note_**: each user will be assigned an email from `mailsac.com` which will be automatically verified. Real emails will be sent to their account and will appear in the applicaiton Inbox page. All this is **transparent** to the user and the deployer).
+**_Note_**: each user will be assigned an email from `mailsac.com` which will be automatically verified. Real emails will be sent to their account and will appear in the application Inbox page. All this is **transparent** to the user and the deployer).
 
 **Alternatively**, if you want users to receive emails to their registered email account (e.g. gmail), use one of the followings:
 
