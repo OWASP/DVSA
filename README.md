@@ -66,6 +66,8 @@ DVSA sends receipts in the email (which will help you in hacking it). You can us
 
 **_Note_**: each user will be assigned an email from `mailsac.com` which will be automatically verified. Real emails will be sent to their account and will appear in the applicaiton Inbox page. All this is **transparent** to the user and the deployer).
 
+**_Note_**: to make the email verification script work your dafault AWS region has to be "US East (N. Virginia)", for example by setting `region = us-east-1` in your ~/.aws/config file 
+
 **Alternatively**, if you want users to receive emails to their registered email account (e.g. gmail), use one of the followings:
 
 - Send an email verification link to email address, by running the following command (after clicking on the received link, emails will **also** be sent to their actual email addrss):
