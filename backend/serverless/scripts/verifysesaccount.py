@@ -6,7 +6,7 @@ import time
 
 def err():
 	print ("[ERR] Could not verify email account.\n")
-	print ("Try again ($python backend/serverless/scripts/verifysesaccount.py), or manually browse to: https://mailsac.com/inbox/noreply.dvsa@mailsac.com and approve the email account")
+	print ("Make sure you've specified a region using \"aws configure\" and try again ($python backend/serverless/scripts/verifysesaccount.py), or manually browse to: https://mailsac.com/inbox/noreply.dvsa@mailsac.com and approve the email account")
 	return False
 
 def getEmailList(email):
@@ -19,9 +19,14 @@ def getEmailList(email):
 	
 	if res.status_code != 200:
 		return False
-		
+
 	j = json.loads(res.text)
-	id = j[len(j)-1]["_id"]
+	messageCount = len(j)
+
+	if not messageCount:
+		return False
+
+	id = j[messageCount-1]["_id"]
 	return id
 
 def getVerificationLink(email, _id):
