@@ -9,8 +9,7 @@
     "build": "webpack -p --env production --mode production",
     "serve": "live-server public",
     "test": "cross-env NODE_ENV=test jest --config=jest.config.json",
-    "start": "webpack-dev-server --hot --inline --mode development",
-    "start:local": "NODE_ENV=local webpack-dev-server --hot --inline --mode development"
+    "start": "webpack-dev-server --hot --inline --mode development"
   },
   "dependencies": {
     "aws-amplify": "^1.1.17",

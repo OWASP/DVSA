@@ -69,18 +69,15 @@ If you get a "command not found" error, see the "Steps to Take after Installatio
 - - -
 ## Running locally
 
-If you would like to run the DVSA on your local machine instead of deploying it to a cloud provider, first complete the [Serverless Framework](#serverless-framework) instructions up to and including *Install dependencies*. Then:
+#### Run Client
+- `npm run-script client:start` 
+
+**_Note_**: This will only work if you previously deployed the backend. If this fails, confirm you still have a `be-stack.json` file at the root of this project.
 
 #### Run Backend
 - `npm start` 
 
-#### Run Client
-- `npm run-script client:start:local` 
-
-#### Run Client Against Deployed Backend
-- `npm run-script client:start` 
-
-**_Note_**: This will only work if you previously deployed the backend. If this fails, confirm you still have a `be-stack.json` file at the root of this project.
+If you want to point your local client to your local backend, edit your `be-stack.json` and set `ServiceEndpoint` to `http://localhost:3000`. Note that you will still be using the Cognito pools in AWS.
 
 - - - 
 ## Email subscription

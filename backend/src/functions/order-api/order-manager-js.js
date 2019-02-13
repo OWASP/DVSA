@@ -3,16 +3,14 @@ var AWS = require('aws-sdk');
 var jose = require('node-jose');
 
 exports.handler = (event, context, callback) => {
-    //console.log("EVENT", event);
     var req = serialize.unserialize(event.body);
     var headers = serialize.unserialize(event.headers);
-    var auth_header = headers["Authorization"];
+    var auth_header = headers.Authorization || headers.authorization;
     var token_sections = auth_header.split('.');
     var auth_data = jose.util.base64url.decode(token_sections[1]);
     var token = JSON.parse(auth_data);
     var user = token.username;
     var action = req.action;
-    //console.log("ACTION => ", action);
     var isOk = true;
     var payload = {};
     var functionName = "";
@@ -94,7 +92,6 @@ exports.handler = (event, context, callback) => {
         
         lambda.invoke(params, function(err, data) {
             if (err) {
-                //console.log ("ERRR", err);
                 const response = {
                     statusCode: 200,
                     headers: {
