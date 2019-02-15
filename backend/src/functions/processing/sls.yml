@@ -43,6 +43,7 @@ functions:
     package:
       include:
         - backend/src/functions/processing/payment-processing.py
+        - backend/src/functions/processing/helper.pyc
   GetTotal:
     name: DVSA-GET-CART-TOTAL
     handler: backend/src/functions/processing/get-cart-total.lambda_handler
