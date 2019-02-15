@@ -3,6 +3,8 @@ import datetime
 import time
 import random
 import string
+import helper
+
 
 def lambda_handler(event, context):
     n = random.randint(2, 4)  # this is to play the role of an external service.
@@ -13,20 +15,9 @@ def lambda_handler(event, context):
     exp_y = int(data['exp'].split("/")[1]) + 2000
     d = datetime.datetime.today()
 
-    # LUHN ALGORITHM
-    sum = 0
-    num_digits = len(str(ccn))
-    oddeven = num_digits & 1
-    for count in range(0, num_digits):
-        digit = int(ccn[count])
+    ccn_sum = helper.get_sum(ccn)
 
-        if not ((count & 1) ^ oddeven):
-            digit = digit * 2
-        if digit > 9:
-            digit = digit - 9
-        sum = sum + digit
-
-    if (sum % 10) == 0:
+    if (ccn_sum % 10) == 0:
         if len(str(data['cvv'])) != 3:
             res = {"status": 110, "msg": "invalid cvv"}
 

@@ -11,12 +11,12 @@ access_key = os.environ["TWITTER_ACCESS_TOKEN"]
 access_secret = os.environ["TWITTER_TOKEN_SECRET"]
 twitter_api = os.environ["TWITTER_API"]
 
+
 # ToDo: Fix bugs
 def authenticate():
     auth_url = '{}oauth2/token'.format(twitter_api)
     token = '{}:{}'.format(access_key, access_secret)
     b64_encoded_key = base64.b64encode(token)
-    #print b64_encoded_key
     auth_headers = {
         'Authorization': 'Basic {}'.format(b64_encoded_key),
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -30,15 +30,9 @@ def authenticate():
     return res
 
 
-def admin(auth):
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table("TWITTER_TOKENS_TABLE")
-    response = table.put_item(
-        Item={
-            'token': auth["token"]
-        }
-    )
-    return {"status": "ok", "msg": response}
+def tweet(token, msg):
+    client = boto3.client('social')
+    res = client.post_item("twitter", token, msg)
 
 
 def lambda_handler(event, context):
@@ -66,12 +60,8 @@ def lambda_handler(event, context):
     try:
         res = urllib2.urlopen(req).read()
 
-        if is_admin:
-            admin(res)
-
-        if res:
-            client = boto3.client('social')
-            res = client.post_item("twitter", res["token"], event["msg"])
+        if event["action"] == "tweet":
+            tweet(res["token"], event["msg"])
 
     except Exception as e:
         res = str(e.reason)

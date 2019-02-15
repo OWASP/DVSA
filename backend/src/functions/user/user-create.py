@@ -30,7 +30,20 @@ import os
 }
 '''
 
+
+def add_admin_user(userId):
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table("DVSA_ADMIN_TABLE")
+    response = table.put_item(
+        Item={
+            'userId': userId
+        }
+    )
+    return {"status": "ok", "msg": response}
+
+
 def lambda_handler(event, context):
+    is_admin = False
     userId = event["userName"]
     email = event["request"]["userAttributes"]["cognito:email_alias"]
     phone = event["request"]["userAttributes"]["phone_number"]
@@ -56,6 +69,9 @@ def lambda_handler(event, context):
             'isAdmin': isAdmin
         }
     )
+
+    if is_admin:
+        add_admin_user(userId)
 
     invokeLambda = boto3.client('lambda')
     payload = {"action": "verify", "user": userId }
