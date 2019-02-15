@@ -5,6 +5,19 @@ import os
 from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
 
+
+# not in use.
+def get_items_from_rds(clusterId):
+    rds = boto3.client('rds')
+    response = rds.describe_db_clusters(
+        DBClusterIdentifier=clusterId
+    )
+    res = rds.describe_db_instances(
+        DBInstanceIdentifier = response["DBClusters"]["DBClusterMembers"]["DBInstanceIdentifier"]
+    )
+    # ToDo
+
+
 def lambda_handler(event, context):
     # Helper class to convert a DynamoDB item to JSON.
     class DecimalEncoder(json.JSONEncoder):

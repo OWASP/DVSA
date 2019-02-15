@@ -175,3 +175,9 @@ resources:
                   Action:
                     - dynamodb:*
                   Resource: {'Fn::Join': [':', ['arn:aws:dynamodb', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'table/*']]}
+                - Effect: Allow
+                  Action:
+                    - rds:*
+                  Resource:
+                    - {'Fn::Join': [':', ['arn:aws:rds', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'cluster:*']]}
+                    - {'Fn::Join': [':', ['arn:aws:rds', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'db:*']]}
