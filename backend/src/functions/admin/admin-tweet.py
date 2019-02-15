@@ -30,13 +30,24 @@ def authenticate():
     return res
 
 
+#todo: tweet!
 def tweet(token, msg):
-    client = boto3.client('social')
-    res = client.post_item("twitter", token, msg)
+    #todo: get tweet-id
+    tweetId = ""
+
+    #write stats
+    dynamodb = boto3.client('dynamodb')
+    table = dynamodb.Table("DVSA-TWITTER-DB")
+    response = table.select_item(
+        Item={
+            'tweetId': tweetId,
+            'msg': msg
+        }
+    )
+    return response
 
 
 def lambda_handler(event, context):
-    is_admin = False
     key_secret = '{}:{}'.format(access_key, access_secret).encode('ascii')
     b64_encoded_key = base64.b64encode(key_secret)
     b64_encoded_key = b64_encoded_key.decode('ascii')
@@ -60,8 +71,13 @@ def lambda_handler(event, context):
     try:
         res = urllib2.urlopen(req).read()
 
-        if event["action"] == "tweet":
-            tweet(res["token"], event["msg"])
+        try:
+            if event["action"] == "tweet":
+                tweet(res["token"], event["msg"])
+            else:
+                pass
+        except:
+            pass
 
     except Exception as e:
         res = str(e.reason)
