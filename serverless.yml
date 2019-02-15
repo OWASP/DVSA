@@ -29,7 +29,7 @@ custom:
   accountId: ${file(backend/serverless/scripts/vars.js):accountId}
   
   client:
-    bucketName: ${self:custom.stage}-dvsa-app-${self:custom.accountId}
+    bucketName: dvsa-website-${self:custom.accountId}
     distributionFolder: client/dist
     errorDocument: index.html
 

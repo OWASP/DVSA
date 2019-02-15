@@ -7,7 +7,7 @@ provider:
 functions:
   AdminGetOrders:
     name: DVSA-ADMIN-GET-ORDERS
-    handler: backend/src/functions/admin/admin-get-orders.lambda_handler
+    handler: backend/src/functions/admin/admin_get_orders.lambda_handler
     role: dvsaAdminRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -15,10 +15,10 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/admin/admin-get-orders.py
+        - backend/src/functions/admin/admin_get_orders.py
   AdminGetReceipt:
     name: DVSA-ADMIN-GET-RECEIPT
-    handler: backend/src/functions/admin/admin-get-receipts.lambda_handler
+    handler: backend/src/functions/admin/admin_get_receipts.lambda_handler
     role: dvsaAdminRole
     environment:
       RECEIPTS_BUCKET: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
@@ -26,10 +26,10 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/admin/admin-get-receipts.py
+        - backend/src/functions/admin/admin_get_receipts.py
   AdminUpdateOrders:
     name: DVSA-ADMIN-UPDATE-ORDERS
-    handler: backend/src/functions/admin/admin-update-orders.lambda_handler
+    handler: backend/src/functions/admin/admin_update_orders.lambda_handler
     role: dvsaAdminRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -37,10 +37,10 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/admin/admin-update-orders.py
+        - backend/src/functions/admin/admin_update_orders.py
   AdminUpdateInventory:
     name: DVSA-ADMIN-UPDATE-INVENTORY
-    handler: backend/src/functions/admin/admin-update-inventory.lambda_handler
+    handler: backend/src/functions/admin/admin_update_inventory.lambda_handler
     role: dvsaAdminRole
     environment:
       INVENTORY_TABLE: DVSA-INVENTORY-DB
@@ -48,10 +48,10 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/admin/admin-update-inventory.py
+        - backend/src/functions/admin/admin_update_inventory.py
   AdminTweet:
     name: DVSA-ADMIN-TWEET
-    handler: backend/src/functions/admin/admin-tweet.lambda_handler
+    handler: backend/src/functions/admin/admin_tweet.lambda_handler
     role: dvsaAdminRole
     environment:
       TWITTER_ACCESS_TOKEN: zzzzzzzzzzzzzzzzzzzzzzz
@@ -61,4 +61,4 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/admin/admin-tweet.py
+        - backend/src/functions/admin/admin_tweet.py

@@ -8,7 +8,7 @@ provider:
 functions:
   UserAccount:
     name: DVSA-USER-ACCOUNT
-    handler: backend/src/functions/user/user-account.lambda_handler
+    handler: backend/src/functions/user/user_account.lambda_handler
     role: dvsaOrderRole
     environment:
       USERS_TABLE: DVSA-USERS-DB
@@ -16,10 +16,10 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/user/user-account.py
+        - backend/src/functions/user/user_account.py
   UserProfile:
     name: DVSA-USER-PROFILE
-    handler: backend/src/functions/user/user-profile.lambda_handler
+    handler: backend/src/functions/user/user_profile.lambda_handler
     role: dvsaOrderRole
     environment:
       USERS_TABLE: DVSA-USERS-DB
@@ -27,10 +27,10 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/user/user-profile.py
+        - backend/src/functions/user/user_profile.py
   UserCreate:
     name: DVSA-USER-CREATE
-    handler: backend/src/functions/user/user-create.lambda_handler
+    handler: backend/src/functions/user/user_create.lambda_handler
     role: dvsaCreateUserRole
     environment:
       USERS_TABLE: DVSA-USERS-DB
@@ -39,17 +39,17 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/user/user-create.py
+        - backend/src/functions/user/user_create.py
     events:
     - cognitoUserPool:
         pool: MyUserPool
         trigger: PostConfirmation
   UserInbox:
     name: DVSA-USER-INBOX
-    handler: backend/src/functions/user/user-inbox.lambda_handler
+    handler: backend/src/functions/user/user_inbox.lambda_handler
     role: dvsaUserInboxRole
     timeout: 30
     memorySize: 128
     package:
       include:
-        - backend/src/functions/user/user-inbox.py
+        - backend/src/functions/user/user_inbox.py

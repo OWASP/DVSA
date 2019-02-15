@@ -59,23 +59,23 @@ Administration functions (backoffice). Unconnected to any UI at the moment. But 
 
 All folders hold an **sls.yml** file, used by the Serverless framework to delpoy.
 
-- **admin-get-orders.py**
+- **admin_get_orders.py**
 
 Returns list of orders based on filters (by user, date, status, etc.)
 
-- **admin-get-receipts.py**
+- **admin_get_receipts.py**
 
 Creates a zip file for receipts from the S3 bucket and returns back a link to download them.
 
-- **admin-update-inventory.py**
+- **admin_update_inventory.py**
 
 Update items in inventory (add, update, delete).
 
-- **admin-update-orders.py**
+- **admin_update_orders.py**
 
 Update orders (add, update, delete).
 
-- **admin-tweet.py**
+- **admin_tweet.py**
 
 Can be used to tweet from the Twitter account (@DVSAowasp) - not completely functioning. But holds the account tokens, so it can be hacked tweeted directly to the account. 
 
@@ -85,15 +85,15 @@ Can be used to tweet from the Twitter account (@DVSAowasp) - not completely func
 
 Cronjob functions launches once daily and do some cleanup in the account.
 
-- **cron-cleaner.py**
+- **cron_cleaner.py**
 
 Runs daily and removes any order which was not completed (Status 100).
 
-- **cron-job-update.py**
+- **cron_job_update.py**
 
 Runs daily and looks for orders which were paied but not processed (status 120). This will change the status to 200, and will trigger the order processing, which also incldues the receipt email.
 
-- **cron-processor.py**
+- **cron_processor.py**
 
 Runs daily. Acts as a mock processing of the orders. Changes order status from processed to shipped to delivered.
 
@@ -108,33 +108,32 @@ One NodeJS function which is tirggered by the API calls from the client. The fun
 
 These functioins handle the ordering from the website.
 
-- **cancel-order.py**
+- **cancel_order.py**
 
 Allow users to cancel orders which are not successfully paid yet.
 
-- **get-order.py**
+- **get_order.py**
 
 Get information about a specific order. 
 
-- **get-orders.py**
+- **get_orders.py**
 
 Get list of orders (status +110) of the users.
 
-- **order-billing.py**
+- **order_billing.py**
 
 The function that in charge of the billing. It calls two other functions via REST API, to calucalte the total of the order and to validate the payment method (these functioins can be found under the `/processing` folder).
 order status changes to 120 if sucessfull, or to 110 if payment failed.
 
-- **new-order.py**
+- **new_order.py**
 
 Create a new order in the database with the data sent by the user.
 
-- **update-order.py**
+- **update_order.py**
 
 Updates an existing order in the database.
 
-
-- **order-shipping.py**
+- **order_shipping.py**
 
 Update shipping address of an order in the database with the details sent by the user as part of the order flow.
 
@@ -143,39 +142,44 @@ Update shipping address of an order in the database with the details sent by the
 
 These functions handle user account and data.
 
-- **user-account.py**
+- **user_account.py**
 
 upon login, sends account data (address, email, etc.) to client.
 
-- **user-create.py**
+
+- **user_create.py**
 
 Triggered when user is confirmed. create an entry in the DVSA-USERS-DB.
 
 
-- **user-profile.py**
+- **user_profile.py**
 
 Allow users to update profile data (name, address, avatar, etc.)
+
+- **user_inbox.py**
+
+Allow users to receive receipts for their completed orders
 
 
 ### /processing
 
 These functions handle orders, but are not triggered directly from the user (although they can be :) )
 
-- **get-cart-total.py**
+- **get_cart_total.py**
 
 Called when billing is sent to calcualte the cart total amount to pay from the according to the prices in the inventory db.
 
-- **payment-processing.py**
+- **payment_processing.py**
 
 Acts as a mock for online payment processing (Stripe-like), but runs inside the account. The function verifies the credit card number according to luhn algorithm and that the expiry date is valid.
 When approved, changes the order status in the db to 120.
 
 
-- **create-receipt.py**
+- **create_receipt.py**
 
 Called when an order was successfuly paied. Creates a receipt for the order and uploads it to the s3 bucket
 
 
-- **send-receipt-email.py**
+- **send_receipt_email.py**
 
 Triggered when a recipt was uploaded to the s3 bucket. Changes the order status to processing. In addition, it modifies the original receipt (.raw) and uploads a new receipt file (.txt). This function is **vulnerable**.

@@ -11,7 +11,7 @@ custom:
 functions:
   CreateReceipt:
     name: DVSA-CREATE-RECEIPT
-    handler: backend/src/functions/processing/create-receipt.lambda_handler
+    handler: backend/src/functions/processing/create_receipt.lambda_handler
     role: dvsaCreateReceiptRole
     environment:
       INVENTORY_TABLE: DVSA-INVENTORY-DB
@@ -21,7 +21,7 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/processing/create-receipt.py
+        - backend/src/functions/processing/create_receipt.py
     events:
       - sqs:
           arn:
@@ -31,7 +31,7 @@ functions:
           batchSize: 1
   PaymentProcessor:
     name: DVSA-PAYMENT-PROCESSOR
-    handler: backend/src/functions/processing/payment-processing.lambda_handler
+    handler: backend/src/functions/processing/payment_processing.lambda_handler
     role: dvsaPaymentProcessingRole
     timeout: 30
     memorySize: 128
@@ -42,11 +42,11 @@ functions:
         cors: true
     package:
       include:
-        - backend/src/functions/processing/payment-processing.py
+        - backend/src/functions/processing/payment_processing.py
         - backend/src/functions/processing/helper.pyc
   GetTotal:
     name: DVSA-GET-CART-TOTAL
-    handler: backend/src/functions/processing/get-cart-total.lambda_handler
+    handler: backend/src/functions/processing/get_cart_total.lambda_handler
     role: dvsaCartTotalRole
     environment:
       INVENTORY_TABLE: DVSA-INVENTORY-DB
@@ -59,10 +59,10 @@ functions:
         cors: true
     package: 
       include: 
-        - backend/src/functions/processing/get-cart-total.py
+        - backend/src/functions/processing/get_cart_total.py
   SendReceipt:
     name: DVSA-SEND-RECEIPT-EMAIL
-    handler: backend/src/functions/processing/send-receipt-email.lambda_handler
+    handler: backend/src/functions/processing/send_receipt_email.lambda_handler
     role: dvsaCreateReceiptRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -77,7 +77,7 @@ functions:
         - suffix: .raw
     package: 
       include: 
-        - backend/src/functions/processing/send-receipt-email.py
+        - backend/src/functions/processing/send_receipt_email.py
 
 resources:
   Resources:

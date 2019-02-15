@@ -8,7 +8,7 @@ provider:
 functions:
   OrderShipping:
     name: DVSA-ORDER-SHIPPING
-    handler: backend/src/functions/order/order-shipping.lambda_handler
+    handler: backend/src/functions/order/order_shipping.lambda_handler
     role: dvsaOrderRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -16,10 +16,10 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/order/order-shipping.py
+        - backend/src/functions/order/order_shipping.py
   OrderBilling:
     name: DVSA-ORDER-BILLING
-    handler: backend/src/functions/order/order-billing.lambda_handler
+    handler: backend/src/functions/order/order_billing.lambda_handler
     role: dvsaOrderRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -30,10 +30,10 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/order/order-billing.py
+        - backend/src/functions/order/order_billing.py
   CancelOrder:
     name: DVSA-ORDER-CANCEL
-    handler: backend/src/functions/order/cancel-order.lambda_handler
+    handler: backend/src/functions/order/cancel_order.lambda_handler
     role: dvsaOrderRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -41,10 +41,10 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/order/cancel-order.py
+        - backend/src/functions/order/cancel_order.py
   GetOrder:
     name: DVSA-ORDER-GET
-    handler: backend/src/functions/order/get-order.lambda_handler
+    handler: backend/src/functions/order/get_order.lambda_handler
     role: dvsaOrderRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -52,10 +52,10 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/order/get-order.py
+        - backend/src/functions/order/get_order.py
   OrderNew:
     name: DVSA-ORDER-NEW
-    handler: backend/src/functions/order/new-order.lambda_handler
+    handler: backend/src/functions/order/new_order.lambda_handler
     role: dvsaOrderRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -63,10 +63,10 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/order/new-order.py
+        - backend/src/functions/order/new_order.py
   GetOrders:
     name: DVSA-ORDER-ORDERS
-    handler: backend/src/functions/order/get-orders.lambda_handler
+    handler: backend/src/functions/order/get_orders.lambda_handler
     role: dvsaOrderRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -74,10 +74,10 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/order/get-orders.py
+        - backend/src/functions/order/get_orders.py
   OrderUpdate:
     name: DVSA-ORDER-UPDATE
-    handler: backend/src/functions/order/update-order.lambda_handler
+    handler: backend/src/functions/order/update_order.lambda_handler
     role: dvsaOrderRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -85,4 +85,4 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/order/update-order.py
+        - backend/src/functions/order/update_order.py

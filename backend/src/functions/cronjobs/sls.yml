@@ -7,7 +7,7 @@ provider:
 functions:
   CronProcessor:
     name: DVSA-CRON-PROCESSOR
-    handler: backend/src/functions/cronjobs/cron-processor.lambda_handler
+    handler: backend/src/functions/cronjobs/cron_processor.lambda_handler
     role: dvsaCronjobsRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -15,7 +15,7 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/cronjobs/cron-processor.py
+        - backend/src/functions/cronjobs/cron_processor.py
     events:
     - schedule:
         name: daily_process_orders_status
@@ -24,7 +24,7 @@ functions:
         enabled: true
   CronOrderCleaner:
     name: DVSA-CRON-ORDER-CLEANER
-    handler: backend/src/functions/cronjobs/cron-cleaner.lambda_handler
+    handler: backend/src/functions/cronjobs/cron_cleaner.lambda_handler
     role: dvsaCronjobsRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -32,7 +32,7 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/cronjobs/cron-cleaner.py
+        - backend/src/functions/cronjobs/cron_cleaner.py
     events:
     - schedule:
         name: daily_clean_incomplete_orders
@@ -41,7 +41,7 @@ functions:
         enabled: true
   CronJobUpdate:
     name: DVSA-CRON-JOB-UPDATE
-    handler: backend/src/functions/cronjobs/cron-update.lambda_handler
+    handler: backend/src/functions/cronjobs/cron_update.lambda_handler
     role: dvsaCronjobsRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
@@ -49,7 +49,7 @@ functions:
     memorySize: 128
     package: 
       include: 
-        - backend/src/functions/cronjobs/cron-update.py
+        - backend/src/functions/cronjobs/cron_update.py
     events:
     - schedule:
         name: daily_process_paid_orders
