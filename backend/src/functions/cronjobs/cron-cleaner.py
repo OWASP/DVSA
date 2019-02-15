@@ -40,7 +40,7 @@ def lambda_handler(event, context):
     for i in response['Items']:
         if ts-i["paymentTS"] > 100000:
             item = { "orderId": i['orderId'], "userId": i['userId'] }
-            orders.append(item)
+            delete_orders.append(item)
     
     while 'LastEvaluatedKey' in response:
         response = table.scan(

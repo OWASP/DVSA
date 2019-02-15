@@ -97,7 +97,11 @@ Resources:
               - Effect: Allow
                 Action:
                   - dynamodb:*
-                Resource: {'Fn::Join': [':', ['arn:aws:dynamodb', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'table/*']]}
+                Resource: {'Fn::Join': [':', ['arn:aws:dynamodb', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'table/DVSA-ORDERS-DB']]}
+              - Effect: Deny
+                Action:
+                  - dynamodb:*
+                Resource: {'Fn::Join': [':', ['arn:aws:dynamodb', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'table/DVSA-INVENTORY-DB']]}
               - Effect: Allow
                 Action:
                   - lambda:InvokeFunction

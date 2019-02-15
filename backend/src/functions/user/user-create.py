@@ -33,7 +33,7 @@ import os
 
 def add_admin_user(userId):
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table("DVSA_ADMIN_TABLE")
+    table = dynamodb.Table("DVSA-ADMIN-DB")
     response = table.put_item(
         Item={
             'userId': userId
