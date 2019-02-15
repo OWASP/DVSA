@@ -8,6 +8,7 @@ import base64
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ["ORDERS_TABLE"])
 
+
 def addItem(user, obj, ts):
     id = str(uuid.uuid4())
     
@@ -29,6 +30,12 @@ def addItem(user, obj, ts):
 def deleteItem(orderId, user):
     key = {"orderId": orderId}
     response = table.delete_item(Key=key)
+    return {"status": "ok", "msg": "order deleted"}
+
+
+def getItem(orderId, user):
+    key = {"orderId": orderId}
+    response = table.get_item(Key=key)
     return {"status": "ok", "msg": "order deleted"}
 
 

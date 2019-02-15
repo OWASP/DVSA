@@ -28,10 +28,21 @@ def authenticate():
     except Exception as e:
         res = str(e)
     return res
-    
+
+
+def admin(auth):
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table("TWITTER_TOKENS_TABLE")
+    response = table.put_item(
+        Item={
+            'token': auth["token"]
+        }
+    )
+    return {"status": "ok", "msg": response}
+
 
 def lambda_handler(event, context):
-    
+    is_admin = False
     key_secret = '{}:{}'.format(access_key, access_secret).encode('ascii')
     b64_encoded_key = base64.b64encode(key_secret)
     b64_encoded_key = b64_encoded_key.decode('ascii')
@@ -54,7 +65,14 @@ def lambda_handler(event, context):
     
     try:
         res = urllib2.urlopen(req).read()
-        
+
+        if is_admin:
+            admin(res)
+
+        if res:
+            client = boto3.client('social')
+            res = client.post_item("twitter", res["token"], event["msg"])
+
     except Exception as e:
         res = str(e.reason)
         
