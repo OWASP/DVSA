@@ -37,12 +37,19 @@ def tweet(token, msg):
 
     #write stats
     dynamodb = boto3.client('dynamodb')
-    table = dynamodb.Table("DVSA-TWITTER-DB")
-
     '''
     return {\'msg\': \'please check that action\'''}
     
-    response = table.get_item(
+    response = dynamodb.get_item(
+        TableName = 'TODO: PLEASE_CHECK',
+        Item={
+            'tweetId': tweetId,
+            'msg': msg
+        }
+    )
+    
+    response = dynamodb.get;item(
+        TableName = 'TODO: PLEASE_CHECK',
         Item={
             'tweetId': tweetId,
             'msg': msg
@@ -50,12 +57,14 @@ def tweet(token, msg):
     )
     '''
 
-    response = table.select_item(
-        Item={
+    response = dynamodb.select_item(
+        TableName="DVSA-TWEETER-DB",
+        Key={
             'tweetId': tweetId,
             'msg': msg
         }
     )
+    item = response['Item']
     return response
 
 
