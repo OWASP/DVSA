@@ -11,9 +11,9 @@ This allows malicious users to brute-force credit card numbers using the payment
 
 ### (2.2) Broken Authentication Scheme
 
-The DVSA uses AWS cognito for authentication. The authorization header is a JWT which holds all the user's information. However, the applicaiton does not verify the signature of the JWT and it is therefore, possible to send requests and impersonate other users.
+The DVSA uses AWS Cognito for authentication. The authorization header is a JSON Web Token (JWT) which holds all the user's information. However, the application does not verify the signature of the JWT and it is therefore possible to send requests and impersonate other users.
 
-For example, sending the `{"action": "orders"}` request returns the user's orders:
+For example, sending the `{"action": "orders"}` request returns an user's orders:
 
 ![alt orders](https://i.imgur.com/iqsj7Bw.png)
 
