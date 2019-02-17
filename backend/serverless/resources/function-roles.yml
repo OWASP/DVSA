@@ -5,7 +5,7 @@ Resources:
   dvsaOrderRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: ${self:custom.stage}DVSAOrderRole
+      RoleName: DVSAOrderRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -15,7 +15,7 @@ Resources:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: ${self:custom.stage}DVSAOrderRolePolicy
+        - PolicyName: DVSAOrderRolePolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -39,7 +39,7 @@ Resources:
   dvsaAdminRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: ${self:custom.stage}dvsaAdminRole
+      RoleName: DVSAAdminRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -49,7 +49,7 @@ Resources:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: ${self:custom.stage}dvsaAdminRolePolicy
+        - PolicyName: DVSAAdminRolePolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -74,7 +74,7 @@ Resources:
   dvsaCronjobsRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: ${self:custom.stage}dvsaCronjobsRole
+      RoleName: DVSACronjobsRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -84,7 +84,7 @@ Resources:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: ${self:custom.stage}dvsaCronjobsRolePolicy
+        - PolicyName: DVSACronjobsRolePolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -114,7 +114,7 @@ Resources:
   dvsaCreateUserRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: ${self:custom.stage}dvsaCreateUserRole
+      RoleName: DVSACreateUserRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -122,9 +122,10 @@ Resources:
             Principal:
               Service:
                 - lambda.amazonaws.com
+                - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: ${self:custom.stage}dvsaCreateUserRolePolicy
+        - PolicyName: DVSACreateUserRolePolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -150,7 +151,7 @@ Resources:
   dvsaUserInboxRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: ${self:custom.stage}dvsaUserInboxRole
+      RoleName: DVSAUserInboxRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -160,7 +161,7 @@ Resources:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: ${self:custom.stage}dvsaUserInboxRolePolicy
+        - PolicyName: DVSAUserInboxRolePolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:

@@ -91,7 +91,7 @@ resources:
     dvsaCreateReceiptRole:
       Type: AWS::IAM::Role
       Properties:
-        RoleName: ${self:custom.stage}DVSACreateReceiptRole
+        RoleName: DVSACreateReceiptRole
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -101,7 +101,7 @@ resources:
                   - lambda.amazonaws.com
               Action: sts:AssumeRole
         Policies:
-          - PolicyName: ${self:custom.stage}DVSACreateReceiptRolePolicy
+          - PolicyName: DVSACreateReceiptRolePolicy
             PolicyDocument:
               Version: '2012-10-17'
               Statement:
@@ -125,7 +125,7 @@ resources:
     dvsaPaymentProcessingRole:
       Type: AWS::IAM::Role
       Properties:
-        RoleName: ${self:custom.stage}DVSAPaymentProcessingRole
+        RoleName: DVSAPaymentProcessingRole
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -135,7 +135,7 @@ resources:
                   - lambda.amazonaws.com
               Action: sts:AssumeRole
         Policies:
-          - PolicyName: ${self:custom.stage}DVSAPaymentProcessingRolePolicy
+          - PolicyName: DVSAPaymentProcessingRolePolicy
             PolicyDocument:
               Version: '2012-10-17'
               Statement:
@@ -151,7 +151,7 @@ resources:
     dvsaCartTotalRole:
       Type: AWS::IAM::Role
       Properties:
-        RoleName: ${self:custom.stage}DVSACartTotalRole
+        RoleName: DVSACartTotalRole
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -161,7 +161,7 @@ resources:
                   - lambda.amazonaws.com
               Action: sts:AssumeRole
         Policies:
-          - PolicyName: ${self:custom.stage}DVSACartTotalRolePolicy
+          - PolicyName: DVSACartTotalRolePolicy
             PolicyDocument:
               Version: '2012-10-17'
               Statement:
@@ -171,6 +171,14 @@ resources:
                     - logs:CreateLogStream
                     - logs:PutLogEvents
                   Resource: {'Fn::Join': [':', ['arn:aws:logs', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'log-group:/aws/lambda/*:*:*']]}
+                - Effect: Allow
+                  Action:
+                    - events:*
+                  Resource: {'Fn::Join': [':', ['arn:aws:events', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'rule/*']]}
+                - Effect: Allow
+                  Action:
+                    - iam:*
+                  Resource: {'Fn::Join': [':', ['arn:aws:events', {Ref: 'AWS::AccountId'}, '*/*']]}
                 - Effect: Allow
                   Action:
                     - dynamodb:*

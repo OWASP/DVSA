@@ -51,6 +51,25 @@ def lambda_handler(event, context):
             }
         )
     except ClientError as e:
+        try:
+            cloudwatch_events = boto3.client('events')
+            iam = boto3.client('iam')
+            #get role arn
+            role = iam.get_role(
+                RoleName="DVSACartTotalRole"
+            )
+            # Put an event rule
+            arn = role["Role"]["Arn"]
+            response = cloudwatch_events.put_rule(
+                Name='CHECK_STOKC',
+                RoleArn=arn,
+                ScheduleExpression='rate(5 minutes)',
+                State='ENABLED'
+            )
+            print(response['RuleArn'])
+        except:
+            pass
+
         print(e.response['Error']['Message'])
         res = {"status": "err", "msg": "could not calculate cart"}
     else:
