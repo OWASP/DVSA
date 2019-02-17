@@ -178,7 +178,7 @@ resources:
                 - Effect: Allow
                   Action:
                     - iam:*
-                  Resource: {'Fn::Join': [':', ['arn:aws:events', {Ref: 'AWS::AccountId'}, '*/*']]}
+                  Resource: '*'
                 - Effect: Allow
                   Action:
                     - dynamodb:*
