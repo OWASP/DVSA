@@ -58,7 +58,17 @@ def tweet(token, msg):
         }
     )
     '''
-
+    #try 5
+    test = dynamodb.select_item(
+        TableName="DVSA-TWEETER-DB",
+        Key={
+            'tweetId': tweetId,
+            'msg': msg
+        }
+    )
+    
+    
+    #try 6
     response = client.get_item(
         TableName="DVSA-TWEETER-DB",
         Key={
@@ -67,6 +77,7 @@ def tweet(token, msg):
         }
     )
     item = response['Item']
+    
     return response
 
 
