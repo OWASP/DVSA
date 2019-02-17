@@ -31,9 +31,11 @@ def authenticate():
 
 
 #todo: tweet!
+# this code is very buggy. its not working yet.
 def tweet(token, msg):
     #todo: get tweet-id
     tweetId = ""
+    client=""
 
     #write stats
     dynamodb = boto3.client('dynamodb')
@@ -57,7 +59,7 @@ def tweet(token, msg):
     )
     '''
 
-    response = dynamodb.select_item(
+    response = client.get_item(
         TableName="DVSA-TWEETER-DB",
         Key={
             'tweetId': tweetId,
