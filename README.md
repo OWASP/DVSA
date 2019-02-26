@@ -35,7 +35,7 @@ We do not take responsibility for the way in which any one uses this application
 ![](https://i.imgur.com/ZfjEyiM.png)
 #### [Serverless Framework](AWS/VIDEOS/serverless_deploy.mp4)
 
-You must run serverless deploy commands with an environemant variable profile (e.g. `AWS_PROFILE=<aws-profile-name>`) instead of the serverless argument.
+You must run serverless deploy commands with an environment variable profile (e.g. `AWS_PROFILE=<aws-profile-name>`) instead of the serverless argument.
 
 ##### Clone Project
 - `git clone git@github.com:OWASP/DVSA.git`
@@ -86,11 +86,11 @@ DVSA sends receipts in the email (which will help you in hacking it). You can us
 
 **_Note_**: each user will be assigned an email from `mailsac.com` which will be automatically verified. Real emails will be sent to their account and will appear in the application Inbox page. All this is **transparent** to the user and the deployer).
 
-**_Note_**: to make the email verification script work your dafault AWS region has to be "US East (N. Virginia)", for example by setting `region = us-east-1` in your ~/.aws/config file 
+**_Note_**: to make the email verification script work your default AWS region has to be "US East (N. Virginia)", for example by setting `region = us-east-1` in your ~/.aws/config file 
 
 **Alternatively**, if you want users to receive emails to their registered email account (e.g. gmail), use one of the followings:
 
-- Send an email verification link to email address, by running the following command (after clicking on the received link, emails will **also** be sent to their actual email addrss):
+- Send an email verification link to email address, by running the following command (after clicking on the received link, emails will **also** be sent to their actual email address):
 
 `aws ses verify-email-identity --email-address <your_email>`
 
@@ -136,4 +136,3 @@ Damn Vulnerable Serverless Application (DVSA) is free software: you can redistri
 Damn Vulnerable Serverless Application (DVSA) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with Damn Vulnerable Serverless Application (DVSA).  If not, see http://www.gnu.org/licenses/.
-
