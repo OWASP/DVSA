@@ -71,11 +71,15 @@ exports.handler = (event, context, callback) => {
             functionName = "DVSA-USER-INBOX";
             break;
 
-         case "delete":
+        case "delete":
             payload = { "action": "delete", "user": user, "msgId": req["msg-id"] };
             functionName = "DVSA-USER-INBOX";
             break;
 
+        case "feedback":
+            payload = { "user": user, "file": req["attachment"] };
+            functionName = "DVSA-FEEDBACK-UPLOADS";
+            break;
 
         default:
             isOk = false;

@@ -1,4 +1,22 @@
 Resources:
+  S3BucketFeedbackBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: {'Fn::Join': ['', ['dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
+      # Set the CORS policy
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - '*'
+            AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+              - DELETE
+              - HEAD
+            MaxAge: 3000
   S3BucketReceiptsBucket:
     Type: AWS::S3::Bucket
     Properties:

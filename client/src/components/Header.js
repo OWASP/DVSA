@@ -90,6 +90,12 @@ export class Header extends Component {
                             </Link>
                          </Menu.Item>
 
+                         <Menu.Item name='contact'>
+                            <Link to='/contact'>
+                            <a><img src='https://i.imgur.com/S8Rfv9l.png' width="24px"/></a>
+                            </Link>
+                         </Menu.Item>
+
                         <Menu.Item>
                             <a onClick={this.onClickLogout} href="#"><img src='https://i.imgur.com/kYgKJMH.png' width="24px"/></a>
                         </Menu.Item>
