@@ -18,6 +18,10 @@ const Footer = () => (
                     <a href="https://twitter.com/DVSAowasp"><Icon name='twitter' size='big'/></a>
                 </div>
             </div>
+            <br/>
+            <div align="right">
+                    <p>Join us. Send your CV to <a href="mailto:careers@serverless.fail"> careers@serverless.fail </a></p>
+                </div>
         </Container>
     </footer>
 );

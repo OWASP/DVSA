@@ -16,6 +16,22 @@ Resources:
             RequireNumbers: false
             MinimumLength: 6
             RequireUppercase: false
+      Schema:
+        - AttributeDataType: String
+          Mutable: true
+          Name: name
+        - AttributeDataType: String
+          Mutable: true
+          Name: is_admin
+          Required: false
+        - AttributeDataType: String
+          Mutable: false
+          Name: email
+          Required: true
+        - Name: phone_number
+          AttributeDataType: String
+          Mutable: true
+          Required: false
 
   CognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient

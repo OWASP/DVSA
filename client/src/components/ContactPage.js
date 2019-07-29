@@ -7,6 +7,15 @@ import {Redirect} from 'react-router-dom';
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 
+function generate_UUID(){
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (dt + Math.random()*16)%16 | 0;
+        dt = Math.floor(dt/16);
+        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
 
 export class ContactPage extends React.Component {
     constructor(props){
@@ -18,7 +27,10 @@ export class ContactPage extends React.Component {
         this.state = {
             isLoading: false,
             submitted: false,
+            file: null,
+            signedUrl: null,
             feedback: {
+                attachment: '',
                 name: user.fullname,
                 email: user.email,
                 phone: user.phone,
@@ -47,14 +59,22 @@ export class ContactPage extends React.Component {
 
     handleAttachment = e => {
         var f = e.target.value;
-        alert(f);
+        var fname = f.replace("C:\\fakepath\\", "");
         let opts = {
-            'action': 'feedback'
-            'attachment': f;
+            'action': 'upload',
+            'attachment': fname
         };
+        let self = this;
+        self.setState({ file: f });
         API.callApi(opts)
             .then(function(response) {return response.json();}).then(function(data) {
-                   alert(data);
+                var res = JSON.parse(data);
+                //console.log(res);
+                self.setState({ signedUrl: res });
+                let feedback = {...self.state.feedback};
+                feedback["attachment"] = res.fields.key;
+                self.setState({ feedback: feedback })
+
            });
         }
 
@@ -70,10 +90,34 @@ export class ContactPage extends React.Component {
         let self = this;
         self.setState({ submitted: true });
         self.setState({ isLoading: true });
+        if (self.state["signedUrl"]) {
+            var s3Data = self.state["signedUrl"];
+            var ufile = document.getElementById('embedpollfileinput').files[0];
+            var data = new FormData();
+            for(var key in s3Data.fields){
+                data.append(key, s3Data.fields[key]);
+            }
+            data.append('file', ufile);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", s3Data.url, true);
+            xhr.onreadystatechange = function() {
+                if(xhr.readyState === 4){
+                    if(xhr.status === 200 || xhr.status === 204){
+                    }
+                    else{
+                        alert("Could not upload file.");
+                    }
+                }
+
+            };
+            xhr.send(data);
+        }
+
         for (var item in self.state.feedback) {
             if (typeof self.state.feedback[item] === "undefined")
                 self.state.feedback[item] = "";
         }
+
         let opts = {
             'action': 'feedback',
             'data': this.state.feedback
@@ -118,7 +162,7 @@ export class ContactPage extends React.Component {
 
                         <Form.Field>
                         <label>Message</label>
-                        <textarea style={{width: "512px"}} placeholder='Subject' value={this.state.feedback.message} onChange={this.handleChange('message')}/>
+                        <textarea style={{width: "512px"}} placeholder='' value={this.state.feedback.message} onChange={this.handleChange('message')}/>
                         </Form.Field>
 
                      </Form>
@@ -128,14 +172,19 @@ export class ContactPage extends React.Component {
                     <Table.Cell>
                       {this.state.isLoading && <img src="/images/loader.gif" /> }
                     </Table.Cell>
-
                         <Table.Cell verticalAlign='top'>
+                        <Table.Row>
                                 <br/>
                                  <input onChange={this.handleAttachment} type="file" class="inputfile" id="embedpollfileinput" />
                                   <label for="embedpollfileinput" class="ui medium grey right floated button">
                                       <i class="ui upload icon"></i>
                                       Attach file
                                   </label>
+                            </Table.Row>
+                          <Table.Row>
+                                <br/>
+                                {this.state.file && <label> {this.state.file} </label>}
+                           </Table.Row>
                         </Table.Cell>
 
                     </Table.Row>
@@ -145,10 +194,12 @@ export class ContactPage extends React.Component {
                           <Button type='submit' onClick={this.handleSubmit} disabled={this.state.submitted}>Send Feedback</Button>
                       </Form>
                 </div>
+
             </Container>
         );
     }
 }
+
 
 const mapStateToProps = (state) => ({
     cart: state.shoppingCart
