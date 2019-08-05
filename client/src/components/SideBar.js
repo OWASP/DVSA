@@ -31,6 +31,16 @@ export class SideBar extends Component {
         alert("You are not an administrator.");
         return false
     }
+    else {
+            let opts = {
+                'action': 'profile',
+                'data': this.state.profile
+            };
+            API.callApi(opts)
+                .then(function(response) {
+                    return response.json();
+                }).then(function(data) {});
+    }
   };
 
   onClickLessons() {
@@ -96,10 +106,12 @@ export class SideBar extends Component {
                   </Menu.Item>
                 </Link>
 
+                    <Link to='/admin' onClick={this.onClickAdmin}>
                   <Menu.Item name='admin'>
-                    <a href="https://5drct579cd.execute-api.us-east-1.amazonaws.com/dev/admin/orders" onClick={this.onClickAdmin} ><img src="images/iconadmin.png" width="28px"/></a>
-                    <br/>Settings
+                    <a> <img src="/images/iconadmin.png" width="28px"/></a>
+                    <br/>Admin
                   </Menu.Item>
+               </Link>
 
                     <Menu.Item name='lessons'>
                       <a href="https://github.com/OWASP/DVSA/blob/master/AWS/LESSONS/"> <img src="/images/iconlessons.png" width="32px"/></a>

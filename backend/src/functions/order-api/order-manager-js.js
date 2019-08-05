@@ -19,8 +19,9 @@ exports.handler = async (event, context, callback) => {
     try {
         const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
         const userData = await cognitoidentityserviceprovider.adminGetUser(params).promise();
+        console.log(userData);
         var len = Object.keys(userData.UserAttributes).length;
-        if (userData.UserAttributes[len-1].Name === "custom:is_admin" || userData.UserAttributes[len-1].Name === "dev:custom:is_admin") {
+        if (userData.UserAttributes[len-1].Name === "custom:is_admin") {
           isAdmin = userData.UserAttributes[len-1].Value;
         }
         var action = req.action;

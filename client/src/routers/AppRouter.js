@@ -19,6 +19,7 @@ import OrderView from '../components/OrderView';
 import InfoPage from '../components/InfoPage';
 import ContactPage from '../components/ContactPage';
 import ProfilePage from '../components/ProfilePage';
+import AdminPage from '../components/AdminPage';
 import InboxPage from '../components/InboxPage';
 import MessageView from '../components/MessageView';
 
@@ -56,6 +57,7 @@ export class AppRouter extends React.Component {
                         <Route path='/confirmation' component={ConfirmationPage} exact={true}/>
                         <Route path='/orders' component={OrdersPage} exact={true}/>
                         <Route path='/profile' component={ProfilePage} exact={true}/>
+                        <Route path='/admin' component={AdminPage} exact={true}/>
                         <Route path='/orders/:id' component={OrderView} />
                         <Route path='/inbox' component={InboxPage} exact={true}/>
                         <Route path='/inbox/:id' component={MessageView} />
