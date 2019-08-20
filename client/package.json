@@ -25,11 +25,13 @@
     "numeral": "2.0.6",
     "react": "16.3.2",
     "react-addons-shallow-compare": "15.6.0",
+    "react-bootstrap": "^1.0.0-beta.11",
     "react-credit-card-input": "^1.1.0",
     "react-dates": "12.7.0",
     "react-device-detect": "1.4.5",
     "react-dom": "16.3.2",
     "react-modal": "3.4.4",
+    "react-native-base64": "0.0.2",
     "react-onclickoutside": "6.7.1",
     "react-redux": "5.0.7",
     "react-router-dom": "4.2.2",
@@ -41,8 +43,7 @@
     "sass-loader": "7.0.1",
     "semantic-ui-react": "0.81.1",
     "validator": "10.2.0",
-    "webpack": "4.27.1",
-    "react-native-base64": "0.0.2"
+    "webpack": "4.27.1"
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
