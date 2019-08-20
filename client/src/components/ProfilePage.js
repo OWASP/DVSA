@@ -4,10 +4,14 @@ import { Link } from 'react-router-dom';
 import { Button, Container, Table, Header, Form, Dimmer, Loader, Image, Segment, Card, Icon } from 'semantic-ui-react';
 import * as API from '../utils/apiCaller';
 import {Redirect} from 'react-router-dom';
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 
 export class ProfilePage extends React.Component {
     constructor(props){
         super(props);
+        this.addNotification = this.addNotification.bind(this);
+        this.notificationDOMRef = React.createRef();
         var user = JSON.parse(localStorage.getItem("AccountData"));
         this.state = {
             profile:{
@@ -24,6 +28,20 @@ export class ProfilePage extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleNewImage = this.handleNewImage.bind(this);
     }
+
+     addNotification() {
+        this.notificationDOMRef.current.addNotification({
+          title: "Success",
+          message: "Profile was updated",
+          type: "success",
+          insert: "top",
+          container: "top-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 2000 },
+          dismissable: { click: true }
+        });
+      }
 
     handleNewImage = e => {
       let self = this;
@@ -45,10 +63,11 @@ export class ProfilePage extends React.Component {
                     var link = imgurResponse.data.link;
                     let profile = {...self.state.profile};
                     profile["avatar"] = link;
-                    self.setState({ profile: profile })
+                    self.setState({ profile: profile });
+                    self.handleSubmit();
+
                 }
             }
-
          }
          xhr.send(formData);
       }
@@ -90,6 +109,7 @@ export class ProfilePage extends React.Component {
                             self.setState({ isLoading: false });
                             self.setState({ submitted: false });
                             localStorage.setItem("AccountData", JSON.stringify(data.account));
+                            self.addNotification();
                         } else {
                             //handle response error
                         }
@@ -107,7 +127,7 @@ export class ProfilePage extends React.Component {
             <Container className='page-top-margin'>
                 <div>
                 <Header as='h2'>Profile Details</Header>
-
+                   <ReactNotification ref={this.notificationDOMRef} />
                 <Table>
                   <Table.Row style={{height: "512px"}}>
                   <Table.Cell>

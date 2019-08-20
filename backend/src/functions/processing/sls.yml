@@ -9,6 +9,23 @@ custom:
   accountId: ${file(backend/serverless/scripts/vars.js):accountId}
  
 functions:
+
+  FeedBackUploads:
+    name: DVSA-FEEDBACK-UPLOADS
+    handler: backend/src/functions/processing/feedback_uploads.lambda_handler
+    role: dvsaFeedbackRole
+    environment:
+      FEEDBACK_BUCKET: {'Fn::Join': ['', ['dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
+    timeout: 10
+    memorySize: 128
+    package:
+      include:
+        - backend/src/functions/processing/feedback_uploads.py
+    events:
+    - s3:
+        bucket: FeedbackBucket
+        event: s3:ObjectCreated:*
+
   CreateReceipt:
     name: DVSA-CREATE-RECEIPT
     handler: backend/src/functions/processing/create_receipt.lambda_handler
@@ -29,6 +46,7 @@ functions:
               - SQSQueue
               - Arn
           batchSize: 1
+
   PaymentProcessor:
     name: DVSA-PAYMENT-PROCESSOR
     handler: backend/src/functions/processing/payment_processing.lambda_handler
@@ -44,6 +62,7 @@ functions:
       include:
         - backend/src/functions/processing/payment_processing.py
         - backend/src/functions/processing/helper.pyc
+
   GetTotal:
     name: DVSA-GET-CART-TOTAL
     handler: backend/src/functions/processing/get_cart_total.lambda_handler
@@ -60,6 +79,7 @@ functions:
     package: 
       include: 
         - backend/src/functions/processing/get_cart_total.py
+
   SendReceipt:
     name: DVSA-SEND-RECEIPT-EMAIL
     handler: backend/src/functions/processing/send_receipt_email.lambda_handler
@@ -85,6 +105,39 @@ resources:
       Type: "AWS::SQS::Queue"
       Properties:
         QueueName: "dvsa-order-paid-sqs"
+    #--------------------------
+    # Role: dvsaFeedbackRole
+    #--------------------------
+    dvsaFeedbackRole:
+      Type: AWS::IAM::Role
+        Properties:
+          RoleName: dvsaFeedbackRole
+          AssumeRolePolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Principal:
+                  Service:
+                    - lambda.amazonaws.com
+                Action: sts:AssumeRole
+          Policies:
+            - PolicyName: DVSAFeedbackRolePolicy
+              PolicyDocument:
+                Version: '2012-10-17'
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - logs:CreateLogGroup
+                      - logs:CreateLogStream
+                      - logs:PutLogEvents
+                    Resource: {'Fn::Join': [':', ['arn:aws:logs', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'log-group:/aws/lambda/*:*:*']]}
+                  - Effect: "Allow"
+                    Action:
+                      - ses:*
+                      - s3:*
+                    Resource: "*"
+
+
     #--------------------------
     # Role: dvsaCreateReceiptRole
     #--------------------------
