@@ -13,7 +13,10 @@ export class Header extends Component {
     constructor(props){
         super(props);
         this.onClickLogout   = this.onClickLogout.bind(this);
-        this.state = {inbox: false};
+        this.state = {
+            inbox: false,
+            inboxLength: 0,
+        };
         this.ajaxCall = this.ajaxCall.bind(this);
      }
 
@@ -39,6 +42,7 @@ export class Header extends Component {
                 if(data) {
                     if ( data.status == "ok" && data.messages.length > 0) {
                         self.setState ({ inbox: true });
+                        self.setState ({ inboxLength: data.messages.length });
                     }
                     else {
                         self.setState ({ inbox: false });
@@ -47,6 +51,7 @@ export class Header extends Component {
                 else {
                     if (err.status == "ok" && err.messages.length > 0) {
                         self.setState ({ inbox: true });
+                        self.setState ({ inboxLength: err.messages.length });
                     }
                     else {
                         self.setState ({ inbox: false });
@@ -56,12 +61,11 @@ export class Header extends Component {
     }
 
     componentWillMount() {
-        setInterval(this.ajaxCall, 10000);
+        setInterval(this.ajaxCall, 60000);
 
     }
 
     render() {
-        const inboxicon = this.state.inbox? 'https://i.imgur.com/YHJEIjH.png': '/images/iconinbox.png'
         return (
             <Segment inverted>
                 <Menu inverted fixed='top' size='large'>
@@ -86,8 +90,10 @@ export class Header extends Component {
 
                          <Menu.Item name='inbox'>
                             <Link to='/inbox'>
-                            <a><img src={inboxicon} width="28px"/></a>
+                            <a><img src='/images/iconinbox.png' width="28px"/></a>
                             </Link>
+                            {  this.state.inboxLength > 0 &&
+                            <Label size='mini' color='red'>{ this.state.inboxLength }</Label>}
                          </Menu.Item>
 
                          <Menu.Item name='contact'>

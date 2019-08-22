@@ -16,7 +16,7 @@ export class InboxPage extends React.Component {
 
     componentWillMount(){
         let opts = {
-                    'action': 'inbox'
+            'action': 'inbox'
         };
         let self = this;
         API.callApi(opts)
