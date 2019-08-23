@@ -52,13 +52,6 @@ export class SideBar extends Component {
                 </Menu.Item>
               </Link>
 
-              <Link to='/mgmt'>
-                  <Menu.Item name='mgmt'>
-                    <a> <img src="https://i.imgur.com/lZ3BA2i.png" width="28px"/></a>
-                    <br/>Management
-                  </Menu.Item>
-                </Link>
-
               <Link to='/store'>
                   <Menu.Item name='home'>
                     <Icon name='home' />
