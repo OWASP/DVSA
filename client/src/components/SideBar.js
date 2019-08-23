@@ -51,6 +51,14 @@ export class SideBar extends Component {
                     <br/>Info
                 </Menu.Item>
               </Link>
+
+              <Link to='/mgmt'>
+                  <Menu.Item name='mgmt'>
+                    <a> <img src="https://i.imgur.com/lZ3BA2i.png" width="28px"/></a>
+                    <br/>Management
+                  </Menu.Item>
+                </Link>
+
               <Link to='/store'>
                   <Menu.Item name='home'>
                     <Icon name='home' />
@@ -83,13 +91,6 @@ export class SideBar extends Component {
                     <Menu.Item name='inbox'>
                     <a><img src="/images/iconinbox.png" width="28px"/></a>
                     <br/>Inbox
-                  </Menu.Item>
-                </Link>
-
-                <Link to='/mgmt'>
-                  <Menu.Item name='mgmt'>
-                    <a> <img src="https://i.imgur.com/lZ3BA2i.png" width="28px"/></a>
-                    <br/>Management
                   </Menu.Item>
                 </Link>
 

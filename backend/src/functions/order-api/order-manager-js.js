@@ -19,7 +19,7 @@ exports.handler = async (event, context, callback) => {
     try {
         const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
         const userData = await cognitoidentityserviceprovider.adminGetUser(params).promise();
-        //console.log(userData);
+        console.log(userData);
         var len = Object.keys(userData.UserAttributes).length;
         for (var i; i < len ; i++) {
           var attr = userData.UserAttributes[i];

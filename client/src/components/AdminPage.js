@@ -22,6 +22,16 @@ export class AdminPage extends React.Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.statuses = {
+            "100": "incomplete",
+            "110": "payment failed",
+            "120": "paid",
+            "200": "processed",
+            "210": "shipped",
+            "300": "delivered",
+            "500": "cancelled",
+            "600": "rejected"
+        };
     }
 
     handleChange = input => event => {
@@ -53,6 +63,7 @@ export class AdminPage extends React.Component {
             .then(function(response) {
                 return response.json();
             }).then(function(data) {
+                console.log(data);
                 //console.log("payload : ", data);
                 if(data && data.status == 'ok') {
                     self.setState ({ isLoading: false });
@@ -65,6 +76,10 @@ export class AdminPage extends React.Component {
                     //handle response error
                 }
            });
+    }
+
+    componentWillMount(){
+        this.handleSubmit();
     }
 
     render(){
@@ -113,7 +128,8 @@ export class AdminPage extends React.Component {
                     <Table.Header>
                           <Table.Row>
                             <Table.HeaderCell>Date</Table.HeaderCell>
-                            <Table.HeaderCell>ID</Table.HeaderCell>
+                            <Table.HeaderCell>Order ID</Table.HeaderCell>
+                            <Table.HeaderCell>User ID</Table.HeaderCell>
                             <Table.HeaderCell>Status</Table.HeaderCell>
                             <Table.HeaderCell>Total</Table.HeaderCell>
                             <Table.HeaderCell>Confirmation</Table.HeaderCell>
@@ -124,11 +140,12 @@ export class AdminPage extends React.Component {
                             {
                                 this.state.orders.map( x=>(
                                        <Table.Row>
-                                            <Table.Cell>{new Date(x["date"]*1000).toLocaleString()}</Table.Cell>
-                                            <Table.Cell><Link to={'/orders/'+x["order-id"]}><a href="">{x["order-id"]}</a></Link></Table.Cell>
-                                            <Table.Cell>{x["status"]}</Table.Cell>
-                                            <Table.Cell>{x["total"]}</Table.Cell>
-                                            <Table.Cell>{x["token"]}</Table.Cell>
+                                            <Table.Cell>{new Date(x["paymentTS"]*1000).toLocaleString()}</Table.Cell>
+                                            <Table.Cell><Link to={'/orders/'+x["orderId"]}><a href="">{x["orderId"]}</a></Link></Table.Cell>
+                                            <Table.Cell>{x["userId"]}</Table.Cell>
+                                            <Table.Cell>{this.statuses[x["orderStatus"]]}</Table.Cell>
+                                            <Table.Cell>${x["totalAmount"]}</Table.Cell>
+                                            <Table.Cell>{x["confirmationToken"]}</Table.Cell>
                                       </Table.Row>
                                 ) )
                             }

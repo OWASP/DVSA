@@ -79,7 +79,16 @@ export class Header extends Component {
                         <img width="128px" src="https://i.imgur.com/NZWCtGA.png"/>
                         <h3>DVSA - Damn Vulnerable Serverless Application</h3>
                     </Menu.Item>
+
+
                     <Menu.Menu position='right'>
+
+                      <Menu.Item name='mgmt'>
+                      <Link to='/mgmt'>
+                        <img src="https://i.imgur.com/lZ3BA2i.png" width="28px"/>
+                        </Link>
+                      </Menu.Item>
+
                         <Menu.Item>
                             <Link to='/cart'>
                                 <Icon className='cursor' size='large' name='shop'/>
