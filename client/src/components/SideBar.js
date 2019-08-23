@@ -87,9 +87,16 @@ export class SideBar extends Component {
                 </Link>
 
                 <Link to='/mgmt'>
+                  <Menu.Item name='mgmt'>
+                    <a> <img src="https://i.imgur.com/lZ3BA2i.png" width="28px"/></a>
+                    <br/>Management
+                  </Menu.Item>
+                </Link>
+
+                <Link to='/admin'>
                   <Menu.Item name='admin'>
                     <a> <img src="/images/iconadmin.png" width="28px"/></a>
-                    <br/>Management
+                    <br/>Admin
                   </Menu.Item>
                 </Link>
 

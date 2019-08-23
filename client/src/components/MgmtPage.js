@@ -13,7 +13,7 @@ export class MgmtPage extends React.Component {
         super(props);
         this.state = {
             email: "",
-            profileBar: 3,
+            profileBar: 5,
             submitted: false,
             isLoading: false,
             learningProgressOrderManager: 0,
@@ -62,8 +62,8 @@ export class MgmtPage extends React.Component {
                         if (prog > 100) {
                             prog = 100;
                         }
-                        self.setState({ learningProgressOrderManager: prog });
-                        self.setState({ learningProgressCreateReceipt: prog });
+                        self.setState({ learningProgressOrderManager: prog*20 });
+                        self.setState({ learningProgressCreateReceipt: prog*20 });
                     });
                 });
             });
@@ -78,8 +78,21 @@ export class MgmtPage extends React.Component {
         API.callApi(opts).then(function(response) {
             return response.json();
         }).then(function(data) {
-            self.setState({ learningProgressSendEmail: data.messages.length });
-            console.log(data.messages.length);
+            for (var i=0; i < data.messages.length; i++ ){
+                let opts = {
+                    'action': 'delete',
+                    'msg-id': data.messages[i]["msg-id"],
+                };
+                API.callApi(opts).then(function(response) {
+                    return response.json();
+                }).then(function(data) {
+                    var prog = self.state.learningProgressSendEmail + 1;
+                    if (prog > 100) {
+                        prog = 100;
+                    }
+                    self.setState({ learningProgressSendEmail: prog*20 });
+                });
+            }
         });
     }
 
@@ -114,7 +127,7 @@ export class MgmtPage extends React.Component {
                         if (prog > 100) {
                             prog = 100;
                         }
-                        self.setState({ learningProgressFeedbackUpload: prog });
+                        self.setState({ learningProgressFeedbackUpload: prog*20 });
                     }
                 };
                 xhr.send(formdata);
@@ -132,10 +145,8 @@ export class MgmtPage extends React.Component {
         }
         this.profileManager();
         setInterval(this.profileSendEmail,3000);
-        //this.profileFeedback();
-        //console.log(self.state.profile);
+        this.profileFeedback();
         this.setState({ submitted: true });
-       // this.setState({ isLoading: true });
     }
 
 
