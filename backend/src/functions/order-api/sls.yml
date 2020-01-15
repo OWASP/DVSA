@@ -13,7 +13,8 @@ functions:
     timeout: 30
     memorySize: 128
     environment:
-      userpoolid: us-east-1_SBU17s3sW
+      userpoolid:
+        - Ref: CognitoUserPoolMyUserPool
     events:
     - http:
         path: order
@@ -58,14 +59,10 @@ resources:
                 - Effect: Allow
                   Action:
                     - cognito-idp:*
-                  Resource: *
+                  Resource: "*"
                 - Effect: Allow
                   Action:
                     - lambda:InvokeFunction
                     - lambda:InvokeAsync
                   Resource: {'Fn::Join': [':', ['arn:aws:lambda', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'function:*']]}
-                - Effect: Allow
-                    Action:
-                      - cognito-idp:*
-                    Resource: *
 
