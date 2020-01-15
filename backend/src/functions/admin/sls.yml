@@ -5,6 +5,7 @@ provider:
   stage: dev
 
 functions:
+
   AdminGetOrders:
     name: DVSA-ADMIN-GET-ORDERS
     handler: backend/src/functions/admin/admin_get_orders.lambda_handler
@@ -16,6 +17,7 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_get_orders.py
+
   AdminGetReceipt:
     name: DVSA-ADMIN-GET-RECEIPT
     handler: backend/src/functions/admin/admin_get_receipts.lambda_handler
@@ -27,6 +29,7 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_get_receipts.py
+
   AdminUpdateOrders:
     name: DVSA-ADMIN-UPDATE-ORDERS
     handler: backend/src/functions/admin/admin_update_orders.lambda_handler
@@ -38,6 +41,7 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_update_orders.py
+
   AdminUpdateInventory:
     name: DVSA-ADMIN-UPDATE-INVENTORY
     handler: backend/src/functions/admin/admin_update_inventory.lambda_handler
@@ -49,6 +53,7 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_update_inventory.py
+
   AdminTweet:
     name: DVSA-ADMIN-TWEET
     handler: backend/src/functions/admin/admin_tweet.lambda_handler

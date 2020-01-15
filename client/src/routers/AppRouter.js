@@ -17,9 +17,9 @@ import OrdersPage from '../components/OrdersPage'
 import { withAuthenticator } from 'aws-amplify-react';
 import OrderView from '../components/OrderView';
 import InfoPage from '../components/InfoPage';
+import AdminPage from '../components/AdminPage';
 import ContactPage from '../components/ContactPage';
 import ProfilePage from '../components/ProfilePage';
-import AdminPage from '../components/AdminPage';
 import InboxPage from '../components/InboxPage';
 import MessageView from '../components/MessageView';
 

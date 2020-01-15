@@ -3,6 +3,7 @@ var AWS = require('aws-sdk');
 var jose = require('node-jose');
 
 exports.handler = async (event, context, callback) => {
+    //console.log(JSON.stringify(event));
     var req = serialize.unserialize(event.body);
     var headers = serialize.unserialize(event.headers);
     var auth_header = headers.Authorization || headers.authorization;
@@ -21,8 +22,12 @@ exports.handler = async (event, context, callback) => {
         const userData = await cognitoidentityserviceprovider.adminGetUser(params).promise();
         console.log(userData);
         var len = Object.keys(userData.UserAttributes).length;
-        if (userData.UserAttributes[len-1].Name === "custom:is_admin") {
-          isAdmin = userData.UserAttributes[len-1].Value;
+        for (var i=0; i< len; i++) {
+           //console.log(userData.UserAttributes[i]);
+           if (userData.UserAttributes[i].Name === "custom:is_admin") {
+             isAdmin = userData.UserAttributes[i].Value;
+             break;
+           }
         }
         var action = req.action;
         var isOk = true;
@@ -45,7 +50,7 @@ exports.handler = async (event, context, callback) => {
                 break;
 
             case "get":
-                payload = { "user": user, "orderId": req["order-id"] };
+                payload = { "user": user, "orderId": req["order-id"], "isAdmin": isAdmin };
                 functionName = "DVSA-ORDER-GET";
                 break;
 
@@ -95,10 +100,6 @@ exports.handler = async (event, context, callback) => {
                 break;
 
             case "feedback":
-                // currently we do NOTHING with the feedback. We promise to have better support in the future ;)
-                //payload = { "user": user, "data": data };
-                //functionName = "DVSA-FEEDBACK-UPLOADS";
-                //break;
                  const response = {
                         statusCode: 200,
                         headers: {
@@ -108,21 +109,21 @@ exports.handler = async (event, context, callback) => {
                  };
                  callback(null, response);
 
-            case "admin-update-order":
-                if (isAdmin == false) {
-                    const response = {
-                        statusCode: 403,
-                        headers: {
-                            "Access-Control-Allow-Origin" : "*"
-                        },
-                        body: JSON.stringify({"status": "err", "message": "Unauthorized"})
-                     };
-                     callback(null, response);
+            case "admin-orders":
+                if (isAdmin == "true") {
+                  payload = { "user": user, "data": req["data"] };
+                  functionName = "DVSA-ADMIN-GET-ORDERS";
+                  break;
                 }
                 else {
-                    payload = { "user": user, "data": req["data"] };
-                    functionName = "DVSA-ADMIN-UPDATE-ORDERS";
-                    break;
+                  const response = {
+                      statusCode: 403,
+                      headers: {
+                          "Access-Control-Allow-Origin" : "*"
+                      },
+                      body: JSON.stringify({"status": "err", "message": "Unauthorized"})
+                   };
+                   callback(null, response);
                 }
 
             default:
@@ -138,30 +139,16 @@ exports.handler = async (event, context, callback) => {
               Payload: JSON.stringify(payload)
             };
 
-            lambda.invoke(params, function(err, data) {
-                if (err) {
-                    const response = {
-                        statusCode: 200,
-                        headers: {
-                            "Access-Control-Allow-Origin" : "*"
-                        },
-
-                        body: JSON.stringify(JSON.parse(err.Payload))
-                    };
-                    callback(null, response);
-                }
-                else {
-                    const response = {
-                        statusCode: 200,
-                        headers: {
-                            "Access-Control-Allow-Origin" : "*"
-                        },
-                        body: JSON.stringify(JSON.parse(data.Payload))
-                    };
-                    callback(null, response);
-
-                }
-            });
+            const lambda_response = await lambda.invoke(params).promise();
+            console.log(lambda_response);
+            const response = {
+                statusCode: 200,
+                headers: {
+                    "Access-Control-Allow-Origin" : "*"
+                },
+                body: JSON.stringify(JSON.parse(lambda_response.Payload))
+            };
+            callback(null, response);
 
         }
         else {

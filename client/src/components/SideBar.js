@@ -124,4 +124,3 @@ export class SideBar extends Component {
   }
 }
 export default onClickOutside(SideBar);
-

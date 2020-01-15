@@ -1,1 +1,1 @@
-TBD.
+Azure related content

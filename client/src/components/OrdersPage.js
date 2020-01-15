@@ -57,7 +57,7 @@ export class OrdersPage extends React.Component {
                                             <Table.Cell>{new Date(x["date"]*1000).toLocaleString()}</Table.Cell>
                                             <Table.Cell><Link to={'/orders/'+x["order-id"]}><a href="">{x["order-id"]}</a></Link></Table.Cell>
                                             <Table.Cell>{x["status"]}</Table.Cell>
-                                            <Table.Cell>{x["total"]}</Table.Cell>
+                                            <Table.Cell>${x["total"]}</Table.Cell>
                                             <Table.Cell>{x["token"]}</Table.Cell>
                                       </Table.Row>
                                 ) )

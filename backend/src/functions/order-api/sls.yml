@@ -1,17 +1,19 @@
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   versionFunctions: false
   stage: dev
-      
+
 functions:
   OrderManager:
-    runtime: nodejs8.10
+    runtime: nodejs12.x
     name: DVSA-ORDER-MANAGER-JS
     handler: backend/src/functions/order-api/order-manager-js.handler
     role: dVSAOrderAPIRole
     timeout: 30
     memorySize: 128
+    environment:
+      userpoolid: us-east-1_SBU17s3sW
     events:
     - http:
         path: order
@@ -55,6 +57,15 @@ resources:
                   Resource: {'Fn::Join': [':', ['arn:aws:logs', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'log-group:/aws/lambda/*:*:*']]}
                 - Effect: Allow
                   Action:
+                    - cognito-idp:*
+                  Resource: *
+                - Effect: Allow
+                  Action:
                     - lambda:InvokeFunction
                     - lambda:InvokeAsync
                   Resource: {'Fn::Join': [':', ['arn:aws:lambda', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'function:*']]}
+                - Effect: Allow
+                    Action:
+                      - cognito-idp:*
+                    Resource: *
+

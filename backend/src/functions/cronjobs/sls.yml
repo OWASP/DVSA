@@ -5,6 +5,7 @@ provider:
   stage: dev
 
 functions:
+
   CronProcessor:
     name: DVSA-CRON-PROCESSOR
     handler: backend/src/functions/cronjobs/cron_processor.lambda_handler
@@ -22,6 +23,7 @@ functions:
         description: 'acts as an order proccess (daily change of order status... processed->shipped->delivered)'
         rate: rate(1 day)
         enabled: true
+
   CronOrderCleaner:
     name: DVSA-CRON-ORDER-CLEANER
     handler: backend/src/functions/cronjobs/cron_cleaner.lambda_handler
@@ -39,6 +41,7 @@ functions:
         description: 'clean all empty unpaid orders, once a day'
         rate: rate(1 day)
         enabled: true
+
   CronJobUpdate:
     name: DVSA-CRON-JOB-UPDATE
     handler: backend/src/functions/cronjobs/cron_update.lambda_handler

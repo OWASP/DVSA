@@ -7,7 +7,7 @@ provider:
 custom:
   stage: ${opt:stage, self:provider.stage}
   accountId: ${file(backend/serverless/scripts/vars.js):accountId}
- 
+
 functions:
 
   FeedbackUploads:
@@ -48,8 +48,8 @@ functions:
       RECEIPTS_BUCKET: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
     timeout: 10
     memorySize: 128
-    package: 
-      include: 
+    package:
+      include:
         - backend/src/functions/processing/create_receipt.py
     events:
       - sqs:
@@ -88,8 +88,8 @@ functions:
         path: DVSA-GET-CART-TOTAL
         method: POST
         cors: true
-    package: 
-      include: 
+    package:
+      include:
         - backend/src/functions/processing/get_cart_total.py
 
   SendReceipt:
@@ -107,8 +107,8 @@ functions:
         event: s3:ObjectCreated:*
         rules:
         - suffix: .raw
-    package: 
-      include: 
+    package:
+      include:
         - backend/src/functions/processing/send_receipt_email.py
 
 resources:
