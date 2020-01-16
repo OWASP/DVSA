@@ -44,7 +44,7 @@ Resources:
     Properties:
       FunctionName:
         "Fn::GetAtt":
-          - FeedBackUploadsLambdaFunction
+          - FeedbackUploadsLambdaFunction
           - Arn
       Principal: "s3.amazonaws.com"
       Action: "lambda:InvokeFunction"
