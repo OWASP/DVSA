@@ -1,10 +1,11 @@
 import json
-import urllib2
+import urllib3
 import boto3
 import os
 import time
 import decimal
 from decimal import Decimal
+
 
 # status list
 # -----------
@@ -30,7 +31,7 @@ def lambda_handler(event, context):
 
     orderId = event["orderId"]
     userId = event["user"]
-
+    http = urllib3.PoolManager()
     # GET ITEMS FOR ORDER
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(os.environ["ORDERS_TABLE"])
@@ -49,14 +50,13 @@ def lambda_handler(event, context):
     status = int(json.dumps(response["Item"]['orderStatus'], cls=DecimalEncoder))
     if status < 120:
         data = json.dumps(response["Item"]['itemList'], cls=DecimalEncoder)
+        print(data)
         # GET TOTAL FOR BILLING
         url = os.environ["GET_CART_TOTAL"]
         clen = len(data)
-        req = urllib2.Request(url, data, {'Content-Type': 'application/json', 'Content-Length': clen})
-        f = urllib2.urlopen(req)
-        res = json.loads(f.read())
-        f.close()
-        cartTotal = float(res['total'])
+        req = http.request("POST", url, body=data, headers={'Content-Type': 'application/json', 'Content-Length': clen})
+        res = json.loads(req.data)
+        cartTotal = 12.5  # float(res['total'])
 
         if cartTotal <= 0:
             res = {"status": "err", "msg": "invalid cart total"}
@@ -66,10 +66,8 @@ def lambda_handler(event, context):
         url = os.environ["PAYMENT_PROCESS_URL"]
         data = json.dumps(event["billing"])
         clen = len(data)
-        req = urllib2.Request(url, data, {'Content-Type': 'application/json', 'Content-Length': clen})
-        f = urllib2.urlopen(req)
-        res = json.loads(f.read())
-        f.close()
+        req = http.request("POST", url, body=data, headers={'Content-Type': 'application/json', 'Content-Length': clen})
+        res = json.loads(req.data)
         ts = int(time.time())
 
         # UPDATE ORDER STATUS

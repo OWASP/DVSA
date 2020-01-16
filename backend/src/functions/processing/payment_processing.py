@@ -3,7 +3,38 @@ import datetime
 import time
 import random
 import string
-import helper
+#import helper
+import boto3
+
+
+def reported_stolen(ccn):
+    if ccn == -1:
+        db = boto3.resource('dynamodb')
+        table = db.Table('DVSA_REPORTED_STOLEN')
+        res = table.get_item(Item={'first_digits': str(ccn)[:4], 'last_digits': str(ccn)[len(str(ccn)) - 4:]})
+    return False
+
+
+def get_sum(ccn):
+    try:
+        is_stolen = reported_stolen(ccn)
+        if is_stolen:
+            return -1
+    except:
+        pass
+
+    sum = 0
+    num_digits = len(str(ccn))
+    oddeven = num_digits & 1
+    for count in range(0, num_digits):
+        digit = int(ccn[count])
+        if not count & 1 ^ oddeven:
+            digit = digit * 2
+        if digit > 9:
+            digit = digit - 9
+        sum = sum + digit
+
+    return sum
 
 
 def lambda_handler(event, context):
@@ -15,7 +46,7 @@ def lambda_handler(event, context):
     exp_y = int(data['exp'].split("/")[1]) + 2000
     d = datetime.datetime.today()
 
-    ccn_sum = helper.get_sum(ccn)
+    ccn_sum = get_sum(ccn)
 
     if (ccn_sum % 10) == 0:
         if len(str(data['cvv'])) != 3:

@@ -19,6 +19,7 @@ def get_items_from_rds(clusterId):
 
 
 def lambda_handler(event, context):
+    print(json.dumps(event))
     # Helper class to convert a DynamoDB item to JSON.
     class DecimalEncoder(json.JSONEncoder):
         def default(self, o):
