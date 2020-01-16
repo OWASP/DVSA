@@ -1,13 +1,13 @@
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   versionFunctions: false
   stage: dev
       
 functions:
   OrderManager:
-    runtime: nodejs8.10
-    name: DVSA-ORDER-MANAGER-JS
+    runtime: nodejs12.x
+    name: DVSA-ORDER-MANAGER
     handler: backend/src/functions/order-api/order-manager-js.handler
     role: dVSAOrderAPIRole
     timeout: 30

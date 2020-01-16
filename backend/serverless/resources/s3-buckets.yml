@@ -1,4 +1,5 @@
 Resources:
+
   S3BucketFeedbackBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -17,6 +18,7 @@ Resources:
               - DELETE
               - HEAD
             MaxAge: 3000
+
   S3BucketReceiptsBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -36,7 +38,49 @@ Resources:
               - DELETE
               - HEAD
             MaxAge: 3000
-  ResizeLambdaPermissionReceiptsBucketS3:
+
+  LambdaPermissionFeedbackBucketS3:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      FunctionName:
+        "Fn::GetAtt":
+          - FeedBackUploadsLambdaFunction
+          - Arn
+      Principal: "s3.amazonaws.com"
+      Action: "lambda:InvokeFunction"
+      SourceAccount:
+        Ref: AWS::AccountId
+      SourceArn: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
+
+  S3BucketfeedbackPermissions:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: {'Fn::Join': ['', ['dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
+        PolicyDocument:
+          Statement:
+            -
+              Sid: "PublicWriteFeedbackStatement"
+              Principal: "*"
+              Action:
+                - s3:PutObject
+                - s3:PutObjectAcl
+                - s3:GetObject
+                - s3:DeleteObject
+              Effect: Allow
+              Resource: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}, '/*']]}
+            -
+              Sid: "AdminListFeedbackStatement"
+              Principal:
+                AWS:
+                  Fn::GetAtt:
+                    - dvsaAdminRole
+                    - Arn
+              Action:
+                - s3:*
+              Effect: Allow
+              Resource: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
+
+  LambdaPermissionReceiptsBucketS3:
     Type: "AWS::Lambda::Permission"
     Properties:
       FunctionName:
@@ -48,6 +92,7 @@ Resources:
       SourceAccount:
         Ref: AWS::AccountId
       SourceArn: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
+
   S3BucketPermissions:
       Type: AWS::S3::BucketPolicy
       Properties:

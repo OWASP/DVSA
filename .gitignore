@@ -1,7 +1,7 @@
 .idea
 .serverless
+backend/src/functions/order-api/.serverless
 client/node_modules
-src/functions/order-api/.serverless:
 node_modules
 be-stack.json
 COPYING.txt
