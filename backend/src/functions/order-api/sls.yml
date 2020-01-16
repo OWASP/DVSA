@@ -9,7 +9,7 @@ functions:
     runtime: nodejs12.x
     name: DVSA-ORDER-MANAGER
     handler: backend/src/functions/order-api/order-manager-js.handler
-    role: dVSAOrderAPIRole
+    role: DVSAOrderAPIRole
     timeout: 30
     memorySize: 128
     environment:
@@ -31,12 +31,12 @@ functions:
 resources:
   Resources:
     #--------------------------
-    # Role: dVSAOrderAPIRole
+    # Role: DVSAOrderAPIRole
     #--------------------------
-    dVSAOrderAPIRole:
+    DVSAOrderAPIRole:
       Type: AWS::IAM::Role
       Properties:
-        RoleName: ${self:custom.stage}dVSAOrderAPIRole
+        RoleName: ${self:custom.stage}DVSAOrderAPIRole
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -46,7 +46,7 @@ resources:
                   - lambda.amazonaws.com
               Action: sts:AssumeRole
         Policies:
-          - PolicyName: ${self:custom.stage}dVSAOrderAPIRolePolicy
+          - PolicyName: ${self:custom.stage}DVSAOrderAPIRolePolicy
             PolicyDocument:
               Version: '2012-10-17'
               Statement:
@@ -63,5 +63,5 @@ resources:
                   Resource: {'Fn::Join': [':', ['arn:aws:lambda', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'function:*']]}
                 - Effect: Allow
                   Action:
-                    - cognito-idp
+                    - cognito-idp:*
                   Resource: '*'
