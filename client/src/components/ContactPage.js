@@ -32,9 +32,9 @@ export class ContactPage extends React.Component {
             signedUrl: null,
             feedback: {
                 attachment: '',
-                name: '',
-                email: '',
-                phone: '',
+                name: user.fullname,
+                email: user.email,
+                phone: user.phone,
                 subject: '',
                 message: ''
             }
@@ -43,19 +43,6 @@ export class ContactPage extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-  componentWillMount(){
-        let self = this;
-        var user = self.user;
-        if (user != null) {
-            let profile = {...self.state.profile};
-            profile["avatar"] = user.avatar;
-            profile["name"] = user.fullname;
-            profile["email"] = user.email;
-            profile["address"] = user.address;
-            profile["phone"] = user.phone;
-            self.setState({ profile: profile });
-        }
-     }
 
   addNotification() {
     this.notificationDOMRef.current.addNotification({
@@ -80,17 +67,15 @@ export class ContactPage extends React.Component {
         };
         let self = this;
         self.setState({ file: f });
-        API.callApi(opts)
-            .then(function(response) {return response.json();}).then(function(data) {
-                //console.log(res);
-                self.setState({ signedUrl: data });
-                let feedback = {...self.state.feedback};
-                feedback["attachment"] = data.fields.key;
-                self.setState({ feedback: feedback })
-
-           });
-        }
-
+        API.callApi(opts).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            self.setState({ signedUrl: data });
+            let feedback = {...self.state.feedback};
+            feedback["attachment"] = data.fields.key;
+            self.setState({ feedback: feedback })
+       });
+    }
 
     handleChange = input => event => {
         let self = this;
@@ -107,11 +92,12 @@ export class ContactPage extends React.Component {
             var s3Data = self.state["signedUrl"];
             var ufile = document.getElementById('embedpollfileinput').files[0];
             var data = new FormData();
-            for(var key in s3Data.fields){
+            for (var key in s3Data.fields) {
                 data.append(key, s3Data.fields[key]);
             }
             data.append('file', ufile);
             var xhr = new XMLHttpRequest();
+            console.log(s3Data.url);
             xhr.open("POST", s3Data.url, true);
             xhr.onreadystatechange = function() {
                 if(xhr.readyState === 4){
@@ -121,7 +107,6 @@ export class ContactPage extends React.Component {
                         //alert("Could not upload file.");
                     }
                 }
-
             };
             xhr.send(data);
         }
@@ -140,7 +125,7 @@ export class ContactPage extends React.Component {
                 self.addNotification();
                 self.setState({ isLoading: false });
                 self.setState({ submitted: false });
-           });
+        });
     }
 
     render(){
