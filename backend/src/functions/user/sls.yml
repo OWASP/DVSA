@@ -1,7 +1,7 @@
 
 provider:
   name: aws
-  runtime: python2.7
+  runtime: python3.6
   versionFunctions: false
   stage: dev
 
