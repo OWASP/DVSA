@@ -32,9 +32,9 @@ export class ContactPage extends React.Component {
             signedUrl: null,
             feedback: {
                 attachment: '',
-                name: user.fullname,
-                email: user.email,
-                phone: user.phone,
+                name: '',
+                email: '',
+                phone: '',
                 subject: '',
                 message: ''
             }
@@ -43,6 +43,19 @@ export class ContactPage extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+  componentWillMount(){
+        let self = this;
+        var user = self.user;
+        if (user != null) {
+            let profile = {...self.state.profile};
+            profile["avatar"] = user.avatar;
+            profile["name"] = user.fullname;
+            profile["email"] = user.email;
+            profile["address"] = user.address;
+            profile["phone"] = user.phone;
+            self.setState({ profile: profile });
+        }
+     }
 
   addNotification() {
     this.notificationDOMRef.current.addNotification({

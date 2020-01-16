@@ -12,14 +12,14 @@ export class ProfilePage extends React.Component {
         super(props);
         this.addNotification = this.addNotification.bind(this);
         this.notificationDOMRef = React.createRef();
-        var user = JSON.parse(localStorage.getItem("AccountData"));
+        const user = JSON.parse(localStorage.getItem("AccountData"));
         this.state = {
             profile:{
-                name: user.fullname,
-                email: user.email,
-                address: user.address,
-                phone: user.phone,
-                avatar: user.avatar
+                name: '',
+                email: '',
+                address: '',
+                phone: '',
+                avatar: ''
             },
             isLoading: false,
             submitted: false
@@ -28,6 +28,21 @@ export class ProfilePage extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleNewImage = this.handleNewImage.bind(this);
     }
+
+
+     componentWillMount(){
+        let self = this;
+        var user = self.user;
+        if (user != null) {
+            let profile = {...self.state.profile};
+            profile["avatar"] = user.avatar;
+            profile["name"] = user.fullname;
+            profile["email"] = user.email;
+            profile["address"] = user.address;
+            profile["phone"] = user.phone;
+            self.setState({ profile: profile });
+        }
+     }
 
      addNotification() {
         this.notificationDOMRef.current.addNotification({

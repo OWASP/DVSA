@@ -18,6 +18,7 @@ export class StorePage extends Component {
   }
 
   componentDidMount() {
+
         let opts = { 'action': 'account' };
         API.callApi(opts)
         .then(function(response) {
@@ -48,6 +49,9 @@ export class StorePage extends Component {
                     });
                 }
             }
+        })
+        .catch(function () {
+            alert("[ERROR] Backend failed. DVSA will not work properly.")
         });
     }
 
