@@ -5,6 +5,7 @@ import os
 import time
 from boto3.dynamodb.conditions import Key, Attr
 
+
 def lambda_handler(event, context):
     # Helper class to convert a DynamoDB item to JSON.
     class DecimalEncoder(json.JSONEncoder):
@@ -21,13 +22,14 @@ def lambda_handler(event, context):
     orders = []
 
     ts = int(time.time())
-    dateTo = ts if event['body']['to'] == 0 else event['body']['to']
-    dateFrom = 0 if event['body']['from'] == 0 else event['body']['from']
+
+    dateTo = ts if 'to' not in event else event['to']
+    dateFrom = 0 if 'from' not in event else event['from']
     fe = "Attr('paymentTS').between(dateFrom, dateTo)"
 
-    orderId = "" if event['body']['orderId'] == "*" else " & Attr('orderId').eq(event['body']['orderId'])"
-    userId = "" if event['body']['userId'] == "*" else " & Attr('userId').eq(event['body']['userId'])"
-    status = "" if event['body']['status'] == 0 else " & Attr('orderStatus').eq(event['body']['status'])"
+    orderId = "" if 'orderId' not in event else " & Attr('orderId').eq(event['orderId'])"
+    userId = "" if 'userId' not in event else " & Attr('userId').eq(event['userId'])"
+    status = "" if 'status' not in event else " & Attr('orderStatus').eq(event['status'])"
 
     fe = fe + orderId + userId + status
 
@@ -47,5 +49,5 @@ def lambda_handler(event, context):
         for i in response['Items']:
             orders.append(i)
 
-    res = {"orders": orders}
-    return json.dumps(res, cls=DecimalEncoder).replace("\\\"", "\"").replace("\\n", "")
+    res = {"status": "ok", "orders": orders}
+    return json.loads(json.dumps(res, cls=DecimalEncoder).replace("\\\"", "\"").replace("\\n", ""))
