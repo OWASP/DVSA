@@ -12,6 +12,9 @@ functions:
     role: dVSAOrderAPIRole
     timeout: 30
     memorySize: 128
+    environment:
+      userpoolid:
+        Ref: CognitoUserPoolMyUserPool
     events:
     - http:
         path: order

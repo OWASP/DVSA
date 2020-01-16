@@ -62,7 +62,7 @@ def lambda_handler(event, context):
     elif "Authorization" in event["headers"]:
         auth_header = event["headers"]["Authorization"];
     else:
-        res = {"status": "err", "msg": "Unkown user. Are you an admin?"}
+        res = {"status": "err", "msg": "Unknown user. Are you an admin?"}
         return res
         
     token_sections = auth_header.split('.')

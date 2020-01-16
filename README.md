@@ -16,7 +16,7 @@ Please note, there are **both documented and undocumented vulnerabilities** with
 - - - 
 ## Disclaimer
 
-***Do no install DVSA on a production account***
+***Do not install DVSA on a production account***
 
 We do not take responsibility for the way in which any one uses this application (DVSA). We have made the purposes of the application clear and it should not be used maliciously. We have given warnings and taken measures to prevent users from installing DVSA on to production accounts.
 

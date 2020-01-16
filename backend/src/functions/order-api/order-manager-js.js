@@ -3,6 +3,7 @@ var AWS = require('aws-sdk');
 var jose = require('node-jose');
 
 exports.handler = async (event, context, callback) => {
+    //console.log(JSON.stringify(event));
     var req = serialize.unserialize(event.body);
     var headers = serialize.unserialize(event.headers);
     var auth_header = headers.Authorization || headers.authorization;
@@ -21,15 +22,14 @@ exports.handler = async (event, context, callback) => {
         const userData = await cognitoidentityserviceprovider.adminGetUser(params).promise();
         console.log(userData);
         var len = Object.keys(userData.UserAttributes).length;
-        for (var i; i < len ; i++) {
-          var attr = userData.UserAttributes[i];
-          if (attr.Name ==  "custom:is_admin") {
-            isAdmin = attr.Value;
-            break;
-          }
+        for (var i=0; i< len; i++) {
+           //console.log(userData.UserAttributes[i]);
+           if (userData.UserAttributes[i].Name === "custom:is_admin") {
+             isAdmin = userData.UserAttributes[i].Value;
+             break;
+           }
         }
         var action = req.action;
-        //console.log(user + " : " + isAdmin + " : " + action);
         var isOk = true;
         var payload = {};
         var functionName = "";
@@ -50,7 +50,7 @@ exports.handler = async (event, context, callback) => {
                 break;
 
             case "get":
-                payload = { "user": user, "orderId": req["order-id"] };
+                payload = { "user": user, "orderId": req["order-id"], "isAdmin": isAdmin };
                 functionName = "DVSA-ORDER-GET";
                 break;
 
@@ -100,10 +100,6 @@ exports.handler = async (event, context, callback) => {
                 break;
 
             case "feedback":
-                // currently we do NOTHING with the feedback. We promise to have better support in the future ;)
-                //payload = { "user": user, "data": data };
-                //functionName = "DVSA-FEEDBACK-UPLOADS";
-                //break;
                  const response = {
                         statusCode: 200,
                         headers: {
@@ -114,20 +110,20 @@ exports.handler = async (event, context, callback) => {
                  callback(null, response);
 
             case "admin-orders":
-                if (isAdmin == false) {
-                    const response = {
-                        statusCode: 403,
-                        headers: {
-                            "Access-Control-Allow-Origin" : "*"
-                        },
-                        body: JSON.stringify({"status": "err", "message": "Unauthorized"})
-                     };
-                     callback(null, response);
+                if (isAdmin == "true") {
+                  payload = { "user": user, "data": req["data"] };
+                  functionName = "DVSA-ADMIN-GET-ORDERS";
+                  break;
                 }
                 else {
-                    payload = { "user": user, "data": req["data"] };
-                    functionName = "DVSA-ADMIN-GET-ORDERS";
-                    break;
+                  const response = {
+                      statusCode: 403,
+                      headers: {
+                          "Access-Control-Allow-Origin" : "*"
+                      },
+                      body: JSON.stringify({"status": "err", "message": "Unauthorized"})
+                   };
+                   callback(null, response);
                 }
 
             default:
