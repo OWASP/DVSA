@@ -7,9 +7,6 @@
     "node-jose": "^0.3.0",
     "node-serialize": "^0.0.4"
   },
-  "devDependencies": {
-    "serverless-plugin-protego-fsp": "https://artifactory.app.protego.io/protego-serverless-plugin.tgz"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

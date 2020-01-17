@@ -1,6 +1,6 @@
 {
   "name": "dvsa",
-  "version": "1.0.0",
+  "version": "1.2.2",
   "description": "DVSA - Damn Vulneravle SERVERLESSS Application",
   "main": "index.js",
   "scripts": {
@@ -13,20 +13,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/protegolabs/DVSA.git"
+    "url": "git+https://github.com/owasp/DVSA.git"
   },
   "keywords": [
     "DVSA",
     "serverless",
-    "vulnerable",
-    "spa"
+    "vulnerable"
   ],
-  "author": "Protego Labs",
+  "author": "Tal Melamed",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/protegolabs/DVSA/issues"
+    "url": "https://github.com/owasp/DVSA/issues"
   },
-  "homepage": "https://github.com/protegolabs/DVSA#readme",
+  "homepage": "https://github.com/owasp/DVSA#readme",
   "devDependencies": {
     "serverless-finch": "2.3.2",
     "serverless-scriptable-plugin": "^0.8.0",

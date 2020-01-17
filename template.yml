@@ -1,18 +1,18 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
-Description: 'Protego Serverless Security Workshop'
+Description: 'DVSA Repo Template'
 
 Metadata:
   AWS::ServerlessRepo::Application:
-    Name: Protego-Workshop
-    Description: 'Protego Serverless Security Workshop'
-    Author: Protego Labs
+    Name: DVSA
+    Description: Damn Vulnerable Serverless Application (DVSA)'
+    Author: 'Tal Melamed'
     LicenseUrl: LICENSE
     ReadmeUrl: README.md
-    Labels: ['serverless', 'security', 'protego']
-    HomePageUrl: https://www.protego.io
-    SemanticVersion: 1.2.0
-    SourceCodeUrl: https://github.com/protegolabs/DVSA
+    Labels: ['serverless', 'security']
+    HomePageUrl: https://owasp.org/www-project-dvsa/
+    SemanticVersion: 1.2.2
+    SourceCodeUrl: https://github.com/owasp/DVSA
 
 Globals:
   Api:

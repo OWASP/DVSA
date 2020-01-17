@@ -1,7 +1,7 @@
 
 # ![alt DVSA](https://i.imgur.com/Z4L7MqL.png)
 
-## a Damn Vulnerable Serverless Application 
+## a Damn Vulnerable Serverless Application
 
 - - -
 Damn Vulnerable Serverless Application (DVSA) is a deliberately vulnerable application aiming to be an aid for security professionals to test their skills and tools in a legal environment, help developers better understand the processes of securing serverless applications and to aid both students & teachers to learn about serverless application security in a controlled class room environment.
@@ -13,7 +13,7 @@ Please note, there are **both documented and undocumented vulnerabilities** with
 
 
 
-- - - 
+- - -
 ## Disclaimer
 
 ***Do not install DVSA on a production account***
@@ -58,35 +58,35 @@ If you get a "command not found" error, see the "Steps to Take after Installatio
 - `npm i`
 
 ##### Deploy Backend
-- `sls deploy` 
+- `sls deploy`
 
 ##### Build Client
-- `npm run-script client:build` 
+- `npm run-script client:build`
 
 ##### Deploy Client
-- `sls client deploy` 
+- `sls client deploy`
 
 - - -
 ## Running locally
 
 #### Run Client
-- `npm run-script client:start` 
+- `npm run-script client:start`
 
 **_Note_**: This will only work if you previously deployed the backend. If this fails, confirm you still have a `be-stack.json` file at the root of this project.
 
 #### Run Backend
-- `npm start` 
+- `npm start`
 
 If you want to point your local client to your local backend, edit your `be-stack.json` and set `ServiceEndpoint` to `http://localhost:3000`. Note that you will still be using the Cognito pools in AWS.
 
-- - - 
+- - -
 ## Email subscription
 
 DVSA sends receipts in the email (which will help you in hacking it). You can use the built-in **Inbox** page within the application to get the emails and obtain the receipts.
 
 **_Note_**: each user will be assigned an email from `mailsac.com` which will be automatically verified. Real emails will be sent to their account and will appear in the application Inbox page. All this is **transparent** to the user and the deployer).
 
-**_Note_**: to make the email verification script work your default AWS region has to be "US East (N. Virginia)", for example by setting `region = us-east-1` in your ~/.aws/config file 
+**_Note_**: to make the email verification script work your default AWS region has to be "US East (N. Virginia)", for example by setting `region = us-east-1` in your ~/.aws/config file
 
 **Alternatively**, if you want users to receive emails to their registered email account (e.g. gmail), use one of the followings:
 
@@ -97,7 +97,7 @@ DVSA sends receipts in the email (which will help you in hacking it). You can us
 - [Request a sending limit increase](https://console.aws.amazon.com/support/v1#/case/create?issueType=service-limit-increase&limitType=service-code-ses). This will allow your entire cloud account to send emails to any address.
 
 
-- - - 
+- - -
 ## Presentation
 [Download](OWASP_DC_SLS_Top10.pdf)
 
@@ -112,7 +112,7 @@ see [LESSONS](AWS/LESSONS/README.md) for information about hacking DVSA.
 see [VIDEOS](AWS/VIDEOS) for how to deploy, use and hack DVSA.
 
 
-- - - 
+- - -
 ## Links
 [OWASP Top 10 - Serverless Interpretation](https://github.com/OWASP/Serverless-Top-10-Project/blob/master/README.md)
 
