@@ -131,7 +131,7 @@ see [VIDEOS](AWS/VIDEOS) for how to deploy, use and hack DVSA.
 
 - - -
 ## Acknowledgements
-DVSA was created and contributed to OWASP by [Protego Labs](https://protego.io)
+DVSA was created by [Tal Melamed](https://github.com/4ppsec)
 
 
 - - -

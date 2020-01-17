@@ -40,8 +40,7 @@ You should have received a copy of the GNU General Public License along with Dam
                 <h3>Source Code</h3>
                 Source code is published on <a href="https://github.com/owasp/dvsa/">GitHub</a><br/><br/>
                 <h3>Acknowledgements</h3>
-                DVSA was created and contributed to OWASP by <a href="https://protego.io/">Protego Labs</a><br/><br/>
-                        <img src="/images/protegologo.png" width="120px"/>
+                DVSA was created by <a href="https://twitter.com/4ppsec">Tal Melamed</a>
                  <br/><br/> <br/>
                 </div>
             </Container>
