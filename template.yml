@@ -11,7 +11,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['serverless', 'security', 'vulnerability']
     HomePageUrl: https://owasp.org/www-project-dvsa/
-    SemanticVersion: 1.2.3
+    SemanticVersion: 1.2.4
     SourceCodeUrl: https://github.com/owasp/DVSA
 
 Globals:
