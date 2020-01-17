@@ -24,7 +24,6 @@ export class ContactPage extends React.Component {
         var ReactS3Uploader = require('react-s3-uploader');
         this.addNotification = this.addNotification.bind(this);
         this.notificationDOMRef = React.createRef();
-        var user = JSON.parse(localStorage.getItem("AccountData"));
         this.state = {
             isLoading: false,
             submitted: false,
@@ -32,9 +31,9 @@ export class ContactPage extends React.Component {
             signedUrl: null,
             feedback: {
                 attachment: '',
-                name: user.fullname,
-                email: user.email,
-                phone: user.phone,
+                name: '',
+                email: '',
+                phone: '',
                 subject: '',
                 message: ''
             }
@@ -43,6 +42,17 @@ export class ContactPage extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+     componentWillMount(){
+        let self = this;
+        var user = JSON.parse(localStorage.getItem("AccountData"));
+        if (user != null) {
+            let feedback = {...self.state.feedback};
+            feedback["name"] = user.fullname;
+            feedback["email"] = user.email;
+            feedback["phone"] = user.phone;
+            self.setState({ feedback: feedback });
+        }
+     }
 
   addNotification() {
     this.notificationDOMRef.current.addNotification({

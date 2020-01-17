@@ -1,9 +1,10 @@
 import json
 import boto3
-import urllib
+import urllib.parse
 import os
 import datetime
 import decimal
+
 
 def lambda_handler(event, context):
     # Helper class to convert a DynamoDB item to JSON.
@@ -18,7 +19,7 @@ def lambda_handler(event, context):
 
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = event['Records'][0]['s3']['object']['key']
-    key = urllib.unquote_plus(urllib.unquote(key))
+    key = urllib.parse.unquote_plus(urllib.parse.unquote(key))
     order = key.split("/")[3]
     orderId = order.split("_")[0]
     userId = order.split("_")[1].replace(".raw", "")
@@ -52,7 +53,6 @@ def lambda_handler(event, context):
         }
     )
 
-
     if 'Item' not in response:
         res = {"status": "err", "msg": "could not find order"}
     else:
@@ -69,24 +69,23 @@ def lambda_handler(event, context):
             account_id = sts.get_caller_identity()["Account"]
             mailsac_email = "dvsa.{}.{}@mailsac.com".format(account_id, ''.join(userId.split('-')))
 
-
             # create email
             subject = 'Your DVSA Order: Confirmed'.format(token)
             email_msg = \
                 '''
                 Dear {}, <br><br>
-    
+
                 Your order: <b>{}</b> has been <b>confirmed</b> and will be sent to: <br>
-    
+
                 {}
-    
+
                 <br><br>Please, download receipt from the <a href="{}">this link</a>.<br><br>
-    
+
                 Best,<br>
                 DVSA Team
                 <br>
                 <a href="https://www.owasp.org/index.php/OWASP_DVSA"><img src="https://i.imgur.com/UHYml4I.png" width="200px" height="75px"/></a>
-    
+
                 '''.format(name, token, address, signed_link)
 
             # SEND EMAIL TO CUSTOMER

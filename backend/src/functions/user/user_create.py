@@ -75,6 +75,7 @@ def lambda_handler(event, context):
 
     invokeLambda = boto3.client('lambda')
     payload = {"action": "verify", "user": userId }
-    invokeLambda.invoke(FunctionName='DVSA-USER-INBOX', InvocationType='Event', Payload=json.dumps(payload))
+    res = invokeLambda.invoke(FunctionName='DVSA-USER-INBOX', InvocationType='Event', Payload=json.dumps(payload))
+    print(res)
 
     return event

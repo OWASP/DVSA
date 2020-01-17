@@ -12,7 +12,6 @@ export class ProfilePage extends React.Component {
         super(props);
         this.addNotification = this.addNotification.bind(this);
         this.notificationDOMRef = React.createRef();
-        const user = JSON.parse(localStorage.getItem("AccountData"));
         this.state = {
             profile:{
                 name: '',
@@ -32,7 +31,8 @@ export class ProfilePage extends React.Component {
 
      componentWillMount(){
         let self = this;
-        var user = self.user;
+        var user = JSON.parse(localStorage.getItem("AccountData"));
+        console.log(user);
         if (user != null) {
             let profile = {...self.state.profile};
             profile["avatar"] = user.avatar;

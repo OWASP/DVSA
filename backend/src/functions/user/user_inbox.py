@@ -1,28 +1,29 @@
 import json
 import time
 import boto3
-import urllib
-import urllib2
+import urllib3
+
 import base64
 
+HTTP = urllib3.PoolManager()
 
 
 def getEmailList(email):
     try:
-        res = urllib.urlopen("https://mailsac.com/api/addresses/" + email + "/messages")
+        res = HTTP.request("GET", "https://mailsac.com/api/addresses/" + email + "/messages")
     except Exception as e:
         err = "[ERR] "
         print(err + (str(e)))
 
-    if res.getcode() != 200:
+    if res.status != 200:
         return False
     else:
-        return res.read()
+        return res.data
 
 
 def getVerificationEmailId(email):
-    i=0
-    while i<5:
+    i = 0
+    while i < 5:
         data = getEmailList(email)
         if len(data) < 10:
             i = i + 1
@@ -40,21 +41,21 @@ def getVerificationEmailId(email):
 
 def getEmailById(email, _id, mod):
     try:
-        res = urllib.urlopen("https://mailsac.com/api/{}/{}/{}".format(mod, email, _id))
+        res = HTTP.request("GET", "https://mailsac.com/api/{}/{}/{}".format(mod, email, _id))
     except Exception as e:
         err = "[ERR] "
-        print (err + (str(e)))
+        print(err + (str(e)))
         return False
 
-    if res.getcode() != 200:
+    if res.status != 200:
         return False
 
     else:
-        return res.read()
+        return res.data
 
 
 def getVerificationLink(email, _id):
-    body = getEmailById(email, _id, "text")
+    body = getEmailById(email, _id, "text").decode('utf-8')
     startpoint = body.find("https://email-verification")
     endpoint = body.find("Your request will not be processed unless you confirm the address using this URL.")
     if (startpoint == -1 or endpoint == -1):
@@ -66,12 +67,12 @@ def getVerificationLink(email, _id):
 
 def verifyEmail(link):
     try:
-        res = urllib.urlopen(link)
+        res = HTTP.request("GET", link)
     except Exception as e:
         err = "[ERR] "
-        print (err + (str(e)))
+        print(err + (str(e)))
 
-    if (("Location" in res.headers and res.headers["Location"].find("ses/verifysuccess") == -1) and res.read().find(
+    if (("Location" in res.headers and res.headers["Location"].find("ses/verifysuccess") == -1) and res.data.find(
             "You have successfully verified an email address") != -1):
         return False
 
@@ -81,16 +82,14 @@ def verifyEmail(link):
 def deleteEmail(email, _id):
     try:
         uri = ("https://mailsac.com/api/addresses/" + email + "/messages/" + _id)
-        request = urllib2.Request(uri)
-        request.get_method = lambda: 'DELETE'
-        res = urllib2.urlopen(request)
+        res = HTTP.request("DELETE", uri)
 
     except Exception as e:
         err = "[ERR] "
-        print (err + (str(e)))
+        print(err + (str(e)))
         return False
 
-    if res.getcode() != 200:
+    if res.status != 200:
         return False
 
     return True
@@ -103,17 +102,17 @@ def lambda_handler(event, context):
     sts = boto3.client("sts")
     account_id = sts.get_caller_identity()["Account"]
     mailsac_email = "dvsa.{}.{}@mailsac.com".format(account_id, ''.join(userId.split('-')))
-    print ("MAIL", mailsac_email)
+    print("MAIL", mailsac_email)
 
     if action == "get":
         _id = event["msgId"]
         mod = event["type"]
         if mod == 'html':
             mod = 'dirty'
-        body = getEmailById(mailsac_email, _id, mod).encode("UTF-8")
+        body = getEmailById(mailsac_email, _id, mod)
         if (body):
             data = base64.b64encode(body)
-            res = {"status": "ok", "message": data}
+            res = {"status": "ok", "message": data.decode("utf-8")}
             return res
 
         else:
@@ -129,7 +128,6 @@ def lambda_handler(event, context):
 
         return res
 
-
     if action == "inbox":
         messages = []
         emails = getEmailList(mailsac_email)
@@ -141,14 +139,14 @@ def lambda_handler(event, context):
         for email in list:
             sender = email["from"][0]["address"]
             if (sender == "dvsa.noreply@mailsac.com"):
-                item = {"date": email["received"], "msg-id": email["_id"], "subject": email["subject"], "sender": sender}
-                messages.append (item)
+                item = {"date": email["received"], "msg-id": email["_id"], "subject": email["subject"],
+                        "sender": sender}
+                messages.append(item)
 
         res = {"status": "ok", "messages": messages}
         return res
 
-
-    else:
+    if action == "verify":
         ses = boto3.client('ses')
         response = ses.verify_email_identity(
             EmailAddress=mailsac_email
@@ -158,7 +156,7 @@ def lambda_handler(event, context):
         _id = getVerificationEmailId(mailsac_email)
         if not _id:
             res = {"status": "err", "msg": "Could not get messages from account"}
-            print (res)
+            print(res)
             return res
 
         elif id == 99:
@@ -174,12 +172,15 @@ def lambda_handler(event, context):
         verified = verifyEmail(link)
         if not verified:
             res = {"status": "err", "msg": "Could not verify email"}
-            print (res)
+            print(res)
             return res
 
         deleted = deleteEmail(mailsac_email, _id)
 
-        res = {"status": "ok", "msg": str(mailsac_email) + " was verified" }
+        res = {"status": "ok", "msg": str(mailsac_email) + " was verified"}
         print(res)
         return res
+
+    else:
+        return "Unkown action" + action
 
