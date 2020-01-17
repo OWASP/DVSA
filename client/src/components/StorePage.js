@@ -51,7 +51,7 @@ export class StorePage extends Component {
             }
         })
         .catch(function () {
-            alert("[ERROR] Backend failed. DVSA will not work properly.")
+            alert("[ERROR] DVSA backend does not work properly. Try to delete cache and re-login.")
         });
     }
 

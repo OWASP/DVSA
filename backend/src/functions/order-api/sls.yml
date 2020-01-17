@@ -64,4 +64,5 @@ resources:
                 - Effect: Allow
                   Action:
                     - cognito-idp:*
+                    - sts:*
                   Resource: '*'
