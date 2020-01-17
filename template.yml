@@ -1134,7 +1134,7 @@ Resources:
       FunctionName: DVSA-INIT
       Handler: dvsa_init.lambda_handler
       Runtime: python3.6
-      CodeUri: backend/serverless/scripts/init/
+      CodeUri: backend/serverless/scripts/
       Environment:
         Variables:
           USER_POOL_ID:
