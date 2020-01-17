@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
-Description: 'DVSA Repo Template'
+Description: 'DVSA Stack (Repository Deployment)'
 
 Metadata:
   AWS::ServerlessRepo::Application:
@@ -9,9 +9,9 @@ Metadata:
     Author: 'Tal Melamed'
     LicenseUrl: LICENSE
     ReadmeUrl: README.md
-    Labels: ['serverless', 'security']
+    Labels: ['serverless', 'security', 'vulnerability']
     HomePageUrl: https://owasp.org/www-project-dvsa/
-    SemanticVersion: 1.2.2
+    SemanticVersion: 1.2.3
     SourceCodeUrl: https://github.com/owasp/DVSA
 
 Globals:
@@ -32,13 +32,6 @@ Parameters:
     Default: dev
 
 Resources:
-#  DVSAWebsiteUrl:
-#    Type: "AWS::SSM::Parameter"
-#    Properties:
-#      Description: DVSA Website URL after Deployment
-#      Name: DVSA-Website-URL
-#      Type: String
-#      Value: {'Fn::Join': ['', ['http://dvsa-website-', {Ref: 'AWS::AccountId'}, '.s3-website-', {Ref: 'AWS::Region'}, '.amazonaws.com']]}
 
   ApiGatewayApi:
     Type: AWS::Serverless::Api

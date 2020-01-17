@@ -32,7 +32,6 @@ export class ProfilePage extends React.Component {
      componentWillMount(){
         let self = this;
         var user = JSON.parse(localStorage.getItem("AccountData"));
-        console.log(user);
         if (user != null) {
             let profile = {...self.state.profile};
             profile["avatar"] = user.avatar;
