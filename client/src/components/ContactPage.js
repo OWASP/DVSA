@@ -80,6 +80,7 @@ export class ContactPage extends React.Component {
         API.callApi(opts).then(function(response) {
             return response.json();
         }).then(function(data) {
+            data = JSON.parse(data);
             self.setState({ signedUrl: data });
             let feedback = {...self.state.feedback};
             feedback["attachment"] = data.fields.key;
