@@ -40,18 +40,28 @@ You must run serverless deploy commands with an environment variable profile (e.
 ##### Clone Project
 - `git clone git@github.com:OWASP/DVSA.git`
 
+##### Install nodejs==14.15.4 and npm (later versions break the lambda packaging: [issue](https://github.com/serverless/serverless/issues/8794))
+- https://nodejs.org/download/release/latest-v14.x/
+- https://www.npmjs.com/package/npm?activeTab=versions
+
+##### Configure nodejs to use python2.7
+- `npm config set python python2.7`
+
 ##### Install Serverless
 - `npm install -g serverless`
 
 ##### Install AWS-CLI
 - `pip install awscli --upgrade --user`
 
+##### Install npm's python dependencies
+- `pip install requests --user`
+
 ##### Verify AWS-CLI Installation
 - `aws --version`
 
 If you get a "command not found" error, see the "Steps to Take after Installation" section [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html#install-tool-pip).
 
-##### Configure AWS-CLI for your Account
+##### Configure AWS-CLI for your Account. Make sure the default region matches the region in `serverless.yml`
 - `aws configure`
 
 ##### Install dependencies
