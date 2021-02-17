@@ -50,12 +50,12 @@ Resources:
       Action: "lambda:InvokeFunction"
       SourceAccount:
         Ref: AWS::AccountId
-      SourceArn: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
+      SourceArn: !GetAtt S3BucketFeedbackBucket.Arn
 
   S3BucketfeedbackPermissions:
       Type: AWS::S3::BucketPolicy
       Properties:
-        Bucket: {'Fn::Join': ['', ['dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
+        Bucket: !Ref S3BucketFeedbackBucket
         PolicyDocument:
           Statement:
             -
@@ -67,7 +67,7 @@ Resources:
                 - s3:GetObject
                 - s3:DeleteObject
               Effect: Allow
-              Resource: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}, '/*']]}
+              Resource: {'Fn::Join': ['', [!GetAtt S3BucketFeedbackBucket.Arn, '/*']]}
             -
               Sid: "AdminListFeedbackStatement"
               Principal:
@@ -78,7 +78,7 @@ Resources:
               Action:
                 - s3:*
               Effect: Allow
-              Resource: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
+              Resource: !GetAtt S3BucketFeedbackBucket.Arn
 
   LambdaPermissionReceiptsBucketS3:
     Type: "AWS::Lambda::Permission"
@@ -91,7 +91,7 @@ Resources:
       Action: "lambda:InvokeFunction"
       SourceAccount:
         Ref: AWS::AccountId
-      SourceArn: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
+      SourceArn: !GetAtt S3BucketReceiptsBucket.Arn
 
   S3BucketPermissions:
       Type: AWS::S3::BucketPolicy
@@ -108,7 +108,7 @@ Resources:
                 - s3:GetObject
                 - s3:DeleteObject
               Effect: Allow 
-              Resource: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}, '/*']]}
+              Resource: {'Fn::Join': ['', [!GetAtt S3BucketReceiptsBucket.Arn, '/*']]}
             - 
               Sid: "AdminListReceiptsStatement"
               Principal:
@@ -119,4 +119,4 @@ Resources:
               Action:
                 - s3:*
               Effect: Allow 
-              Resource: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
+              Resource: !GetAtt S3BucketReceiptsBucket.Arn
