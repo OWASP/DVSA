@@ -7,9 +7,10 @@ const Footer = () => (
         <Container>
             <div className='footer-content'>
                 <div className='footer-info'>
-                <h5>Powered by: <a href="https://www.owasp.org/index.php/OWASP_DVSA"><img align="bottom" width="64px" src="/images/owasplogofooter.svg"/> </a></h5>
+                <h5>Created by: <a href="https://github.com/4ppsec/">Tal Melamed (4ppsec) </a></h5>
+                <h5>Powered by: <a href="https://owasp.org/www-project-dvsa/"><img align="bottom" width="64px" src="https://owasp.org/assets/images/logo.png"/> </a></h5>
                     <div>
-                        <div><Icon name='mail'/> tal.melamed@owasp.org </div>
+                        <div><Icon name='mail'/> hi@dvsa.cloud </div>
                     </div>
                 </div>
                 <div className='footer-social'>

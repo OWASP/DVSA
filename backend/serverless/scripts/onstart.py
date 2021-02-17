@@ -16,7 +16,7 @@ def main():
     print("#     You are deploying DVSA: a Damn vulnerable Serverless Application     #")
     print("#            This project was developed by Tal Melamed (@4ppsec)           #")
     print("#      Please read all the necessary information on the project page:      #")
-    print("#  https://github.com/owasp/dvsa | online version: http://serverless.fail  #")
+    print("#    https://github.com/owasp/dvsa | online version: http://dvsa.cloud     #")
     print("#                                                                          #")
     print("############################################################################")
     print("\n\n\n")

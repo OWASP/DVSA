@@ -93,6 +93,22 @@ def lambda_handler(event, context):
             except Exception as e:
                 print(str(e))
                 pass
+            
+            print("Deleting CW LogGroups -- ")
+            cwl = boto3.client('logs')
+            res = cwl.describe_log_groups()
+            if "logGroups" in res:
+                log_groups = res.get("logGroups")
+                for lg in log_groups:
+                    lg_name = lg.get("logGroupName", "X") 
+                    if lg_name.startswith("DVSA-"):
+                        cwl.delete_log_group(logGroupName=lg_name)
+                        print("Deleted LogGroup: {}".format(lg_name))
+
+            print("! Deleting myself :)")
+            lclient = boto3.client ('lambda')
+            lclient.delete_function (FunctionName = context.function_name)
+
 
     except Exception as e:
         print(str(e))
