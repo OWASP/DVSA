@@ -2,7 +2,6 @@ import json
 import time
 import boto3
 import urllib3
-
 import base64
 
 HTTP = urllib3.PoolManager()

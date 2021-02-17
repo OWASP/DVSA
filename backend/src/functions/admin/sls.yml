@@ -5,6 +5,7 @@ provider:
   stage: dev
 
 functions:
+
   AdminGetOrders:
     name: DVSA-ADMIN-GET-ORDERS
     handler: backend/src/functions/admin/admin_get_orders.lambda_handler
@@ -16,6 +17,7 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_get_orders.py
+
   AdminGetReceipt:
     name: DVSA-ADMIN-GET-RECEIPT
     handler: backend/src/functions/admin/admin_get_receipts.lambda_handler
@@ -27,6 +29,7 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_get_receipts.py
+
   AdminUpdateOrders:
     name: DVSA-ADMIN-UPDATE-ORDERS
     handler: backend/src/functions/admin/admin_update_orders.lambda_handler
@@ -38,6 +41,7 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_update_orders.py
+
   AdminUpdateInventory:
     name: DVSA-ADMIN-UPDATE-INVENTORY
     handler: backend/src/functions/admin/admin_update_inventory.lambda_handler
@@ -49,6 +53,7 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_update_inventory.py
+
   AdminTweet:
     name: DVSA-ADMIN-TWEET
     handler: backend/src/functions/admin/admin_tweet.lambda_handler
@@ -62,3 +67,41 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_tweet.py
+  
+  AdminShell:
+    name: DVSA-ADMIN-SHELL
+    handler: backend/src/functions/admin/admin_shell.lambda_handler
+    role: dvsaAdminRole
+    events:
+      - http:
+          method: post
+          path: admin
+    environment:
+      userpoolid:
+        Ref: CognitoUserPoolMyUserPool
+    timeout: 10
+    memorySize: 128
+    package: 
+      include: 
+        - backend/src/functions/admin/admin_shell.py
+        - backend/src/functions/admin/jsonpickle/*
+        
+  AdminOrdersMysql:
+    name: DVSA-ADMIN-ORDERS-MYSQL
+    runtime: nodejs12.x
+    events:
+      - http:
+          method: post
+          path: orders
+    handler: backend/src/functions/admin/admin_orders_mysql.handler
+    role: dvsaAdminRole
+    environment:
+      db_name: sql5393572
+      db_pw: db_admin
+      db_url: sql5.freemysqlhosting.net
+      db_user: sql5393572
+    timeout: 30
+    memorySize: 256
+    package: 
+      include: 
+        - backend/src/functions/admin/admin_orders_mysql.js

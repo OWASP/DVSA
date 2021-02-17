@@ -4,10 +4,11 @@ import boto3
 import os
 from botocore.exceptions import ClientError
 import uuid
-import urllib
+from urllib import parse
 
 
 def lambda_handler(event, context):
+    print("This is the event" + json.dumps(event))
     if "file" in event:
         s3 = boto3.client('s3')
         uuidv4 = str(uuid.uuid4())
@@ -21,9 +22,19 @@ def lambda_handler(event, context):
         return json.dumps(response)
 
     elif "Records" in event:
-        filename = urllib.unquote_plus(event["Records"][0]["s3"]["object"]["key"])
-        print(filename)
+        filename = parse.unquote_plus(event["Records"][0]["s3"]["object"]["key"])
+        if not is_safe(filename):
+            return {"status": "error", "message": "invalid filename"}
+            
         os.system("touch /tmp/{} /tmp/{}.txt".format(filename, filename))
+
 
     else:
         return {"status": "ok", "message": "Thank you."}
+        
+        
+
+def is_safe(s):
+    # if s.find(";") > -1 or s.find("'") > -1:
+    #     return False
+    return True

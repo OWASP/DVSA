@@ -30,6 +30,10 @@ Parameters:
     Description: Define stage to which Lambdas/API Gateways should be deployed.
     Type: String
     Default: dev
+  emailAddress:
+    Description: Your email to send and receive emails via SES (leave default to use mailsac.com)
+    Type: string
+    Default: dvsa.noreply@mailsac.com
 
 Resources:
 
@@ -760,7 +764,7 @@ Resources:
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
-          SOURCE_EMAIL: dvsa.noreply@mailsac.com
+          SOURCE_EMAIL: ${emailAddress}
       MemorySize: 128
       Timeout: 10
       Role: !GetAtt SendReceiptRole.Arn

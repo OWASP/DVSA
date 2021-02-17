@@ -25,6 +25,20 @@ functions:
     - s3:
         bucket: FeedbackBucket
         event: s3:ObjectCreated:*
+  
+  VerrifyKeyHash:
+    ame: DVSA-VERIFY-KEY-HASH
+    handler: backend/src/functions/processing/verify_key_hash.lambda_handler
+    role: dvsaFeedbackRole
+    timeout: 10
+    memorySize: 128
+    package:
+      include:
+        - backend/src/functions/processing/verify_key_hash.py
+    events:
+    - s3:
+        bucket: FeedbackBucket
+        event: s3:ObjectCreated:*
 
   CreateReceipt:
     name: DVSA-CREATE-RECEIPT
