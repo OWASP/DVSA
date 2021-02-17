@@ -11,4 +11,6 @@ README.md
 news.md
 AWS/
 Azure/
+*.code-workspace
+backend/src/functions/admin/jsonpickle-2.0.0.dist-info/
 sam_packaged.yml

@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: 'AWS::Serverless-2016-10-31'
+#Transform: 'AWS::Serverless-2016-10-31'
 Description: 'DVSA Stack (Repository Deployment)'
 
 Metadata:
@@ -11,7 +11,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['serverless', 'security', 'vulnerability']
     HomePageUrl: https://owasp.org/www-project-dvsa/
-    SemanticVersion: 1.2.4
+    SemanticVersion: 2.0.1
     SourceCodeUrl: https://github.com/owasp/DVSA
 
 Globals:
@@ -21,17 +21,9 @@ Globals:
       AllowHeaders: "'*'"
       AllowOrigin: "'*'"
 
-  Function:
-    Tags:
-      STAGE: !Sub ${targetStage}
-
 Parameters:
-  targetStage:
-    Description: Define stage to which Lambdas/API Gateways should be deployed.
-    Type: String
-    Default: dev
   emailAddress:
-    Description: Your email to send and receive emails via SES (leave default to use mailsac.com)
+    Description: Your email to send and receive emails via SES (This will only work if you verified the address in SES, leave default to use mailsac.com)
     Type: string
     Default: dvsa.noreply@mailsac.com
 
@@ -44,7 +36,7 @@ Resources:
         AllowHeaders: '*'
         AllowMethods: '*'
         AllowOrigin: '*'
-      StageName: !Sub ${targetStage}
+      StageName: dvsa
       DefinitionBody:
         swagger: 2.0
         info:
@@ -205,7 +197,7 @@ Resources:
   CognitoUserPoolMyUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
-      UserPoolName: !Sub DVSA-USER-POOL-${targetStage}
+      UserPoolName: !Sub DVSA-USER-POOL
       LambdaConfig:
         PostConfirmation: !GetAtt UserCreate.Arn
       UsernameAttributes:
@@ -269,7 +261,7 @@ Resources:
   CognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
-      ClientName: !Sub DVSA-user-pool-client-${targetStage}
+      ClientName: !Sub DVSA-user-pool-client
       UserPoolId:
         Ref: CognitoUserPoolMyUserPool
       ExplicitAuthFlows:
@@ -289,7 +281,7 @@ Resources:
     Properties:
       AuthorizerResultTtlInSeconds: 300
       IdentitySource: method.request.header.Authorization
-      Name: !Sub DVSA-CognitoAuthorizer-${targetStage}
+      Name: !Sub DVSA-CognitoAuthorizer
       RestApiId:
         Ref: ApiGatewayApi
       Type: COGNITO_USER_POOLS
@@ -299,7 +291,7 @@ Resources:
   CognitoIdentityPool:
     Type: AWS::Cognito::IdentityPool
     Properties:
-      IdentityPoolName: !Sub DVSA-IdentityPool-${targetStage}
+      IdentityPoolName: !Sub DVSA-IdentityPool
       AllowUnauthenticatedIdentities: false
       CognitoIdentityProviders:
         - ClientId:
@@ -675,8 +667,8 @@ Resources:
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
-          GET_CART_TOTAL: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/${targetStage}/total"
-          PAYMENT_PROCESS_URL: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/${targetStage}/payment"
+          GET_CART_TOTAL: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/dvsa/total"
+          PAYMENT_PROCESS_URL: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/dvsa/payment"
           SQS_URL: !Sub "https://sqs.${AWS::Region}.amazonaws.com/${AWS::AccountId}/dvsa-order-paid-sqs"
       MemorySize: 128
       Timeout: 30
@@ -783,7 +775,7 @@ Resources:
   OrderManagerRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub DVSA-OrderManagerRole-${targetStage}
+      RoleName: !Sub DVSA-OrderManagerRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -793,7 +785,7 @@ Resources:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: !Sub DVSA-Receipt-Policy-${targetStage}
+        - PolicyName: !Sub DVSA-Receipt-Policy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -808,7 +800,7 @@ Resources:
   SendReceiptRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub DVSA-ReceiptRole-${targetStage}
+      RoleName: !Sub DVSA-ReceiptRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -818,7 +810,7 @@ Resources:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: !Sub DVSA-Receipt-Policy-${targetStage}
+        - PolicyName: !Sub DVSA-Receipt-Policy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -855,7 +847,7 @@ Resources:
   FeedbackUploadRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub DVSA-FeedbackUpload-Role-${targetStage}
+      RoleName: !Sub DVSA-FeedbackUpload-Role
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -865,7 +857,7 @@ Resources:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: !Sub DVSA-FeedbackUpload-RolePolicy-${targetStage}
+        - PolicyName: !Sub DVSA-FeedbackUpload-RolePolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -880,7 +872,7 @@ Resources:
   dvsaAdminRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub DVSA-AdminRole-${targetStage}
+      RoleName: !Sub DVSA-AdminRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -890,7 +882,7 @@ Resources:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: !Sub DVSA-AdminRolePolicy-${targetStage}
+        - PolicyName: !Sub DVSA-AdminRolePolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -927,7 +919,7 @@ Resources:
   InitFunctionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub DVSA-InitFunctionRole-${targetStage}
+      RoleName: !Sub DVSA-InitFunctionRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -937,7 +929,7 @@ Resources:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: !Sub DVSA-InitFunctionRolePolicy-${targetStage}
+        - PolicyName: !Sub DVSA-InitFunctionRolePolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -952,7 +944,7 @@ Resources:
   dvsaCronjobsRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub DVSA-Cronjob-Role-${targetStage}
+      RoleName: !Sub DVSA-Cronjob-Role
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -962,7 +954,7 @@ Resources:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: !Sub DVSA-Cronjobs-RolePolicy-${targetStage}
+        - PolicyName: !Sub DVSA-Cronjobs-RolePolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -1084,7 +1076,7 @@ Resources:
   dvsaUserInboxRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub DVSA-UserInboxRole-${targetStage}
+      RoleName: !Sub DVSA-UserInboxRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -1094,7 +1086,7 @@ Resources:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: !Sub DVSA-UserInboxRolePolicy-${targetStage}
+        - PolicyName: !Sub DVSA-UserInboxRolePolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -1140,10 +1132,10 @@ Resources:
             Ref: CognitoUserPoolClient
           IDENTITY_POOL:
             Ref: CognitoIdentityPool
-          ORDER_API: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/${targetStage}"
-          CLIENT_BUCKET: {'Fn::Join': ['', ['dvsa-website-', {Ref: 'AWS::AccountId'}]]}
-          RECEIPTS_BUCKET: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
-          FEEDBACK_BUCKET: {'Fn::Join': ['', ['dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
+          ORDER_API: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/dvsa"
+          CLIENT_BUCKET: !Sub dvsa-website-${AWS::AccountId}
+          RECEIPTS_BUCKET: !Sub dvsa-receipts-bucket-${AWS::AccountId}
+          FEEDBACK_BUCKET: !Sub dvsa-feedback-bucket-${AWS::AccountId}
       MemorySize: 512
       Timeout: 120
       Role: !GetAtt InitFunctionRole.Arn
@@ -1163,7 +1155,7 @@ Resources:
       CodeUri: backend/src/functions/admin/admin_get_receipts.py
       Environment:
         Variables:
-          RECEIPTS_BUCKET: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
+          RECEIPTS_BUCKET: !Sub dvsa-receipts-bucket-${AWS::AccountId}
       MemorySize: 128
       Timeout: 10
       Role: !GetAtt dvsaAdminRole.Arn
@@ -1215,4 +1207,4 @@ Resources:
 Outputs:
   WebsiteURL:
     Description: DVSA Website URL
-    Value: {'Fn::Join': ['', ['http://dvsa-website-', {Ref: 'AWS::AccountId'}, '.s3-website-', {Ref: 'AWS::Region'}, '.amazonaws.com']]}
+    Value: !Sub "http://dvsa-website-${AWS::AccountId}.s3-website.${AWS::Region}.amazonaws.com"

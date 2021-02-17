@@ -23,7 +23,8 @@ functions:
         - backend/src/functions/processing/feedback_uploads.py
     events:
     - s3:
-        bucket: FeedbackBucket
+        bucket: 'dvsa-receipts-bucket-${self:custom.accountId}'
+        existing: true
         event: s3:ObjectCreated:*
   
   VerrifyKeyHash:
@@ -37,7 +38,8 @@ functions:
         - backend/src/functions/processing/verify_key_hash.py
     events:
     - s3:
-        bucket: FeedbackBucket
+        bucket: 'dvsa-receipts-bucket-${self:custom.accountId}'
+        existing: true
         event: s3:ObjectCreated:*
 
   CreateReceipt:
