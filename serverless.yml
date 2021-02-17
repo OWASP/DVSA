@@ -8,7 +8,6 @@ provider:
   runtime: python3.6
   stage: ${env:USER}
   versionFunctions: false
-  region: us-east-1
   timeout: 30
   memorySize: 128
   
@@ -25,7 +24,7 @@ plugins:
   - serverless-scriptable-plugin
 
 custom:
-  stage: ${opt:stage, self:provider.stage}
+  stage: dvsa
   accountId: ${file(backend/serverless/scripts/vars.js):accountId}
   
   client:

@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-#Transform: 'AWS::Serverless-2016-10-31'
+Transform: 'AWS::Serverless-2016-10-31'
 Description: 'DVSA Stack (Repository Deployment)'
 
 Metadata:
@@ -29,6 +29,7 @@ Parameters:
 
 Resources:
 
+  # API Gateway
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -185,7 +186,7 @@ Resources:
                 responses:
                   default:
                     statusCode: 200
-                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OrderManagerJsFunction.Arn}/invocations
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OrderManagerFunction.Arn}/invocations
                 passthroughBehavior: when_no_match
                 httpMethod: POST
                 type: aws_proxy
@@ -194,12 +195,25 @@ Resources:
             type: object
             title: Empty Schema
 
+  ApiGatewayAuthorizer:
+    Type: AWS::ApiGateway::Authorizer
+    Properties:
+      AuthorizerResultTtlInSeconds: 300
+      IdentitySource: method.request.header.Authorization
+      Name: !Sub DVSA-CognitoAuthorizer
+      RestApiId:
+        Ref: ApiGatewayApi
+      Type: COGNITO_USER_POOLS
+      ProviderARNs:
+        - {"Fn::GetAtt": ['CognitoUserPoolMyUserPool', Arn]}
+
+  # Cognito
   CognitoUserPoolMyUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
       UserPoolName: !Sub DVSA-USER-POOL
       LambdaConfig:
-        PostConfirmation: !GetAtt UserCreate.Arn
+        PostConfirmation: !GetAtt UserCreateFunction.Arn
       UsernameAttributes:
         - email
       AutoVerifiedAttributes:
@@ -268,25 +282,13 @@ Resources:
         - ADMIN_NO_SRP_AUTH
       GenerateSecret: false
 
-  LambdaCognitoUserPoolExecutionPermission:
+  CognitoUserPoolLambdaExecutionPermission:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !GetAtt UserCreate.Arn
+      FunctionName: !GetAtt UserCreateFunction.Arn
       Principal: cognito-idp.amazonaws.com
       SourceArn: !Sub 'arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${CognitoUserPoolMyUserPool}'
-
-  ApiGatewayAuthorizer:
-    Type: AWS::ApiGateway::Authorizer
-    Properties:
-      AuthorizerResultTtlInSeconds: 300
-      IdentitySource: method.request.header.Authorization
-      Name: !Sub DVSA-CognitoAuthorizer
-      RestApiId:
-        Ref: ApiGatewayApi
-      Type: COGNITO_USER_POOLS
-      ProviderARNs:
-        - {"Fn::GetAtt": ['CognitoUserPoolMyUserPool', Arn]}
 
   CognitoIdentityPool:
     Type: AWS::Cognito::IdentityPool
@@ -327,6 +329,13 @@ Resources:
               'ForAnyValue:StringLike':
                 'cognito-identity.amazonaws.com:amr': authenticated
 
+  # SQS
+  SQSQueue:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      QueueName: "dvsa-order-paid-sqs"
+
+  # DynamoDB
   OrdersTable:
     Type: 'AWS::DynamoDB::Table'
     Properties:
@@ -389,7 +398,8 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
-  ReceiptsBucket:
+  # S3
+  S3ReceiptsBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
@@ -408,7 +418,7 @@ Resources:
               - HEAD
             MaxAge: 3000
 
-  FeedbackBucket:
+  S3FeedbackBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: {'Fn::Join': ['', ['dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
@@ -427,35 +437,7 @@ Resources:
               - HEAD
             MaxAge: 3000
 
-  S3BReceiptsBucketPermissions:
-      Type: AWS::S3::BucketPolicy
-      Properties:
-        Bucket: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
-        PolicyDocument:
-          Statement:
-            -
-              Sid: "PublicWriteReceiptsStatement"
-              Principal: "*"
-              Action:
-                - s3:PutObject
-                - s3:PutObjectAcl
-                - s3:GetObject
-                - s3:DeleteObject
-              Effect: Allow
-              Resource: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}, '/*']]}
-            -
-              Sid: "AdminListReceiptsStatement"
-              Principal:
-                AWS:
-                  Fn::GetAtt:
-                    - dvsaAdminRole
-                    - Arn
-              Action:
-                - s3:*
-              Effect: Allow
-              Resource: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
-
-  S3BFeedbackBucketPermissions:
+  S3FeedbackBucketPermissions:
     Type: AWS::S3::BucketPolicy
     Properties:
       Bucket: {'Fn::Join': ['', ['dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
@@ -481,7 +463,7 @@ Resources:
             Effect: Allow
             Resource: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
 
-  ClientBucket:
+  S3ClientBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
@@ -534,16 +516,15 @@ Resources:
               Effect: Allow
               Resource: {'Fn::Join': ['', ['arn:aws:s3:::dvsa-website-', {Ref: 'AWS::AccountId'}, '/*']]}
 
-  SQSQueue:
-    Type: "AWS::SQS::Queue"
-    Properties:
-      QueueName: "dvsa-order-paid-sqs"
 
-  OrderManagerJsFunction:
+  # functions
+
+  ## Order-API
+  OrderManagerFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: DVSA-ORDER-MANAGER
-      Handler: order-manager-js.handler
+      Handler: order-manager.handler
       Runtime: nodejs12.x
       CodeUri: backend/src/functions/order-api/
       Environment:
@@ -560,7 +541,33 @@ Resources:
             RestApiId: !Ref ApiGatewayApi
             Path: /order
             Method: POST
+  
+  OrderManagerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub DVSA-OrderManagerRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: !Sub DVSA-Receipt-Policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:*
+                  - cognito-idp:*
+                  - logs:*
+                  - sts:*
+                Resource: "*"
 
+ ## Orders
   OrderNewFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -678,6 +685,7 @@ Resources:
         - SQSSendMessagePolicy:
             QueueName: dvsa-order-paid-sqs
 
+  ## Processing
   PaymentProcessorFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -687,6 +695,9 @@ Resources:
       CodeUri: backend/src/functions/processing/payment_processing.py
       MemorySize: 128
       Timeout: 30
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: DVSA-INVENTORY-DB
       Events:
         PaymentProcessorApi:
           Type: Api
@@ -729,16 +740,16 @@ Resources:
         Variables:
           INVENTORY_TABLE: DVSA-INVENTORY-DB
           ORDERS_TABLE: DVSA-ORDERS-DB
-          RECEIPTS_BUCKET: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
+          RECEIPTS_BUCKET: !Sub dvsa-receipts-bucket-${AWS::AccountId}
       MemorySize: 128
       Timeout: 10
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: DVSA-INVENTORY-DB
-        - DynamoDBCrudPolicy:
-            TableName: DVSA-ORDERS-DB
+            TableName: 
+              - DVSA-INVENTORY-DB
+              - DVSA-ORDERS-DB
         - S3CrudPolicy:
-            BucketName: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
+            BucketName: !Sub dvsa-receipts-bucket-${AWS::AccountId}
       Events:
         MySQSEvent:
           Type: SQS
@@ -759,69 +770,24 @@ Resources:
           SOURCE_EMAIL: ${emailAddress}
       MemorySize: 128
       Timeout: 10
-      Role: !GetAtt SendReceiptRole.Arn
+      Policies:
+        - SESCrudPolicy:
+            IdentityName: !Ref ${emailAddress}
+        - S3CrudPolicy:
+            BucketName: '*'
+        - DynamoDBCrudPolicy:
+            TableName: '*'
       Events:
         ReceiptUpload:
           Type: S3
           Properties:
-            Bucket: !Ref ReceiptsBucket
+            Bucket: !Ref S3ReceiptsBucket
             Events: s3:ObjectCreated:*
             Filter:
               S3Key:
                 Rules:
                   - Name: suffix
                     Value: '.raw'
-
-  OrderManagerRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: !Sub DVSA-OrderManagerRole
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: !Sub DVSA-Receipt-Policy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - sts:*
-                  - lambda:*
-                  - cognito-idp:*
-                  - logs:*
-                Resource: "*"
-
-  SendReceiptRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: !Sub DVSA-ReceiptRole
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: !Sub DVSA-Receipt-Policy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - sts:*
-                  - ses:*
-                  - s3:*
-                  - dynamodb:*
-                  - logs:*
-                Resource: "*"
 
   FeedbackUploadFunction:
     Type: 'AWS::Serverless::Function'
@@ -832,8 +798,32 @@ Resources:
       CodeUri: backend/src/functions/processing/feedback_uploads.py
       Environment:
         Variables:
-          FEEDBACK_BUCKET: {'Fn::Join': ['', ['dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
+          FEEDBACK_BUCKET: !Ref dvsa-feedback-bucket-${AWS::AccountId}
           ORDERS_TABLE: DVSA-ORDERS-DB
+      MemorySize: 128
+      Timeout: 30
+      Policies:
+        - AmazonS3FullAccess
+        - AmazonSESFullAccess
+        - CloudWatchFullAccess
+        - AmazonDynamoDBFullAccess
+      Events:
+        ReceiptUpload:
+          Type: S3
+          Properties:
+            Bucket: !Ref S3FeedbackBucket
+            Events: s3:ObjectCreated:*
+
+  VerifyKeyHashFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-VERIFY-KEY_HASH
+      Handler: verify_key_hash.lambda_handler
+      Runtime: python3.6
+      CodeUri: backend/src/functions/processing/verify_key_hash.py
+      Environment:
+        Variables:
+          FEEDBACK_BUCKET: !Sub dvsa-feedback-bucket-${AWS::AccountId}
       MemorySize: 128
       Timeout: 30
       Role: !GetAtt FeedbackUploadRole.Arn
@@ -841,10 +831,9 @@ Resources:
         ReceiptUpload:
           Type: S3
           Properties:
-            Bucket: !Ref FeedbackBucket
+            Bucket: !Ref S3FeedbackBucket
             Events: s3:ObjectCreated:*
 
-  FeedbackUploadRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: !Sub DVSA-FeedbackUpload-Role
@@ -869,6 +858,150 @@ Resources:
                   - ses:*
                 Resource: "*"
 
+  ## Crons
+  dvsaCronjobsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub DVSA-Cronjob-Role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - CloudWatchFullAccess
+        - AWSLambdaFullAccess
+
+  CronProcessorFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-CRON-PROCESSOR
+      Handler: cron_processor.lambda_handler
+      Runtime: python3.6
+      CodeUri: backend/src/functions/cronjobs/cron_processor.py
+      Environment:
+        Variables:
+          ORDERS_TABLE: DVSA-ORDERS-DB
+      MemorySize: 128
+      Timeout: 30
+      Role: !GetAtt dvsaCronjobsRole.Arn
+      Events:
+        Timer:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 day)
+
+  CronOrderCleanerFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-CRON-ORDER-CLEANER
+      Handler: cron_cleaner.lambda_handler
+      Runtime: python3.6
+      CodeUri: backend/src/functions/cronjobs/cron_cleaner.py
+      Environment:
+        Variables:
+          ORDERS_TABLE: DVSA-ORDERS-DB
+      MemorySize: 128
+      Timeout: 30
+      Role: !GetAtt dvsaCronjobsRole.Arn
+      Events:
+        Timer:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 day)
+
+  CronJobUpdateFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-CRON-JOB-UPDATE
+      Handler: cron_update.lambda_handler
+      Runtime: python3.6
+      CodeUri: backend/src/functions/cronjobs/cron_update.py
+      Environment:
+        Variables:
+          ORDERS_TABLE: DVSA-ORDERS-DB
+      MemorySize: 128
+      Timeout: 30
+      Role: !GetAtt dvsaCronjobsRole.Arn
+      Events:
+        Timer:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 day)
+
+  ## Users
+  UserCreateFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-USER-CREATE
+      Handler: user_create.lambda_handler
+      Runtime: python3.6
+      CodeUri: backend/src/functions/user/user_create.py
+      Environment:
+        Variables:
+          USERS_TABLE: DVSA-USERS-DB
+          GENERIC_AVATAR: https://i.imgur.com/tAmofRW.png
+      MemorySize: 128
+      Timeout: 10
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: '*'
+        - DynamoDBCrudPolicy:
+            TableName: DVSA-USERS-DB
+
+  UserAccountFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-USER-ACCOUNT
+      Handler: user_account.lambda_handler
+      Runtime: python3.6
+      CodeUri: backend/src/functions/user/
+      Environment:
+        Variables:
+          USERS_TABLE: DVSA-USERS-DB
+      MemorySize: 128
+      Timeout: 10
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: DVSA-USERS-DB
+
+  UserProfileFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-USER-PROFILE
+      Handler: user_profile.lambda_handler
+      Runtime: python3.6
+      CodeUri: backend/src/functions/user/user_profile.py
+      Environment:
+        Variables:
+          USERS_TABLE: DVSA-USERS-DB
+      MemorySize: 128
+      Timeout: 10
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: DVSA-USERS-DB
+
+  UserInboxFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-USER-INBOX
+      Handler: user_inbox.lambda_handler
+      Runtime: python3.6
+      CodeUri: backend/src/functions/user/user_inbox.py
+      Environment:
+        Variables:
+          USERS_TABLE: DVSA-USERS-DB
+      MemorySize: 128
+      Timeout: 10
+      Policies:
+        - AmazonSESFullAccess
+        - CloudWatchLogsFullAccess
+
+  ## Admin
   dvsaAdminRole:
     Type: AWS::IAM::Role
     Properties:
@@ -882,25 +1015,12 @@ Resources:
                 - lambda.amazonaws.com
             Action: sts:AssumeRole
       Policies:
-        - PolicyName: !Sub DVSA-AdminRolePolicy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                Resource: {'Fn::Join': [':', ['arn:aws:logs', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'log-group:/aws/lambda/*:*:*']]}
-              - Effect: Allow
-                Action:
-                  - dynamodb:*
-                Resource: {'Fn::Join': [':', ['arn:aws:dynamodb', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'table/*']]}
-              - Effect: Allow
-                Action:
-                  - s3:*
-                Resource:
-                  - {'Fn::Join': ['', ['arn:aws:s3:::', 'dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}, '/*']]}
+        - AmazonDynamoDBFullAccess
+        - AmazonS3FullAccess
+        - CloudWatchFullAccess
+        - AWSLambdaFullAccess
+        - AmazonAPIGatewayInvokeFullAccess
+        - AmazonSESFullAccess
 
   AdminGetOrders:
     Type: 'AWS::Serverless::Function'
@@ -916,6 +1036,107 @@ Resources:
       Timeout: 10
       Role: !GetAtt dvsaAdminRole.Arn
 
+  AdminGetReceiptFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-ADMIN-GET-RECEIPT
+      Handler: admin_get_receipts.lambda_handler
+      Runtime: python3.6
+      CodeUri: backend/src/functions/admin/admin_get_receipts.py
+      Environment:
+        Variables:
+          RECEIPTS_BUCKET: !Sub dvsa-receipts-bucket-${AWS::AccountId}
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt dvsaAdminRole.Arn
+
+  AdminUpdateOrdersFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-ADMIN-UPDATE-ORDERS
+      Handler: admin_update_orders.lambda_handler
+      Runtime: python3.6
+      CodeUri: backend/src/functions/admin/admin_update_orders.py
+      Environment:
+        Variables:
+          ORDERS_TABLE: DVSA-ORDERS-DB
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt dvsaAdminRole.Arn
+
+  AdminUpdateInventoryFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-ADMIN-UPDATE-INVENTORY
+      Handler: admin_update_inventory.lambda_handler
+      Runtime: python3.6
+      CodeUri: backend/src/functions/admin/
+      Environment:
+        Variables:
+          INVENTORY_TABLE: DVSA-INVENTORY-DB
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt dvsaAdminRole.Arn
+
+  AdminShellFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-ADMIN-SHELL
+      Handler: admin_shell.lambda_handler
+      Runtime: python3.6
+      CodeUri: 
+        - backend/src/functions/admin/admin_shell.py
+        - backend/src/functions/admin/jsonpickle
+      Environment:
+        Variables:
+          userpoolid: !Ref CognitoUserPoolMyUserPool
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt dvsaAdminRole.Arn
+  
+  AdminOrdersMysqlFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-ADMIN-ORDERS-MYSQL
+      Handler: admin_orders_mysql.handler
+      Runtime: nodejs12.x
+      CodeUri: 
+        - backend/src/functions/admin/admin_orders_mysql.js
+      Environment:
+        Variables:
+          db_name: sql5393572
+          db_pw: db_admin
+          db_url: sql5.freemysqlhosting.net
+          db_user: sql5393572
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt dvsaAdminRole.Arn
+
+  ## Init Lambda (Custom Resource)
+  InitLambdaFunction:
+    Type: 'AWS::Serverless::Function'
+    DeletionPolicy: Retain
+    Properties:
+      FunctionName: DVSA-INIT
+      Handler: dvsa_init.lambda_handler
+      Runtime: python3.6
+      CodeUri: backend/serverless/scripts/
+      Environment:
+        Variables:
+          USER_POOL_ID:
+            Ref: CognitoUserPoolMyUserPool
+          USER_POOL_CLIENT_ID:
+            Ref: CognitoUserPoolClient
+          IDENTITY_POOL:
+            Ref: CognitoIdentityPool
+          ORDER_API: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/dvsa"
+          CLIENT_BUCKET: !Sub dvsa-website-${AWS::AccountId}
+          RECEIPTS_BUCKET: !Sub dvsa-receipts-bucket-${AWS::AccountId}
+          FEEDBACK_BUCKET: !Sub dvsa-feedback-bucket-${AWS::AccountId}
+      MemorySize: 512
+      Timeout: 120
+      Role: !GetAtt InitFunctionRole.Arn
+  
   InitFunctionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -940,269 +1161,12 @@ Resources:
                   - dynamodb:*
                   - logs:*
                 Resource: '*'
-
-  dvsaCronjobsRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: !Sub DVSA-Cronjob-Role
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: !Sub DVSA-Cronjobs-RolePolicy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - logs:*
-                  - dynamodb:*
-                  - lambda:*
-                Resource: '*'
-
-  CronProcessor:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-CRON-PROCESSOR
-      Handler: cron_processor.lambda_handler
-      Runtime: python3.6
-      CodeUri: backend/src/functions/cronjobs/cron_processor.py
-      Environment:
-        Variables:
-          ORDERS_TABLE: DVSA-ORDERS-DB
-      MemorySize: 128
-      Timeout: 30
-      Role: !GetAtt dvsaCronjobsRole.Arn
-      Events:
-        Timer:
-          Type: Schedule
-          Properties:
-            Schedule: rate(1 day)
-
-  CronOrderCleaner:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-CRON-ORDER-CLEANER
-      Handler: cron_cleaner.lambda_handler
-      Runtime: python3.6
-      CodeUri: backend/src/functions/cronjobs/cron_cleaner.py
-      Environment:
-        Variables:
-          ORDERS_TABLE: DVSA-ORDERS-DB
-      MemorySize: 128
-      Timeout: 30
-      Role: !GetAtt dvsaCronjobsRole.Arn
-      Events:
-        Timer:
-          Type: Schedule
-          Properties:
-            Schedule: rate(1 day)
-
-  CronJobUpdate:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-CRON-JOB-UPDATE
-      Handler: cron_update.lambda_handler
-      Runtime: python3.6
-      CodeUri: backend/src/functions/cronjobs/cron_update.py
-      Environment:
-        Variables:
-          ORDERS_TABLE: DVSA-ORDERS-DB
-      MemorySize: 128
-      Timeout: 30
-      Role: !GetAtt dvsaCronjobsRole.Arn
-      Events:
-        Timer:
-          Type: Schedule
-          Properties:
-            Schedule: rate(1 day)
-
-  UserCreate:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-USER-CREATE
-      Handler: user_create.lambda_handler
-      Runtime: python3.6
-      CodeUri: backend/src/functions/user/user_create.py
-      Environment:
-        Variables:
-          USERS_TABLE: DVSA-USERS-DB
-          GENERIC_AVATAR: https://i.imgur.com/tAmofRW.png
-      MemorySize: 128
-      Timeout: 10
-      Policies:
-        - LambdaInvokePolicy:
-            FunctionName: '*'
-        - DynamoDBCrudPolicy:
-            TableName: DVSA-USERS-DB
-
-  UserAccount:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-USER-ACCOUNT
-      Handler: user_account.lambda_handler
-      Runtime: python3.6
-      CodeUri: backend/src/functions/user/
-      Environment:
-        Variables:
-          USERS_TABLE: DVSA-USERS-DB
-      MemorySize: 128
-      Timeout: 10
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: DVSA-USERS-DB
-
-  UserProfile:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-USER-PROFILE
-      Handler: user_profile.lambda_handler
-      Runtime: python3.6
-      CodeUri: backend/src/functions/user/user_profile.py
-      Environment:
-        Variables:
-          USERS_TABLE: DVSA-USERS-DB
-      MemorySize: 128
-      Timeout: 10
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: DVSA-USERS-DB
-
-  dvsaUserInboxRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: !Sub DVSA-UserInboxRole
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: !Sub DVSA-UserInboxRolePolicy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                Resource: {'Fn::Join': [':', ['arn:aws:logs', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'log-group:/aws/lambda/*:*:*']]}
-              - Effect: Allow
-                Action:
-                  - sts:*
-                  - ses:*
-                Resource: "*"
-
-  UserInbox:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-USER-INBOX
-      Handler: user_inbox.lambda_handler
-      Runtime: python3.6
-      CodeUri: backend/src/functions/user/user_inbox.py
-      Environment:
-        Variables:
-          USERS_TABLE: DVSA-USERS-DB
-      MemorySize: 128
-      Timeout: 10
-      Role: !GetAtt dvsaUserInboxRole.Arn
-
-  InitFunctionLambda:
-    Type: 'AWS::Serverless::Function'
-    DeletionPolicy: Retain
-    Properties:
-      FunctionName: DVSA-INIT
-      Handler: dvsa_init.lambda_handler
-      Runtime: python3.6
-      CodeUri: backend/serverless/scripts/
-      Environment:
-        Variables:
-          USER_POOL_ID:
-            Ref: CognitoUserPoolMyUserPool
-          USER_POOL_CLIENT_ID:
-            Ref: CognitoUserPoolClient
-          IDENTITY_POOL:
-            Ref: CognitoIdentityPool
-          ORDER_API: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/dvsa"
-          CLIENT_BUCKET: !Sub dvsa-website-${AWS::AccountId}
-          RECEIPTS_BUCKET: !Sub dvsa-receipts-bucket-${AWS::AccountId}
-          FEEDBACK_BUCKET: !Sub dvsa-feedback-bucket-${AWS::AccountId}
-      MemorySize: 512
-      Timeout: 120
-      Role: !GetAtt InitFunctionRole.Arn
-
+  
   InitializeApplication:
     Type: AWS::CloudFormation::CustomResource
     Properties:
       ServiceToken:
-         Fn::GetAtt: [ "InitFunctionLambda" , "Arn" ]
-
-  AdminGetReceipt:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-ADMIN-GET-RECEIPT
-      Handler: admin_get_receipts.lambda_handler
-      Runtime: python3.6
-      CodeUri: backend/src/functions/admin/admin_get_receipts.py
-      Environment:
-        Variables:
-          RECEIPTS_BUCKET: !Sub dvsa-receipts-bucket-${AWS::AccountId}
-      MemorySize: 128
-      Timeout: 10
-      Role: !GetAtt dvsaAdminRole.Arn
-
-  AdminUpdateOrders:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-ADMIN-UPDATE-ORDERS
-      Handler: admin_update_orders.lambda_handler
-      Runtime: python3.6
-      CodeUri: backend/src/functions/admin/admin_update_orders.py
-      Environment:
-        Variables:
-          ORDERS_TABLE: DVSA-ORDERS-DB
-      MemorySize: 128
-      Timeout: 10
-      Role: !GetAtt dvsaAdminRole.Arn
-
-  AdminUpdateInventory:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-ADMIN-UPDATE-INVENTORY
-      Handler: admin_update_inventory.lambda_handler
-      Runtime: python3.6
-      CodeUri: backend/src/functions/admin/
-      Environment:
-        Variables:
-          INVENTORY_TABLE: DVSA-INVENTORY-DB
-      MemorySize: 128
-      Timeout: 10
-      Role: !GetAtt dvsaAdminRole.Arn
-
-  AdminTweet:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-ADMIN-TWEET
-      Handler: admin_tweet.lambda_handler
-      Runtime: python3.6
-      CodeUri: backend/src/functions/admin/admin_tweet.py
-      Environment:
-        Variables:
-          TWITTER_ACCESS_TOKEN: grGmA8YH4KID2JquF10n6GFEG
-          TWITTER_API: https://api.twitter.com/
-          TWITTER_TOKEN_SECRET: xxxxxx_xxxxxx
-      MemorySize: 128
-      Timeout: 10
-      Role: !GetAtt dvsaAdminRole.Arn
+         Fn::GetAtt: [ "InitLambdaFunction" , "Arn" ]
 
 Outputs:
   WebsiteURL:

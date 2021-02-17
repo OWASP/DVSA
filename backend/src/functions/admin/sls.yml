@@ -84,7 +84,7 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_shell.py
-        - backend/src/functions/admin/jsonpickle/*
+        - backend/src/functions/admin/jsonpickle
         
   AdminOrdersMysql:
     name: DVSA-ADMIN-ORDERS-MYSQL

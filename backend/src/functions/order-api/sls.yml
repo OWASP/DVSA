@@ -8,7 +8,7 @@ functions:
   OrderManager:
     runtime: nodejs12.x
     name: DVSA-ORDER-MANAGER
-    handler: backend/src/functions/order-api/order-manager-js.handler
+    handler: backend/src/functions/order-api/order-manager.handler
     role: DVSAOrderAPIRole
     timeout: 30
     memorySize: 128
@@ -36,7 +36,7 @@ resources:
     DVSAOrderAPIRole:
       Type: AWS::IAM::Role
       Properties:
-        RoleName: ${self:custom.stage}DVSAOrderAPIRole
+        RoleName: DVSAOrderAPIRole
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -46,7 +46,7 @@ resources:
                   - lambda.amazonaws.com
               Action: sts:AssumeRole
         Policies:
-          - PolicyName: ${self:custom.stage}DVSAOrderAPIRolePolicy
+          - PolicyName: DVSAOrderAPIRolePolicy
             PolicyDocument:
               Version: '2012-10-17'
               Statement:
