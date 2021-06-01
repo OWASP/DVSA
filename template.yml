@@ -1211,4 +1211,4 @@ Resources:
 Outputs:
   WebsiteURL:
     Description: DVSA Website URL
-    Value: {'Fn::Join': ['', ['http://dvsa-website-', {Ref: 'AWS::AccountId'}, '.s3-website-', {Ref: 'AWS::Region'}, '.amazonaws.com']]}
+    Value: {'Fn::Join': ['', ['http://dvsa-website-', {Ref: 'AWS::AccountId'}, '.s3-website.', {Ref: 'AWS::Region'}, '.amazonaws.com']]}
