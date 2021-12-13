@@ -33,7 +33,7 @@ export class Header extends Component {
     ajaxCall(){
         let self = this;
         let opts = {
-                    'action': 'inbox'
+            'action': 'inbox'
         };
         API.callApi(opts)
         .then(function(response) {
@@ -76,7 +76,7 @@ export class Header extends Component {
                         <SearchInput products={fixProductsData(this.props.products)}/>
                     </div>
                     <Menu.Item>
-                        <img width="128px" src="https://i.imgur.com/NZWCtGA.png"/>
+                        <img src="https://i.imgur.com/p3R1bCC.png"/>
                         <h3>DVSA - Damn Vulnerable Serverless Application</h3>
                     </Menu.Item>
 
@@ -95,7 +95,7 @@ export class Header extends Component {
                             <Link to='/inbox'>
                             <a><img src='/images/iconinbox.png' width="28px"/></a>
                             </Link>
-                            {  this.state.inboxLength > 0 &&
+                            {  this.state.inboxLength > 0 && this.state.inbox &&
                             <Label size='mini' color='red'>{ this.state.inboxLength }</Label>}
                          </Menu.Item>
 

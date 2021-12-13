@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import base64 from 'react-native-base64'
-import { Container, Header, Button, Table, Segment } from 'semantic-ui-react';
+import { Container, Header, Table, Segment } from 'semantic-ui-react';
 import * as API from '../utils/apiCaller';
-import { Redirect, HashRouter } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 export class MessageView extends React.Component {
     constructor(props){
@@ -13,30 +12,8 @@ export class MessageView extends React.Component {
         this.state = {
             msgId: id,
             msgData: "",
-            isLoading: true,
-            toInbox: false
+            isLoading: true
         };
-    }
-
-
-    handleDelete = () => {
-        let opts = {
-                    'action': 'delete',
-                    'msg-id': this.state.msgId
-        };
-        let self = this;
-        API.callApi(opts)
-            .then(function(response) {
-                return response.json();
-            }).then(function(err, data) {
-                if(data && data.status == 'ok') {
-                    self.setState ({ isLoading: false });
-                    self.setState ({ toInbox: true});
-                } else {
-                    self.setState ({ isLoading: false });
-                    self.setState ({ toInbox: true});
-                }
-           });
     }
 
     componentWillMount(){
@@ -54,7 +31,6 @@ export class MessageView extends React.Component {
                     self.setState ({ isLoading: false });
                     self.setState ({ msgData: data.message });
                 } else {
-                    //console.log(err.message);
                     self.setState ({ isLoading: false });
                     self.setState ({ msgData: err.message });
                 }
@@ -62,9 +38,6 @@ export class MessageView extends React.Component {
     }
 
     render(){
-        if (this.state.toInbox === true) {
-            return <Redirect to='/inbox' />
-        }
         return(
             <Container className='page-top-margin'>
             {this.state.isLoading && <img src="/images/loader.gif" /> }
@@ -72,17 +45,11 @@ export class MessageView extends React.Component {
                      <h2>Message {this.state.msgId} </h2>
                      <br/><br/>
                           <div>
-                            { base64.decode(this.state.msgData).indexOf('</') !== -1
-                                ? (
-                                    <div dangerouslySetInnerHTML={{__html: base64.decode(this.state.msgData).replace(/(<? *script)/gi, 'illegalscript')}} >
-                                    </div>
-                                  )
-                                : this.props.textOrHtml
-                              }
-
+                            { 
+                                <div dangerouslySetInnerHTML={{__html: base64.decode(this.state.msgData).replace(/(<? *script)/gi, 'illegalscript')}} >
+                                </div>
+                            }
                           </div>
-                    <br/><br/>
-                    <Button type='submit' color='red' onClick={this.handleDelete}>Delete Message</Button>
                  </div>
             </Container>
         );

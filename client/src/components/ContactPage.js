@@ -21,7 +21,7 @@ function generate_UUID(){
 export class ContactPage extends React.Component {
     constructor(props){
         super(props);
-        var ReactS3Uploader = require('react-s3-uploader');
+        // var ReactS3Uploader = require('react-s3-uploader');
         this.addNotification = this.addNotification.bind(this);
         this.notificationDOMRef = React.createRef();
         this.state = {
@@ -80,7 +80,6 @@ export class ContactPage extends React.Component {
         API.callApi(opts).then(function(response) {
             return response.json();
         }).then(function(data) {
-            data = JSON.parse(data);
             self.setState({ signedUrl: data });
             let feedback = {...self.state.feedback};
             feedback["attachment"] = data.fields.key;

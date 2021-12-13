@@ -1,17 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Container, Header, Table, Segment } from 'semantic-ui-react';
+import { Container, Header, Table, Button } from 'semantic-ui-react';
 import * as API from '../utils/apiCaller';
-import { Redirect, HashRouter } from 'react-router-dom';
 
 export class InboxPage extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            messages:[],
-            isLoading: true,
+            messages: [],
+            isLoading: true
         };
+        this.handleDelete = this.handleDelete.bind(this);
+    }
+
+
+    handleDelete = () => {
+      let opts = {
+        'action': 'delete',
+      };
+      let self = this;
+      API.callApi(opts)
+          .then(function(response) {
+              return response.json();
+          }).then(function(err, data) {
+              self.setState ({ isLoading: false });
+              self.setState ({ messages: [] });
+         });
     }
 
     componentWillMount(){
@@ -23,18 +38,19 @@ export class InboxPage extends React.Component {
             .then(function(response) {
                 return response.json();
             }).then(function(data) {
-                //console.log("payload : ", data);
                 if(data && data.status == 'ok') {
                     self.setState({ isLoading: false });
                     self.setState ({ messages: data.messages });
                 } else {
                     self.setState ({ isLoading: false });
-                    //handle response error
                 }
            });
     }
 
     render(){
+        if (this.state.toInbox === true) {
+          return <Redirect to='/inbox' />
+        } 
         return(
             <Container className='page-top-margin'>
                 <Header as='h2'>My Inbox</Header>
@@ -62,7 +78,9 @@ export class InboxPage extends React.Component {
                             }
                        </Table.Body>
                    </Table>
-
+                   { this.state.messages.length > 0 &&
+                    <Button type='submit' color='red' onClick={this.handleDelete} alt='clear-inbox' >Delete Messages</Button>
+                   }
             </Container>
         );
     }
