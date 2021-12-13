@@ -1,0 +1,16 @@
+{
+  "name": "order-manager",
+  "version": "1.0.0",
+  "main": "order-manager.js",
+  "dependencies": {
+    "aws-sdk": "^2.401.0",
+    "node-jose": "^0.3.0",
+    "node-serialize": "^0.0.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

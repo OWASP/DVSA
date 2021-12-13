@@ -1,9 +1,3 @@
-provider:
-  name: aws
-  runtime: python3.6
-  versionFunctions: false
-  stage: dev
-
 functions:
   AdminGetOrders:
     name: DVSA-ADMIN-GET-ORDERS
@@ -16,17 +10,19 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_get_orders.py
+
   AdminGetReceipt:
     name: DVSA-ADMIN-GET-RECEIPT
     handler: backend/src/functions/admin/admin_get_receipts.lambda_handler
     role: dvsaAdminRole
     environment:
-      RECEIPTS_BUCKET: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
+      RECEIPTS_BUCKET: !Sub dvsa-receipts-bucket-${AWS::AccountId}
     timeout: 10
     memorySize: 128
     package: 
       include: 
         - backend/src/functions/admin/admin_get_receipts.py
+
   AdminUpdateOrders:
     name: DVSA-ADMIN-UPDATE-ORDERS
     handler: backend/src/functions/admin/admin_update_orders.lambda_handler
@@ -38,6 +34,7 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_update_orders.py
+
   AdminUpdateInventory:
     name: DVSA-ADMIN-UPDATE-INVENTORY
     handler: backend/src/functions/admin/admin_update_inventory.lambda_handler
@@ -49,6 +46,7 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_update_inventory.py
+
   AdminTweet:
     name: DVSA-ADMIN-TWEET
     handler: backend/src/functions/admin/admin_tweet.lambda_handler
@@ -62,3 +60,60 @@ functions:
     package: 
       include: 
         - backend/src/functions/admin/admin_tweet.py
+  
+  AdminShell:
+    name: DVSA-ADMIN-SHELL
+    handler: admin_shell.handler
+    role: dvsaAdminRole
+    events:
+      - http:
+          method: post
+          path: admin
+    environment:
+      usertable: DVSA-USERS-DB
+      userpoolid:
+        Ref: CognitoUserPoolDvsaUserPool
+    timeout: 10
+    memorySize: 128
+    package: 
+      include: 
+        - backend/src/functions/admin/admin_shell.js
+        
+  AdminOrdersMysql:
+    name: DVSA-ADMIN-ORDERS-MYSQL
+    runtime: nodejs12.x
+    events:
+      - http:
+          method: get
+          path: admin
+    handler: backend/src/functions/admin/admin_orders_mysql.handler
+    role: dvsaAdminRole
+    environment:
+      db_name: bvl1zuoffpflrto3zdrt
+      db_pw: lQ8PQBkxAqFFCizNI5vt
+      db_url: bvl1zuoffpflrto3zdrt-mysql.services.clever-cloud.com
+      db_user: uk7kkjxwjxurqudy
+    timeout: 30
+    memorySize: 256
+    package:
+      include: 
+        - backend/src/functions/admin/admin_orders_mysql.js
+        - backend/src/functions/admin/node_modules/**
+resources:
+  Resources:
+    dvsaAdminRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: dvsaAdminRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
+          - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforDataPipelineRole
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole

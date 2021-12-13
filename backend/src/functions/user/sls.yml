@@ -1,15 +1,8 @@
-
-provider:
-  name: aws
-  runtime: python3.6
-  versionFunctions: false
-  stage: dev
-
 functions:
   UserAccount:
     name: DVSA-USER-ACCOUNT
     handler: backend/src/functions/user/user_account.lambda_handler
-    role: dvsaOrderRole
+    role: dvsaUserRole
     environment:
       USERS_TABLE: DVSA-USERS-DB
     timeout: 10
@@ -17,10 +10,11 @@ functions:
     package: 
       include: 
         - backend/src/functions/user/user_account.py
+
   UserProfile:
     name: DVSA-USER-PROFILE
     handler: backend/src/functions/user/user_profile.lambda_handler
-    role: dvsaOrderRole
+    role: dvsaUserRole
     environment:
       USERS_TABLE: DVSA-USERS-DB
     timeout: 10
@@ -28,10 +22,11 @@ functions:
     package: 
       include: 
         - backend/src/functions/user/user_profile.py
+
   UserCreate:
     name: DVSA-USER-CREATE
     handler: backend/src/functions/user/user_create.lambda_handler
-    role: dvsaCreateUserRole
+    role: dvsaUserRole
     environment:
       USERS_TABLE: DVSA-USERS-DB
       GENERIC_AVATAR: https://i.imgur.com/tAmofRW.png
@@ -42,14 +37,36 @@ functions:
         - backend/src/functions/user/user_create.py
     events:
     - cognitoUserPool:
-        pool: MyUserPool
+        pool: DvsaUserPool
         trigger: PostConfirmation
+
   UserInbox:
     name: DVSA-USER-INBOX
     handler: backend/src/functions/user/user_inbox.lambda_handler
-    role: dvsaUserInboxRole
+    role: dvsaUserRole
     timeout: 30
     memorySize: 128
     package:
       include:
         - backend/src/functions/user/user_inbox.py
+
+
+resources:
+  Resources:
+    dvsaUserRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: dvsaUserRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
+          - arn:aws:iam::aws:policy/AmazonSESFullAccess
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+          - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess

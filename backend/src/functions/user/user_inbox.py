@@ -2,7 +2,6 @@ import json
 import time
 import boto3
 import urllib3
-
 import base64
 
 HTTP = urllib3.PoolManager()
@@ -10,89 +9,43 @@ HTTP = urllib3.PoolManager()
 
 def getEmailList(email):
     try:
-        res = HTTP.request("GET", "https://mailsac.com/api/addresses/" + email + "/messages")
+        url = "https://www.1secmail.com/api/v1/?action=getMessages&login={}&domain={}".format(email.split("@")[0], email.split("@")[1])
+        res = HTTP.request("GET", url)
     except Exception as e:
         err = "[ERR] "
         print(err + (str(e)))
 
     if res.status != 200:
         return False
-    else:
-        return res.data
-
-
-def getVerificationEmailId(email):
-    i = 0
-    while i < 5:
-        data = getEmailList(email)
-        if len(data) < 10:
-            i = i + 1
-            time.sleep(1)
-        else:
-            j = json.loads(data)
-            break
-
-    if len(data) == 0:
-        return 99
-
-    id = j[len(j) - 1]["_id"]
-    return id
+ 
+    data = res.data
+    return json.loads(data)
 
 
 def getEmailById(email, _id, mod):
     try:
-        res = HTTP.request("GET", "https://mailsac.com/api/{}/{}/{}".format(mod, email, _id))
+        url = "https://www.1secmail.com/api/v1/?action=readMessage&login={}&domain={}&id={}".format(email.split("@")[0], email.split("@")[1], _id)
+        res = HTTP.request("GET", url)
     except Exception as e:
         err = "[ERR] "
-        print(err + (str(e)))
+        print(err + str(e))
         return False
 
-    if res.status != 200:
-        return False
-
-    else:
-        return res.data
-
-
-def getVerificationLink(email, _id):
-    body = getEmailById(email, _id, "text").decode('utf-8')
-    startpoint = body.find("https://email-verification")
-    endpoint = body.find("Your request will not be processed unless you confirm the address using this URL.")
-    if (startpoint == -1 or endpoint == -1):
-        return False
-
-    verificationlink = body[startpoint:endpoint - 2]
-    return verificationlink
+    if res.status == 200:
+        data = json.loads(res.data)
+        return data[mod] if len(data[mod]) > 0 else data["body"]
+          
+    return False
 
 
-def verifyEmail(link):
-    try:
-        res = HTTP.request("GET", link)
-    except Exception as e:
-        err = "[ERR] "
-        print(err + (str(e)))
-
-    if (("Location" in res.headers and res.headers["Location"].find("ses/verifysuccess") == -1) and res.data.find(
-            "You have successfully verified an email address") != -1):
-        return False
-
-    return {"status": "ok", "msg": "email verified"}
-
-
-def deleteEmail(email, _id):
-    try:
-        uri = ("https://mailsac.com/api/addresses/" + email + "/messages/" + _id)
-        res = HTTP.request("DELETE", uri)
-
-    except Exception as e:
-        err = "[ERR] "
-        print(err + (str(e)))
-        return False
-
-    if res.status != 200:
-        return False
-
+def deleteMailbox(email):
+  url = "https://www.1secmail.com/mailbox"
+  data = "action=deleteMailbox&domain={}&login={}".format(email.split("@")[1], email.split("@")[0])
+  headers = {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
+  res = HTTP.request("POST", url, body=data, headers=headers)
+  if res.status == 200:
     return True
+  return False
 
 
 def lambda_handler(event, context):
@@ -101,17 +54,19 @@ def lambda_handler(event, context):
 
     sts = boto3.client("sts")
     account_id = sts.get_caller_identity()["Account"]
-    mailsac_email = "dvsa.{}.{}@mailsac.com".format(account_id, ''.join(userId.split('-')))
-    print("MAIL", mailsac_email)
+    secmail = "dvsa.{}.{}@1secmail.com".format(account_id, ''.join(userId.split('-')))
+    #print("MAIL", secmail)
+
+    if action == "delete":
+      return {"status": "ok", "msg": "mailbox cleared"} if deleteMailbox(secmail) else {"status": "err", "msg": "could not delete mailbox"}
+
 
     if action == "get":
         _id = event["msgId"]
-        mod = event["type"]
-        if mod == 'html':
-            mod = 'dirty'
-        body = getEmailById(mailsac_email, _id, mod)
-        if (body):
-            data = base64.b64encode(body)
+        mod = 'htmlBody' if event["type"] == 'html' else 'textBody'
+        body = getEmailById(secmail, _id, mod)
+        if body:
+            data = base64.b64encode(body.encode())
             res = {"status": "ok", "message": data.decode("utf-8")}
             return res
 
@@ -119,68 +74,105 @@ def lambda_handler(event, context):
             res = {"status": "err", "msg": "could not retrieve email"}
             return res
 
-    if action == "delete":
-        _id = event["msgId"]
-        if (deleteEmail(mailsac_email, _id)):
-            res = {"status": "ok", "msg": "message deleted"}
-        else:
-            res = {"status": "err", "msg": "could not delete message"}
+    # if action == "delete":
+    #     _id = event["msgId"]
+    #     if (deleteEmail(secmail, _id)):
+    #         res = {"status": "ok", "msg": "message deleted"}
+    #     else:
+    #         res = {"status": "err", "msg": "could not delete message"}
 
-        return res
+    #     return res
 
     if action == "inbox":
         messages = []
-        emails = getEmailList(mailsac_email)
-        if not emails:
-            res = {"status": "err", "msg": "could not retrieve emails for: " + mailsac_email}
+        emails = getEmailList(secmail)
+        if not emails and not isinstance(emails, list):
+            res = {"status": "err", "msg": "could not retrieve emails for: " + secmail}
             return res
 
-        list = json.loads(emails)
-        for email in list:
-            sender = email["from"][0]["address"]
-            if (sender == "dvsa.noreply@mailsac.com"):
-                item = {"date": email["received"], "msg-id": email["_id"], "subject": email["subject"],
+        for email in emails:
+            sender = email["from"]
+            if sender == "dvsa.noreply@1secmail.com" or sender.endswith("amazonses.com"):
+                item = {"date": email["date"], "msg-id": email["id"], "subject": email["subject"],
                         "sender": sender}
                 messages.append(item)
 
         res = {"status": "ok", "messages": messages}
         return res
 
-    if action == "verify":
+    elif action == "verify":
         ses = boto3.client('ses')
-        response = ses.verify_email_identity(
-            EmailAddress=mailsac_email
+        ses.verify_email_identity(
+            EmailAddress=secmail
         )
         time.sleep(2)
-
-        _id = getVerificationEmailId(mailsac_email)
-        if not _id:
-            res = {"status": "err", "msg": "Could not get messages from account"}
-            print(res)
+        
+        try:
+            req = HTTP.request("GET", "https://www.1secmail.com/api/v1/?action=getMessages&login={}&domain={}".format(secmail.split("@")[0], secmail.split("@")[1]))
+        except Exception as e:
+            res = {"status": "err", "msg": str(e)}
+            print(json.dumps(res))
             return res
-
-        elif id == 99:
-            res = {"status": "err", "msg": "Something went wrong. Please try to login now."}
-            print(res)
+            
+        if req.status != 200:
+            res = {"status": "err", "msg": "got status code: " + str(req.status)}
             return res
+            
+        msg_list = json.loads(req.data)
+        aws_msg_list = []
+        for msg in msg_list:
+            if msg["subject"].find("Email Address Verification") > -1:
+                aws_msg_list.append(msg["id"])
 
-        link = getVerificationLink(mailsac_email, _id)
-        if not link:
+        if not aws_msg_list:
             res = {"status": "err", "msg": "Could not get verification link"}
             return res
+            
+        try:
+            req = HTTP.request("GET", "https://www.1secmail.com/api/v1/?action=readMessage&login={}&domain={}&id={}".format(secmail.split("@")[0], secmail.split("@")[1], max(aws_msg_list)))
+        except Exception as e:
+            res = {"status": "err", "msg": str(e)}
+            print(res)
+            return res
+        
+        if req.status != 200:
+            res = {"status": "err", "msg": "got status code: " + str(req.status)}
+            
+        email_data = json.loads(req.data)
+        body = email_data["body"]
+        startpoint = body.find("https://email-verification")
+        endpoint = body.find("Your request will not be processed unless you confirm the address using this URL.")
+        
+        if (startpoint == -1 or endpoint == -1):
+            res = {"status": "err", "msg": "Could not find verification link in body."}
+            print(res)
+            return res
+        
+        verification_link = body[startpoint:endpoint-2]
+        try:
+            req = HTTP.request("GET", verification_link)
+        except Exception as e:
+            res = {"status": "err", "msg": str(e)}
+            print(res)
+            return res
+            
+        if req.status != 200:
+            res = {"status": "err", "msg": "got status code: " + str(req.status)}
+            
+        data = req.data.decode('utf-8')
+        if data.find("You have successfully verified an email address") > -1 :
+            res = {"status": "ok", "msg": str(secmail) + " was verified"}
+            print(res)
+            return res
 
-        verified = verifyEmail(link)
-        if not verified:
+        else:
             res = {"status": "err", "msg": "Could not verify email"}
             print(res)
             return res
 
-        deleted = deleteEmail(mailsac_email, _id)
-
-        res = {"status": "ok", "msg": str(mailsac_email) + " was verified"}
-        print(res)
+        res = {"status": "ok", "msg": str(secmail) + " was verified"}
+        print(req.data)
         return res
 
     else:
         return "Unkown action" + action
-

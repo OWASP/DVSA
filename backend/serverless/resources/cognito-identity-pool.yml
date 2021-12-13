@@ -4,7 +4,7 @@ Resources:
     Type: AWS::Cognito::IdentityPool
     Properties:
       # Generate a name based on the stage
-      IdentityPoolName: ${self:custom.stage}DVSAIdentityPool
+      IdentityPoolName: DVSAIdentityPool
       # Don't allow unathenticated users
       AllowUnauthenticatedIdentities: false
       # Link to our User Pool
@@ -12,7 +12,7 @@ Resources:
         - ClientId:
             Ref: CognitoUserPoolClient
           ProviderName:
-            Fn::GetAtt: [ "CognitoUserPoolMyUserPool", "ProviderName" ]
+            Fn::GetAtt: [ "CognitoUserPoolDvsaUserPool", "ProviderName" ]
 
   # IAM roles
   CognitoIdentityPoolRoles:

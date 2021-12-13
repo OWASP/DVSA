@@ -59,4 +59,19 @@ def lambda_handler(event, context):
                 "userId": order["userId"]
             }
         )
+    
+    try:
+        cwl = boto3.client('logs')
+        res = cwl.describe_log_groups()
+        log_groups = res.get("logGroups", [])
+        for lg in log_groups:
+            lg_name = lg.get("logGroupName", "X") 
+            if lg_name.startswith("/aws/lambda/DVSA-") and lg.get("retentionInDays", 99) > 15:
+                cwl.put_retention_policy(
+                    logGroupName=lg_name,
+                    retentionInDays=14
+                )
+    except Exception as e:
+        print(str(e))
+
     return

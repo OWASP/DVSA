@@ -5,7 +5,7 @@ import uuid
 import time
 
 db = boto3.resource('dynamodb')
-table = dynamodb.Table(os.environ["INVENTORY_TABLE"])
+table = db.Table(os.environ["INVENTORY_TABLE"])
 
 def addItem(item):
     response = table.put_item(
@@ -21,8 +21,8 @@ def deleteItem(itemId):
 
 
 def updateItem(item):
-    id = item["itemId"]
-    deleteItem(itemId)
+    _id = item["itemId"]
+    deleteItem(_id)
     addItem(item)
     return {"status": "ok", "msg": "item updated"}
 

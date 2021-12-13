@@ -2,10 +2,8 @@ provider:
   name: aws
   runtime: python3.6
   versionFunctions: false
-  stage: dev
 
 custom:
-  stage: ${opt:stage, self:provider.stage}
   accountId: ${file(backend/serverless/scripts/vars.js):accountId}
 
 functions:
@@ -15,7 +13,7 @@ functions:
     handler: backend/src/functions/processing/feedback_uploads.lambda_handler
     role: dvsaFeedbackRole
     environment:
-      FEEDBACK_BUCKET: {'Fn::Join': ['', ['dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
+      FEEDBACK_BUCKET: !Sub dvsa-feedback-bucket-${AWS::AccountId}
     timeout: 10
     memorySize: 128
     package:
@@ -34,7 +32,7 @@ functions:
     environment:
       INVENTORY_TABLE: DVSA-INVENTORY-DB
       ORDERS_TABLE: DVSA-ORDERS-DB
-      RECEIPTS_BUCKET: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
+      RECEIPTS_BUCKET: !Sub dvsa-receipts-bucket-${AWS::AccountId}
     timeout: 10
     memorySize: 128
     package:
@@ -56,7 +54,7 @@ functions:
     memorySize: 128
     events:
     - http:
-        path: DVSA-PAYMENT-PROCESSOR
+        path: payment
         method: POST
         cors: true
     package:
@@ -74,7 +72,7 @@ functions:
     memorySize: 128
     events:
     - http:
-        path: DVSA-GET-CART-TOTAL
+        path: total
         method: POST
         cors: true
     package:
@@ -87,7 +85,7 @@ functions:
     role: dvsaCreateReceiptRole
     environment:
       ORDERS_TABLE: DVSA-ORDERS-DB
-      SOURCE_EMAIL: dvsa.noreply@mailsac.com
+      SOURCE_EMAIL: dvsa.noreply@1secmail.com
     timeout: 10
     memorySize: 128
     events:
@@ -205,6 +203,7 @@ resources:
                   Action:
                     - dynamodb:*
                   Resource: {'Fn::Join': [':', ['arn:aws:dynamodb', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'table/*']]}
+    
     #--------------------------
     # Role: dvsaCartTotalRole
     #--------------------------

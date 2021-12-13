@@ -45,7 +45,7 @@ YAML files of cloud resources to be deployed using the Serverless framework
 
 - **verifysesaccount.py**: 
 
-A script to verify the dvsa.noreply@mailsac.com email for the account. This is used to send the receipts to the users.
+A script to verify the dvsa.noreply@1secmail.com email for the account. This is used to send the receipts to the users.
 
 - **create-inventory-data.json**
 
@@ -98,9 +98,9 @@ Runs daily and looks for orders which were paied but not processed (status 120).
 Runs daily. Acts as a mock processing of the orders. Changes order status from processed to shipped to delivered.
 
 
-### /order-api
+### /order-manager
 
-- **order-manager-js.js**
+- **order-manager.js**
 One NodeJS function which is tirggered by the API calls from the client. The function receives the action in the request payload and invokes the relevant function accordingly. (it is also using **vulnerable** libraries).
 
 

@@ -3,5 +3,5 @@ const output = execSync('aws sts get-caller-identity', { encoding: 'utf-8' });  
 const awsInfo = JSON.parse(output);
 
 exports.accountId = function() {
-    return awsInfo.Account;
+  return awsInfo.Account;
 };

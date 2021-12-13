@@ -2,6 +2,7 @@ import json
 import boto3
 import os
 import decimal
+from boto3.dynamodb.conditions import Key, Attr
 
     # status list
     # -----------
@@ -15,6 +16,7 @@ import decimal
     # 600: rejected
 
 def lambda_handler(event, context):
+    print(json.dumps(event))
     # Helper class to convert a DynamoDB item to JSON.
     class DecimalEncoder(json.JSONEncoder):
         def default(self, o):
@@ -27,21 +29,22 @@ def lambda_handler(event, context):
             
     orderId = event["orderId"]
     userId = event["user"]
+    is_admin = json.loads(event.get("isAdmin", "false").lower())
     address = "{}"
     
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table( os.environ["ORDERS_TABLE"] )
-    response = table.get_item(
-        Key={
-                "orderId": orderId,
-                "userId": userId
-        },
-    )
-    if 'Item' not in response:
-        res = { "status": "err", "msg": "could not find order" }
-        
+    
+    if is_admin:
+        response = table.query(
+            KeyConditionExpression=Key('orderId').eq(orderId)
+        ).get("Items", [None])
+
     else:
-        res = {"status": "ok", "order": response["Item"] }        
+        key = {"orderId": orderId, "userId": userId}
+        response = [table.get_item(Key=key).get("Item")]
+
+    res = {"status": "ok", "order": response[0] } if response[0] is not None else { "status": "err", "msg": "could not find order" }
     
     return json.loads(json.dumps(res, cls=DecimalEncoder).replace("\\\"", "\"").replace("\\n", ""))
 

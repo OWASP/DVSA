@@ -1,0 +1,32 @@
+CREATE TABLE IF NOT EXISTS `orders` (
+`itemList` TEXT NULL,
+`totalAmount` FLOAT NULL,
+`orderStatus` INT(3) NULL,
+`paymentTS` INT(13) NULL,
+`orderId` VARCHAR(64) NULL,
+`userId` VARCHAR(64) NULL,
+`address` TEXT NULL,
+`confirmationToken` VARCHAR(15) NULL
+);
+
+INSERT INTO orders VALUES
+('{\"20\":5}',168,300,1568798598,'166da41a-94fa-40cd-97da-ada616078b54','70db6b6c-14c1-4708-a888-785180496926','{\"address\":\"433 Foster Avenue\, Wyano\, Arizona\, 1489\"\,\"email\":\"nicholemoses@dvsa.cloud\"\,\"name\":\"Anna Patterson\"\,\"phone\":\"+1 (865) 418-3531\"}','lSetitNePFFm'),
+('{\"10\":5}',38,300,1568993425,'42b0aabf-f6f6-42fe-aebf-cc41fb27a29c','18ad767f-bc6d-4681-8e19-0646978a6613','{\"address\":\"243 Bedford Place\, Cloverdale\, Georgia\, 6888\"\,\"email\":\"muellerblackwell@dvsa.cloud\"\,\"name\":\"Courtney Richmond\"\,\"phone\":\"+1 (863) 446-3235\"}','L0zYKMPFnFSW'),
+('{\"15\":2}',117,300,1568179788,'dde68b08-afb4-44ff-afaa-e8264fb78827','7d21c6a9-8299-471e-a1bd-f6c31f27ef35','{\"address\":\"644 Kenmore Court\, Cotopaxi\, Rhode Island\, 7660\"\,\"email\":\"bentoncardenas@dvsa.cloud\"\,\"name\":\"Lawanda Adkins\"\,\"phone\":\"+1 (907) 439-3962\"}','678SrHHtoay1'),
+('{\"18\":1}',33,300,1568952313,'4bcd9c6d-e375-4e5d-bc16-ff72e2435cc2','bc7725de-ac4c-40ea-ad2e-e664a0e3469b','{\"address\":\"115 Grant Avenue\, Curtice\, Wisconsin\, 8618\"\,\"email\":\"kirbytravis@dvsa.cloud\"\,\"name\":\"Vicky Clemons\"\,\"phone\":\"+1 (976) 572-3704\"}','MRUC2Pl7YXhU'),
+('{\"9\":7}',93,300,1568611601,'f0081e4b-5dc4-4db6-bd87-4c795cec9bc3','b9f75101-e063-4662-88f1-07b7d5dff3f2','{\"address\":\"894 Forbell Street\, Roosevelt\, West Virginia\, 7317\"\,\"email\":\"gonzalezbaird@dvsa.cloud\"\,\"name\":\"Benton Cardenas\"\,\"phone\":\"+1 (844) 476-3597\"}','8kxng3svwmTb'),
+('{\"12\":6}',129,300,1568738632,'eb6bc652-72ad-4024-ac20-9a60620a81dd','dea4d1f2-dd52-48a1-9adb-c033a2f69809','{\"address\":\"926 Elizabeth Place\, Bascom\, Federated States Of Micronesia\, 5934\"\,\"email\":\"courtneyrichmond@dvsa.cloud\"\,\"name\":\"Mercado Gibson\"\,\"phone\":\"+1 (879) 543-3117\"}','SsE5XfiLBVBv'),
+('{\"5\":4}',218,300,1568872784,'e8f79c78-163e-42ad-ac6f-8abf720956d5','a5c78d31-7b3a-4aee-9a3e-ff141e014e96','{\"address\":\"199 Montieth Street\, Geyserville\, Iowa\, 1853\"\,\"email\":\"rosemariemeyers@dvsa.cloud\"\,\"name\":\"Melody Kramer\"\,\"phone\":\"+1 (806) 517-2991\"}','PaVsdYTQZNIZ'),
+('{\"6\":8}',85,300,1568577716,'50c076f1-a8fc-48b2-887b-b3baeec09328','13607eaf-56f5-49c4-af7a-6d497c6ba906','{\"address\":\"821 Eastern Parkway\, Hardyville\, Missouri\, 4272\"\,\"email\":\"dominiquegarrett@dvsa.cloud\"\,\"name\":\"Gonzalez Baird\"\,\"phone\":\"+1 (874) 554-2024\"}','61lWPC0WLZwZ'),
+('{\"10\":10}',209,300,1568206603,'fae8751c-4f29-4c95-80d0-bd47bc8e3fad','728f050c-665d-4613-bafc-c6dc64fc891a','{\"address\":\"923 Billings Place\, Hartsville/Hartley\, Wyoming\, 4062\"\,\"email\":\"jenniemcdowell@dvsa.cloud\"\,\"name\":\"Kirby Travis\"\,\"phone\":\"+1 (939) 560-2637\"}','Hprw58Z2sEP4'),
+('{\"13\":8}',221,300,1568916330,'a44e9cad-5e1d-4e96-ba55-48a3e387aae8','4916e80d-037a-4ca6-894c-20366d8a8aed','{\"address\":\"523 Melba Court\, Alden\, Hawaii\, 6876\"\,\"email\":\"annapatterson@dvsa.cloud\"\,\"name\":\"Harrison Massey\"\,\"phone\":\"+1 (965) 591-3540\"}','DZh8DVW9jFvH'),
+('{\"7\":1}',70,300,1568542894,'ebe9cb4c-c346-4da6-b8b4-784dd80db2a6','aae4c786-3ad4-4177-b198-27828e20ec93','{\"address\":\"634 Chapel Street\, Springhill\, Puerto Rico\, 6921\"\,\"email\":\"dalesnyder@dvsa.cloud\"\,\"name\":\"Dominique Garrett\"\,\"phone\":\"+1 (870) 447-2355\"}','aDXKrLaC2zWV'),
+('{\"14\":12}',173,300,1568980382,'0f285f4a-89bf-420c-b353-f7a79a3d63ce','417300d3-3c92-45dd-9512-d09cea388143','{\"address\":\"313 Wogan Terrace\, Lemoyne\, South Dakota\, 6615\"\,\"email\":\"veracalhoun@dvsa.cloud\"\,\"name\":\"Mueller Blackwell\"\,\"phone\":\"+1 (974) 539-2708\"}','gjlwl3GCw9th'),
+('{\"5\":1}',26,300,1568606812,'8774068a-f02b-498b-acc3-862f2c5fea8f','4e67aab0-3f19-47f6-9242-a4a4437f5012','{\"address\":\"894 Maple Street\, Churchill\, Nebraska\, 6698\"\,\"email\":\"mercadogibson@dvsa.cloud\"\,\"name\":\"Mosley Jacobson\"\,\"phone\":\"+1 (943) 472-3092\"}','tkmohL8FqGkt'),
+('{\"9\":5}',18,300,1568974485,'fe348b81-1ad7-4e0b-9a2f-bd5f4ea9726e','4d42d2e5-77c2-48e0-be4e-f743e446c561','{\"address\":\"183 Belmont Avenue\, Belgreen\, Washington\, 6176\"\,\"email\":\"abigailburch@dvsa.cloud\"\,\"name\":\"Trujillo Church\"\,\"phone\":\"+1 (865) 483-3633\"}','ykJ2uSZqSTh3'),
+('{\"18\":11}',41,300,1568254691,'e5766d3a-3279-46e7-a7e8-11b1a97c5aeb','cee3345f-9d15-4e09-a0ac-cda5342471bc','{\"address\":\"560 Chester Court\, Riverton\, Delaware\, 6270\"\,\"email\":\"trujillochurch@dvsa.cloud\"\,\"name\":\"Jennie Mcdowell\"\,\"phone\":\"+1 (871) 462-3173\"}','ZHhvoFId6pE4'),
+('{\"12\":9}',130,300,1568649113,'442cdf84-56fe-4c38-89a4-f19e4dbce541','04d44f10-37ff-4535-a118-14b8a70fced7','{\"address\":\"619 Adams Street\, Whipholt\, Ohio\, 4030\"\,\"email\":\"dianneparsons@dvsa.cloud\"\,\"name\":\"Rosemarie Meyers\"\,\"phone\":\"+1 (851) 566-3866\"}','5M0SOSzhxZGc'),
+('{\"5\":12}',144,300,1568670455,'c3a109e8-dc14-47e0-8415-a099a5397ff8','d55cebc6-8aa1-48d6-908e-2569b8d94dc7','{\"address\":\"170 Adelphi Street\, Ahwahnee\, Kentucky\, 2087\"\,\"email\":\"lawandaadkins@dvsa.cloud\"\,\"name\":\"Vera Calhoun\"\,\"phone\":\"+1 (944) 541-2022\"}','pnKzTbCEvi5n'),
+('{\"12\":11}',191,300,1568574696,'9f84817a-21d7-4cbe-af87-703bcbc4d3bf','7a7cb848-904a-4784-b5f7-9d30338ffbc4','{\"address\":\"653 Lenox Road\, Lookingglass\, Nevada\, 1205\"\,\"email\":\"melodykramer@dvsa.cloud\"\,\"name\":\"Abigail Burch\"\,\"phone\":\"+1 (881) 422-2305\"}','emEQ5GP055tL'),
+('{\"16\":4}',162,300,1568169053,'69e44a10-8a6e-4a1b-8cd2-ac55e3b06a62','21864ca8-0267-4038-a416-51aa22b44036','{\"address\":\"432 Glenwood Road\, Holtville\, Mississippi\, 859\"\,\"email\":\"vickyclemons@dvsa.cloud\"\,\"name\":\"Nichole Moses\"\,\"phone\":\"+1 (915) 477-3754\"}','aBPtIAiCk2FV'),
+('{\"3\":12}',61,300,1568834136,'9c80f0bb-3da2-46d2-864a-c2bfe56a3141','9544892e-1971-4117-87fb-484a04218264','{\"address\":\"851 Hinckley Place\, Escondida\, New Mexico\, 4626\"\,\"email\":\"mosleyjacobson@dvsa.cloud\"\,\"name\":\"Dianne Parsons\"\,\"phone\":\"+1 (920) 597-3392\"}','6J6AIXPXjbWc');

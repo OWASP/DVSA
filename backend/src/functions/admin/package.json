@@ -1,0 +1,14 @@
+{
+  "name": "admin-mysql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "admin_orders_mysql.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}
