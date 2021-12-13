@@ -1,5 +1,5 @@
 
-# ![alt DVSA](https://i.imgur.com/Z4L7MqL.png)
+# ![alt OWASP DVSA](https://i.imgur.com/G15BF6m.png)
 
 ## a Damn Vulnerable Serverless Application
 
@@ -8,7 +8,7 @@ Damn Vulnerable Serverless Application (DVSA) is a deliberately vulnerable appli
 
 The aim of DVSA is to **practice some of the most common serverless vulnerabilities**, with a simple straightforward interface.
 
-Please note, there are **both documented and undocumented vulnerabilities** with this software. This is intentional. You are encouraged to try and discover as many issues as possible.
+Please note, there are both **documented & undocumented vulnerabilities** with this software. This is intentional. You are encouraged to try and discover as many issues as possible.
 
 
 
@@ -25,7 +25,7 @@ We do not take responsibility for the way in which any one uses this application
 ## Deployment
 
 #### [Application Repository](AWS/VIDEOS/reo_deploy.mp4)
-- Deploy DVSA from the [AWS Serverless Application Repository](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:889485553959:applications~DVSA)
+- Deploy DVSA from the [AWS Serverless Application Repository](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:674087993380:applications~OWASP-DVSA)
 
 - After deployment is complete. Click on 'View CloudFormation Stack'
 
@@ -35,48 +35,24 @@ We do not take responsibility for the way in which any one uses this application
 ![](https://i.imgur.com/ZfjEyiM.png)
 #### [Serverless Framework](AWS/VIDEOS/serverless_deploy.mp4)
 
-You must run serverless deploy commands with an environment variable profile (e.g. `AWS_PROFILE=<aws-profile-name>`) instead of the serverless argument.
+##### Prerequisites
+- npm
+- python3
+- Serverless `npm install -g serverless`
 
-##### Clone Project
-- `git clone git@github.com:OWASP/DVSA.git`
+##### Setting your AWS Account/Region
+If you don't want to run with your `default` aws profile/region, run thhe `sls` commands with `AWS_PROFILE=<aws-profile>`/`AWS_REGION=<aws-region>` or modify the `provider.profile`/`provider.region` inside the `serverless.yml` file
 
-##### Install nodejs==14.15.4 and npm (later versions break the lambda packaging: [issue](https://github.com/serverless/serverless/issues/8794))
-- https://nodejs.org/download/release/latest-v14.x/
-- https://www.npmjs.com/package/npm?activeTab=versions
+##### Run
+`./deploy.sh`
+###### Or, Step-by-Step:
+- Install npm dependencies: `npm i`
+- Install pip dependencies: `pip3 install awscli boto3 --user --upgrade`
+- Deploy backend: `sls deploy`
+- Build client: `npm run-script client:build`
+- Deploy client `sls client deploy`
 
-##### Configure nodejs to use python2.7
-- `npm config set python python2.7`
-
-##### Install Serverless
-- `npm install -g serverless`
-
-##### Install AWS-CLI
-- `pip install awscli --upgrade --user`
-
-##### Install npm's python dependencies
-- `pip install requests --user`
-
-##### Verify AWS-CLI Installation
-- `aws --version`
-
-If you get a "command not found" error, see the "Steps to Take after Installation" section [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html#install-tool-pip).
-
-##### Configure AWS-CLI for your Account. Make sure the default region matches the region in `serverless.yml`
-- `aws configure`
-
-##### Install dependencies
-- `npm i`
-
-##### Deploy Backend
-- `sls deploy`
-
-##### Build Client
-- `npm run-script client:build`
-
-##### Deploy Client
-- `sls client deploy`
-
-- - -
+- - - 
 ## Running locally
 
 #### Run Client
@@ -92,15 +68,10 @@ If you want to point your local client to your local backend, edit your `be-stac
 - - -
 ## Email subscription
 
-DVSA sends receipts in the email (which will help you in hacking it). You can use the built-in **Inbox** page within the application to get the emails and obtain the receipts.
+DVSA sends receipts in the email. You can use the built-in **Inbox** page within the application to get the emails and obtain the receipts. Each user will be automatically assigned an email from `1secmail.com` which will be automatically verified. Real emails will be sent to their account and will appear in the application Inbox page.
 
-**_Note_**: each user will be assigned an email from `mailsac.com` which will be automatically verified. Real emails will be sent to their account and will appear in the application Inbox page. All this is **transparent** to the user and the deployer).
-
-**_Note_**: to make the email verification script work your default AWS region has to be "US East (N. Virginia)", for example by setting `region = us-east-1` in your ~/.aws/config file
-
-**Alternatively**, if you want users to receive emails to their registered email account (e.g. gmail), use one of the followings:
-
-- Send an email verification link to email address, by running the following command (after clicking on the received link, emails will **also** be sent to their actual email address):
+If you want users to receive emails to their actual registered email account (e.g. gmail):
+- Send an email verification link to the desired email address, by running the following command (after clicking on the received link, emails will **also** be sent to their actual email address):
 
 `aws ses verify-email-identity --email-address <your_email>`
 

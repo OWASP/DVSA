@@ -10,19 +10,33 @@ export class ConfirmationPage extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            toBilling: false,
+            orderid: this.props.location.state.confirmationInfo.orderId
         }
+    }
+
+    componentWillMount(){
+      let self = this;
+      let opts = {
+          'action': 'complete',
+          'order-id': this.state.orderid
+      };
+      API.callApi(opts)
+          .then(function(response) {
+              return response.json();
+          }).then(function(err, data) {
+         });
     }
 
     render(){
         const token = this.props.location.state.confirmationInfo.token;
         const amount = this.props.location.state.confirmationInfo.amount;
         let cart = this.props.location.state.confirmationInfo.cart;
+        const orderid = this.props.location.state.confirmationInfo.orderId;
         if(cart) cart = JSON.parse(cart);
         return(
             <Container className='page-top-margin'>
             <div>
-            <Header as='h2'>Confirmation Page</Header>
+            <Header as='h2'>Confirmation for order: {orderid}</Header>
                 {
                     cart.length > 0 ? (
                     <div>
@@ -36,7 +50,7 @@ export class ConfirmationPage extends React.Component {
                     </div>) : <div>Your cart is empty</div>
                 }
                 <div>
-                 <Segment>Total Price: {amount}</Segment>
+                 <Segment>Total Price: $ {amount}</Segment>
                  <Segment>Confirmation Token: {token}</Segment>
                  </div>
                 </div>

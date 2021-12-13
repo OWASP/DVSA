@@ -35,7 +35,7 @@ def lambda_handler(event, context):
     os.system('echo -e "\t----------------------\n\t\tDate: {}" >> {}'.format(date, download_path))
 
     # delete original file
-    s3.delete_object(Bucket=bucket, Key=key)
+    #s3.delete_object(Bucket=bucket, Key=key)
     # upload new file (txt)
     s3.upload_file(download_path, bucket, key.replace(".raw", ".txt"))
 
@@ -67,7 +67,7 @@ def lambda_handler(event, context):
 
             sts = boto3.client("sts")
             account_id = sts.get_caller_identity()["Account"]
-            mailsac_email = "dvsa.{}.{}@mailsac.com".format(account_id, ''.join(userId.split('-')))
+            secmail = "dvsa.{}.{}@1secmail.com".format(account_id, ''.join(userId.split('-')))
 
             # create email
             subject = 'Your DVSA Order: Confirmed'.format(token)
@@ -84,51 +84,40 @@ def lambda_handler(event, context):
                 Best,<br>
                 DVSA Team
                 <br>
-                <a href="https://www.owasp.org/index.php/OWASP_DVSA"><img src="https://i.imgur.com/UHYml4I.png" width="200px" height="75px"/></a>
+                <a href="https://www.owasp.org/index.php/OWASP_DVSA"><img src="https://i.imgur.com/P3fU4GH.png" width="200px" height="75px"/></a>
 
                 '''.format(name, token, address, signed_link)
 
             # SEND EMAIL TO CUSTOMER
 
             ses = boto3.client('ses')
+            destinations = [secmail, email_addr]
+            for address in destinations:
+              try:
+                  response = ses.send_email(
+                      Destination={
+                          'ToAddresses': [address]
+                      },
+                      Message={
+                          'Body': {
+                              'Html': {
+                                  'Charset': 'UTF-8',
+                                  'Data': email_msg
+                              },
+                          },
+                          'Subject': {
+                              'Charset': 'UTF-8',
+                              'Data': subject,
+                          },
+                      },
+                      Source=os.environ["SOURCE_EMAIL"],
+                  )
+                  print("Sent email to: {}".format(address))
+              except Exception as e:
+                print("could not send email to: {}".format(address))
+                print(str(e))
+              
 
-            response = ses.send_email(
-                Destination={
-                    'ToAddresses': [mailsac_email],
-                },
-                Message={
-                    'Body': {
-                        'Html': {
-                            'Charset': 'UTF-8',
-                            'Data': email_msg
-                        },
-                    },
-                    'Subject': {
-                        'Charset': 'UTF-8',
-                        'Data': subject,
-                    },
-                },
-                Source=os.environ["SOURCE_EMAIL"],
-            )
-
-            response = ses.send_email(
-                Destination={
-                    'ToAddresses': [email_addr],
-                },
-                Message={
-                    'Body': {
-                        'Html': {
-                            'Charset': 'UTF-8',
-                            'Data': email_msg
-                        },
-                    },
-                    'Subject': {
-                        'Charset': 'UTF-8',
-                        'Data': subject,
-                    },
-                },
-                Source=os.environ["SOURCE_EMAIL"],
-            )
             res = {"status": "ok", "msg": "receipt email sent"}
 
     return res

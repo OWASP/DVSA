@@ -4,9 +4,9 @@ Resources:
     Properties:
       AuthorizerResultTtlInSeconds: 300
       IdentitySource: method.request.header.Authorization
-      Name: ${self:custom.stage}DVSACognitoAuthorizer
+      Name: DVSACognitoAuthorizer
       RestApiId:
         Ref: ApiGatewayRestApi
       Type: COGNITO_USER_POOLS
       ProviderARNs:
-        - {"Fn::GetAtt": ['CognitoUserPoolMyUserPool', Arn]}
+        - {"Fn::GetAtt": ['CognitoUserPoolDvsaUserPool', Arn]}

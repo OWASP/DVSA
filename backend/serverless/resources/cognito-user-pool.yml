@@ -1,9 +1,9 @@
 Resources:
-  CognitoUserPoolMyUserPool:
+  CognitoUserPoolDvsaUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
       # Generate a name based on the stage
-      UserPoolName: ${self:custom.stage}-DVSA-user-pool
+      UserPoolName: dvsa-user-pool
       # Set email as an alias
       UsernameAttributes:
         - email
@@ -37,9 +37,9 @@ Resources:
     Type: AWS::Cognito::UserPoolClient
     Properties:
       # Generate an app client name based on the stage
-      ClientName: ${self:custom.stage}-DVSA-user-pool-client
+      ClientName: dvsa-user-pool-client
       UserPoolId:
-        Ref: CognitoUserPoolMyUserPool
+        Ref: CognitoUserPoolDvsaUserPool
       ExplicitAuthFlows:
         - ADMIN_NO_SRP_AUTH
       GenerateSecret: false
@@ -49,7 +49,7 @@ Resources:
 Outputs:
   UserPoolId:
     Value:
-      Ref: CognitoUserPoolMyUserPool
+      Ref: CognitoUserPoolDvsaUserPool
 
   UserPoolClientId:
     Value:

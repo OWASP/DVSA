@@ -1,0 +1,62 @@
+functions:
+  OrderManager:
+    runtime: nodejs12.x
+    name: DVSA-ORDER-MANAGER
+    handler: backend/src/functions/order-manager/order-manager.handler
+    role: DVSAOrderAPIRole
+    timeout: 30
+    memorySize: 128
+    environment:
+      userpoolid:
+        Ref: CognitoUserPoolDvsaUserPool
+    events:
+    - http:
+        path: order
+        method: POST
+        cors: true
+    package:
+      individually: true
+      exclude:
+        - ./**
+      include:
+        - backend/src/functions/order-manager/*.js
+        - backend/src/functions/order-manager/node_modules/**
+
+resources:
+  Resources:
+    #--------------------------
+    # Role: DVSAOrderAPIRole
+    #--------------------------
+    DVSAOrderAPIRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: DVSAOrderAPIRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: DVSAOrderAPIRolePolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: {'Fn::Join': [':', ['arn:aws:logs', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'log-group:/aws/lambda/*:*:*']]}
+                - Effect: Allow
+                  Action:
+                    - lambda:InvokeFunction
+                    - lambda:InvokeAsync
+                  Resource: {'Fn::Join': [':', ['arn:aws:lambda', {Ref: 'AWS::Region'}, {Ref: 'AWS::AccountId'}, 'function:*']]}
+                - Effect: Allow
+                  Action:
+                    - cognito-idp:*
+                    - sts:*
+                  Resource: '*'

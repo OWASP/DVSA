@@ -7,10 +7,13 @@ provider:
   name: aws
   runtime: python3.6
   stage: ${env:USER}
-  versionFunctions: false
+  profile: default
   region: us-east-1
+  versionFunctions: false
   timeout: 30
   memorySize: 128
+  apiGateway: 
+    shouldStartNameWithService: true
   
 package:
   individually: true
@@ -23,10 +26,12 @@ plugins:
   - serverless-offline
   - serverless-stack-output
   - serverless-scriptable-plugin
+  - serverless-attach-managed-policy
+  - serverless-plugin-log-retention
 
 custom:
-  stage: ${opt:stage, self:provider.stage}
   accountId: ${file(backend/serverless/scripts/vars.js):accountId}
+  logRetentionInDays: 7
   
   client:
     bucketName: dvsa-website-${self:custom.accountId}
@@ -37,13 +42,13 @@ custom:
     file: ./client/src/be-stack.json
 
   scriptHooks:
-    before:package:cleanup:  python backend/serverless/scripts/onstart.py 
-    after:package:finalize:  python backend/serverless/scripts/verifysesaccount.py --verify
-    after:deploy:finalize:   aws dynamodb batch-write-item --request-items file://backend/serverless/scripts/create-inventory-data.json
-    after:remove:remove:     python backend/serverless/scripts/verifysesaccount.py --remove
+    before:package:cleanup:  python3 backend/serverless/scripts/onstart.py 
+    after:package:finalize:  python3 backend/serverless/scripts/verifysesaccount.py --verify
+    after:deploy:finalize:   python3 backend/serverless/scripts/finalize.py --profile ${env:AWS_PROFILE, self:provider.profile} --region ${env:AWS_REGION, self:provider.region}
+    after:remove:remove:     python3 backend/serverless/scripts/verifysesaccount.py --remove
 
 functions:
-  - ${file(backend/src/functions/order-api/sls.yml):functions}
+  - ${file(backend/src/functions/order-manager/sls.yml):functions}
   - ${file(backend/src/functions/order/sls.yml):functions}
   - ${file(backend/src/functions/processing/sls.yml):functions}
   - ${file(backend/src/functions/admin/sls.yml):functions}
@@ -57,8 +62,11 @@ resources:
   - ${file(backend/serverless/resources/api-gateway.yml)}
   - ${file(backend/serverless/resources/dynamodb-tables.yml)}
   - ${file(backend/serverless/resources/s3-buckets.yml)}
-  - ${file(backend/serverless/resources/function-roles.yml)}
 
   # Function Resources
-  - ${file(backend/src/functions/order-api/sls.yml):resources}
+  - ${file(backend/src/functions/order-manager/sls.yml):resources}
   - ${file(backend/src/functions/processing/sls.yml):resources}
+  - ${file(backend/src/functions/order/sls.yml):resources}
+  - ${file(backend/src/functions/admin/sls.yml):resources}
+  - ${file(backend/src/functions/user/sls.yml):resources}
+  - ${file(backend/src/functions/cronjobs/sls.yml):resources}

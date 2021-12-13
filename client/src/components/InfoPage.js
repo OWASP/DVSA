@@ -10,7 +10,7 @@ export class InfoPage extends React.Component {
         return(
             <Container className='page-top-margin'>
                 <a href="https://www.owasp.org/index.php/OWASP_DVSA">
-                <img src="/images/owasplogoinfo.png" width="512px"/>
+                <img src="/images/owasplogoinfo.png"/>
                 </a>
                 <br/><br/>
                 <h2>Information</h2>

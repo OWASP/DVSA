@@ -70,7 +70,8 @@ export class BillingPage extends React.Component {
                 let confirmationInfo = {
                     cart: localStorage.getItem('cart'),
                     amount: data.amount,
-                    token: data.token
+                    token: data.token,
+                    orderId: orderId
                 }
                 self.setState({confirmationInfo: confirmationInfo})
                 localStorage.removeItem('order-id');

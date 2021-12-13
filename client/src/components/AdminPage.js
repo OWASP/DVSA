@@ -101,11 +101,11 @@ export class AdminPage extends React.Component {
 
                       <Table.Cell width={2}>   <input disabled placeholder='To' value={this.state.orderFilters.to} onChange={this.handleChange('to')}/></Table.Cell>
 
-                        <Table.Cell width={4}>  <input disabled placeholder='Order' value={this.state.orderFilters.orderid} onChange={this.handleChange('orderid')}/></Table.Cell>
+                      <Table.Cell width={4}>  <input disabled placeholder='Order' value={this.state.orderFilters.orderid} onChange={this.handleChange('orderid')}/></Table.Cell>
 
-                    <Table.Cell width={4}>      <input disabled placeholder='User' value={this.state.orderFilters.userid} onChange={this.handleChange('userid')}/></Table.Cell>
+                      <Table.Cell width={4}>      <input disabled placeholder='User' value={this.state.orderFilters.userid} onChange={this.handleChange('userid')}/></Table.Cell>
 
-                     <Table.Cell width={2 }>     <input disabled placeholder='Status' value={this.state.orderFilters.status} onChange={this.handleChange('status')}/></Table.Cell>
+                      <Table.Cell width={2}>     <input disabled placeholder='Status' value={this.state.orderFilters.status} onChange={this.handleChange('status')}/></Table.Cell>
                     </Form.Field>
                  </Form>
                  }

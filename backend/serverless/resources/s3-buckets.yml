@@ -1,9 +1,9 @@
 Resources:
 
-  S3BucketFeedbackBucket:
+  S3FeedbackBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: {'Fn::Join': ['', ['dvsa-feedback-bucket-', {Ref: 'AWS::AccountId'}]]}
+      BucketName: !Sub dvsa-feedback-bucket-${AWS::AccountId}
       # Set the CORS policy
       CorsConfiguration:
         CorsRules:
@@ -19,10 +19,10 @@ Resources:
               - HEAD
             MaxAge: 3000
 
-  S3BucketReceiptsBucket:
+  S3ReceiptsBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
+      BucketName: !Sub dvsa-receipts-bucket-${AWS::AccountId}
       # Set the CORS policy
       CorsConfiguration:
         CorsRules:
@@ -39,7 +39,7 @@ Resources:
               - HEAD
             MaxAge: 3000
 
-  LambdaPermissionFeedbackBucketS3:
+  S3FeedbackBucketInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
       FunctionName:
@@ -50,12 +50,12 @@ Resources:
       Action: "lambda:InvokeFunction"
       SourceAccount:
         Ref: AWS::AccountId
-      SourceArn: !GetAtt S3BucketFeedbackBucket.Arn
+      SourceArn: !GetAtt S3FeedbackBucket.Arn
 
-  S3BucketfeedbackPermissions:
+  FeedbackBucketPermissions:
       Type: AWS::S3::BucketPolicy
       Properties:
-        Bucket: !Ref S3BucketFeedbackBucket
+        Bucket: !Ref S3FeedbackBucket
         PolicyDocument:
           Statement:
             -
@@ -67,20 +67,16 @@ Resources:
                 - s3:GetObject
                 - s3:DeleteObject
               Effect: Allow
-              Resource: {'Fn::Join': ['', [!GetAtt S3BucketFeedbackBucket.Arn, '/*']]}
+              Resource: {'Fn::Join': ['', [!GetAtt S3FeedbackBucket.Arn, '/*']]}
             -
               Sid: "AdminListFeedbackStatement"
-              Principal:
-                AWS:
-                  Fn::GetAtt:
-                    - dvsaAdminRole
-                    - Arn
+              Principal: "*"
               Action:
                 - s3:*
               Effect: Allow
-              Resource: !GetAtt S3BucketFeedbackBucket.Arn
+              Resource: !GetAtt S3FeedbackBucket.Arn
 
-  LambdaPermissionReceiptsBucketS3:
+  ReceiptsBucketInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
       FunctionName:
@@ -91,12 +87,12 @@ Resources:
       Action: "lambda:InvokeFunction"
       SourceAccount:
         Ref: AWS::AccountId
-      SourceArn: !GetAtt S3BucketReceiptsBucket.Arn
+      SourceArn: !GetAtt S3ReceiptsBucket.Arn
 
-  S3BucketPermissions:
+  ReceiptBucketPermissions:
       Type: AWS::S3::BucketPolicy
       Properties:
-        Bucket: {'Fn::Join': ['', ['dvsa-receipts-bucket-', {Ref: 'AWS::AccountId'}]]}
+        Bucket: !Ref S3ReceiptsBucket
         PolicyDocument:
           Statement:
             - 
@@ -108,15 +104,11 @@ Resources:
                 - s3:GetObject
                 - s3:DeleteObject
               Effect: Allow 
-              Resource: {'Fn::Join': ['', [!GetAtt S3BucketReceiptsBucket.Arn, '/*']]}
+              Resource: {'Fn::Join': ['', [!GetAtt S3ReceiptsBucket.Arn, '/*']]}
             - 
               Sid: "AdminListReceiptsStatement"
-              Principal:
-                AWS:
-                  Fn::GetAtt:
-                    - dvsaAdminRole
-                    - Arn
+              Principal: "*"
               Action:
                 - s3:*
               Effect: Allow 
-              Resource: !GetAtt S3BucketReceiptsBucket.Arn
+              Resource: !GetAtt S3ReceiptsBucket.Arn

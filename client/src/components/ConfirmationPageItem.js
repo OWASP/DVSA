@@ -34,8 +34,6 @@ export class ConfirmationPageItem extends React.Component {
                             <ul>
                                 <li><h4>{this.props.title}</h4></li>
                                 <li>{this.props.brand}</li>
-                                <li>Type: {this.props.type}</li>
-                                <li>Size: {this.props.size}</li>
                             </ul>
                         </div>
                     </div>

@@ -42,15 +42,7 @@ def tweet(token, msg):
     '''
     return {\'msg\': \'please check that action\'''}
     
-    response = dynamodb.get_item(
-        TableName = 'TODO: PLEASE_CHECK',
-        Item={
-            'tweetId': tweetId,
-            'msg': msg
-        }
-    )
-    
-    response = dynamodb.get;item(
+    response = dynamodb.put_item(
         TableName = 'TODO: PLEASE_CHECK',
         Item={
             'tweetId': tweetId,
@@ -58,6 +50,17 @@ def tweet(token, msg):
         }
     )
     '''
+    try:
+      response = dynamodb.updateItem(
+          TableName = 'TODO: PLEASE_CHECK',
+          Item={
+              'tweetId': tweetId,
+              'msg': msg
+          }
+      )
+    except:
+      pass
+    
     #try 5
     test = dynamodb.select_item(
         TableName="DVSA-TWEETER-DB",

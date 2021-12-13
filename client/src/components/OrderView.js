@@ -16,7 +16,16 @@ export class OrderView extends React.Component {
             isDisabled: true,
             toOrders: false
         };
-
+        this.statuses = {
+          "100": "incomplete",
+          "110": "payment failed",
+          "120": "paid",
+          "200": "processed",
+          "210": "shipped",
+          "300": "delivered",
+          "500": "cancelled",
+          "600": "rejected"
+      };
     }
 
     handleCancel = () => {
@@ -42,8 +51,8 @@ export class OrderView extends React.Component {
     componentWillMount(){
         let self = this;
         let opts = {
-                    'action': 'get',
-                    'order-id': self.state.order.orderId
+            'action': 'get',
+            'order-id': self.state.order.orderId
         };
         API.callApi(opts)
             .then(function(response) {
@@ -77,11 +86,11 @@ export class OrderView extends React.Component {
             {this.state.isLoading && <img src="/images/loader.gif" /> }
                 <div>
                      <h2>Order {this.state.order.orderId} </h2>
-                     <h4>status: {this.state.order.orderStatus}</h4>
+                     <h4>Order Status: {this.statuses[this.state.order.orderStatus]}</h4>
                      <h4>Confirmation Token: {this.state.order.confirmationToken}</h4>
                      <h4>Date: {new Date(this.state.order.paymentTS*1000).toLocaleString()}</h4>
-                     <h4>Address: {JSON.stringify(this.state.order.address)}</h4>
-                     <h4>Total: {this.state.order.totalAmount}</h4>
+                     <h4>Address: {JSON.stringify(this.state.order.address, null, 2)}</h4>
+                     <h4>Total: ${this.state.order.totalAmount}</h4>
 
                      <br/><br/>
                     <Button type='submit' color='red' onClick={this.handleCancel} disabled={this.state.isDisabled}>Cancel Order</Button>
