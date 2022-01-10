@@ -2,7 +2,7 @@
 
 To avoid flooding the 3rd party payment processing (its not really 3rd-party, but think about it as a STRIPE), the DVSA is configured to allow only 10 concurrent invocations of the billing process.
 
-This means that an attacker can cause a Denial of Service on payment processing in the applicaiton, simply by sending the billing request in at least 10 parallel threads.
+This means that an attacker can cause a Denial of Service on payment processing in the application, simply by sending the billing request in at least 10 parallel threads.
 
 This simply python code will exploit it (with sample data):
 
