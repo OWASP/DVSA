@@ -27,12 +27,14 @@
   },
   "homepage": "https://github.com/owasp/DVSA#readme",
   "devDependencies": {
-    "serverless-finch": "^2.6.0",
+    "serverless-attach-managed-policy": "^0.0.7",
+    "serverless-finch": "^4.0.2",
+    "serverless-plugin-log-retention": "^2.0.0",
     "serverless-scriptable-plugin": "^0.8.0",
     "serverless-stack-output": "^0.2.3"
   },
   "dependencies": {
-    "serverless": "^2.22.0",
-    "serverless-offline": "^4.10.6"
+    "serverless": "^3.26.0",
+    "serverless-offline": "^5.3.3"
   }
 }

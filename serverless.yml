@@ -5,10 +5,10 @@ service: dvsa
 
 provider:
   name: aws
-  runtime: python3.6
+  runtime: python3.8
   stage: ${env:USER}
-  profile: default
-  region: us-east-1
+  profile: myagent
+  region: eu-west-1
   versionFunctions: false
   timeout: 30
   memorySize: 128
@@ -28,7 +28,6 @@ plugins:
   - serverless-scriptable-plugin
   - serverless-attach-managed-policy
   - serverless-plugin-log-retention
-
 custom:
   accountId: ${file(backend/serverless/scripts/vars.js):accountId}
   logRetentionInDays: 7
