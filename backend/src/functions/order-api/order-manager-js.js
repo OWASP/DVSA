@@ -105,7 +105,7 @@ exports.handler = async (event, context, callback) => {
                         headers: {
                             "Access-Control-Allow-Origin" : "*"
                         },
-                        body: JSON.stringify({"status": "ok", "message": "Thank you."})
+                        body: JSON.stringify({"status": "ok", "message": `Thank you ${req["data"]["name"]}.`})
                  };
                  callback(null, response);
 
