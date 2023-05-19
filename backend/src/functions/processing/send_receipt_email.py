@@ -28,21 +28,24 @@ def lambda_handler(event, context):
     # download file to /tmp
     download_path = '/tmp/' + order.replace(".raw", ".txt")
 
-    # print download_path
-    s3.download_file(bucket, key, download_path)
     date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
 
     os.system('echo -e "\t----------------------\n\t\tDate: {}" >> {}'.format(date, download_path))
 
-    # delete original file
-    #s3.delete_object(Bucket=bucket, Key=key)
-    # upload new file (txt)
-    s3.upload_file(download_path, bucket, key.replace(".raw", ".txt"))
+    # print download_path
+    try:
+        s3.download_file(bucket, key, download_path)
 
-    # get signed url
-    signed_link = s3.generate_presigned_url('get_object', Params={'Bucket': bucket, 'Key': key.replace(".raw", ".txt")},
-                                            ExpiresIn=259200)
+        # delete original file
+        #s3.delete_object(Bucket=bucket, Key=key)
+        # upload new file (txt)
+        s3.upload_file(download_path, bucket, key.replace(".raw", ".txt"))
 
+        # get signed url
+        signed_link = s3.generate_presigned_url('get_object', Params={'Bucket': bucket, 'Key': key.replace(".raw", ".txt")},
+                                                ExpiresIn=259200)
+    except Exception as e:
+        print(e)
     # GET ITEMS FOR ORDER
     dynamodb = boto3.resource('dynamodb')
     order_table = dynamodb.Table(os.environ["ORDERS_TABLE"])

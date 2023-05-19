@@ -55,16 +55,26 @@ export class ContactPage extends React.Component {
      }
 
   addNotification() {
+    var msg = "Thank you "+this.state.feedback["name"]+"!";
     this.notificationDOMRef.current.addNotification({
       title: "Sent",
-      message: "Thank you!",
+      message: "Thank you "+this.state.feedback["name"]+"!",
       type: "success",
       insert: "top",
       container: "top-right",
       animationIn: ["animated", "fadeIn"],
       animationOut: ["animated", "fadeOut"],
       dismiss: { duration: 2000 },
-      dismissable: { click: true }
+      dismissable: { click: true },
+      content: (
+        <div className="notification-success">
+            <div className="notification-content">
+                <h4 className="notification-title">Sent</h4>
+                <p className="notification-message" dangerouslySetInnerHTML={{__html:msg}}>
+                </p>
+            </div>
+        </div>
+        )
     });
   }
 

@@ -40,7 +40,7 @@ def lambda_handler(event, context):
                 "userId": userId
         }
     )
-
+    receipt = os.open("/tmp/{}.raw".format(orderId), os.O_RDWR|os.O_CREAT)
     if 'Item' not in response:
         res = { "status": "err", "msg": "could not find order" }
     else:
@@ -80,8 +80,14 @@ def lambda_handler(event, context):
                 items = items + "    {}\t\t{} ({})\n\t\t".format(item["name"], str(item["price"]), got_items[item["itemId"]])                
             ts = response["Item"]["paymentTS"]
             address = response["Item"]["address"]
-            name = address["name"]
-            to = address["address"]
+            try: 
+                name = address.get("name","")
+            except:
+                name = address
+            try:
+                to = address.get("address","")
+            except:
+                to = address
 
             amount = str(response["Item"]["totalAmount"])
             token = response["Item"]["confirmationToken"]
@@ -102,9 +108,10 @@ def lambda_handler(event, context):
             '''.format(token, name, to, items, amount)
            
             # UPLOAD TXT RECEIPT TO S3
-            receipt = open("/tmp/{}.raw".format(orderId),"w+")
-            receipt.write(msg)
-            receipt.close()
+            # receipt = open("/tmp/{}.raw".format(orderId),"w+")
+            #receipt.write(msg)
+            os.write(receipt, str.encode(msg))
+            # receipt.close()
             s3 = boto3.resource('s3')
             bucket = os.environ["RECEIPTS_BUCKET"]
             y = datetime.utcfromtimestamp(ts).strftime('%Y')
@@ -124,6 +131,7 @@ def lambda_handler(event, context):
             ) 
             
             res = {"status": "ok", "msg":"order in process"}
-            
+    #receipt.close()
+    os.close(receipt)
     return res
 
