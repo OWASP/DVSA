@@ -20,10 +20,10 @@ functions:
       include:
         - backend/src/functions/processing/feedback_uploads.py
     events:
-    - s3:
-        bucket: 'dvsa-feedback-bucket-${self:custom.accountId}'
-        existing: true
-        event: s3:ObjectCreated:*
+      - s3:
+          bucket: 'dvsa-feedback-bucket-${self:custom.accountId}'
+          existing: true
+          event: s3:ObjectCreated:*
 
   CreateReceipt:
     name: DVSA-CREATE-RECEIPT
