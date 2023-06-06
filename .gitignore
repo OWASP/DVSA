@@ -1,13 +1,12 @@
 .idea
-.serverless
-backend/src/functions/order-api/.serverless
+.aws-sam
 client/node_modules
+backend/functions/order-manager/node_modules
 node_modules
 be-stack.json
 COPYING.txt
 favicon.ico
 LICENSE
-README.md
 news.md
 AWS/
 Azure/

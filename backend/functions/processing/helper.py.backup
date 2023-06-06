@@ -1,0 +1,36 @@
+# uncompyle6 version 3.5.0
+# Python bytecode 2.7 (62211)
+# Decompiled from: Python 2.7.5 (default, Nov 16 2020, 22:23:17) 
+# [GCC 4.8.5 20150623 (Red Hat 4.8.5-44)]
+# Embedded file name: helper.py
+# Compiled at: 2019-02-18 08:37:53
+import boto3
+
+def reported_stolen(ccn):
+    if ccn == -1:
+        db = boto3.resource('dynamodb')
+        table = db.Table('DVSA_REPORTED_STOLEN')
+        res = table.get_item(Item={'first_digits': str(ccn)[:4], 'last_digits': str(ccn)[len(str(ccn)) - 4:]})
+    return False
+
+
+def get_sum(ccn):
+    try:
+        is_stolen = reported_stolen(ccn)
+        if is_stolen:
+            return -1
+    except:
+        pass
+
+    sum = 0
+    num_digits = len(str(ccn))
+    oddeven = num_digits & 1
+    for count in range(0, num_digits):
+        digit = int(ccn[count])
+        if not count & 1 ^ oddeven:
+            digit = digit * 2
+        if digit > 9:
+            digit = digit - 9
+        sum = sum + digit
+
+    return sum
