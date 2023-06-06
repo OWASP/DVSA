@@ -1,0 +1,9 @@
+version = 3.0
+[default.deploy.parameters]
+stack_name = "OWASP-DVSA"
+resolve_s3 = true
+s3_prefix = "OWASP-DVSA"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "AdminEmail=\"dvsa.admin@1secmail.com\" WebsiteBucketPrefix=\"dvsa-website\""
+image_repositories = []
