@@ -2,6 +2,7 @@
 .aws-sam/
 client/node_modules/
 client/build/
+build/
 backend/functions/order-manager/node_modules/
 node_modules/
 be-stack.json
