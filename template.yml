@@ -740,6 +740,23 @@ Resources:
             BucketName: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}
         - SQSSendMessagePolicy:
             QueueName: dvsa-order-paid-sqs
+
+  OrderCompleteFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DVSA-ORDER-COMPLETE
+      Handler: order_complete.lambda_handler
+      Runtime: python3.8
+      CodeUri: backend/src/functions/order/
+      Environment:
+        Variables:
+          ORDERS_TABLE: DVSA-ORDERS-DB
+          INVENTORY_TABLE: DVSA-INVENTORY-DB
+      MemorySize: 128
+      Timeout: 10
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: '*'      
   
   ## Processing
   PaymentProcessorFunction:
