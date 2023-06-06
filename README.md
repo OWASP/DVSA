@@ -61,8 +61,8 @@ We do not take responsibility for the way in which any one uses this application
   - new code will be built into `.aws-sam/` folder
   - SAM builds automatically when it finds `package.json` and `requirements.txt` so you don't need to build yourself
 
-- Run `sam package --output-template-file <NEW_TEMPLATE_FILE_NAME> --s3-bucket <YOUR_OWNED_S3_BUCKET_TO_HOST_CODE> --profile <AWS_PROFILE_OWNING_BUCKET> --region <AWS_REGION_WHERE_WILL_BE_DEPLOYED>`
-
+- Run `sam package --output-template-file <NEW_TEMPLATE_FILE_NAME> --profile <AWS_PROFILE_OWNING_BUCKET> --region <AWS_REGION_WHERE_WILL_BE_DEPLOYED>`  (optional: --s3-bucket <YOUR_OWNED_S3_BUCKET_TO_HOST_CODE>)
+  - if you do not specify the bucket, AWS will provided one automatically and you code will be hosted there.
 - Now you can deploy the <NEW_TEMPLATE_NAME_NAME> through the CloudFormation console. Using **Create Stack** and then uploading the template:
 
 ![](https://i.imgur.com/aeBKZav.png)
