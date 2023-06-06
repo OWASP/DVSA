@@ -22,51 +22,60 @@ We do not take responsibility for the way in which any one uses this application
 
 
 - - -
-## Deployment
-
-#### [Application Repository](AWS/VIDEOS/reo_deploy.mp4)
+## Deployment from [Application Repository](AWS/VIDEOS/reo_deploy.mp4)
 - Deploy DVSA from the [AWS Serverless Application Repository](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:674087993380:applications~OWASP-DVSA)
 
 - After deployment is complete. Click on 'View CloudFormation Stack'
 
 - Under 'Outputs' you will find the URL for the application (DVSA Website URL)
 
-
-![](https://i.imgur.com/ZfjEyiM.png)
-#### [Serverless Framework](AWS/VIDEOS/serverless_deploy.mp4)
-
-##### Prerequisites
-- npm
-- python3
-- Serverless `npm install -g serverless`
-
-##### Setting your AWS Account/Region
-If you don't want to run with your `default` aws profile/region, run thhe `sls` commands with `AWS_PROFILE=<aws-profile>`/`AWS_REGION=<aws-region>` or modify the `provider.profile`/`provider.region` inside the `serverless.yml` file
-
-##### Run
-`./deploy.sh`
-###### Or, Step-by-Step:
-- Install npm dependencies: `npm i`
-- Install pip dependencies: `pip3 install awscli boto3 --user --upgrade`
-- Deploy backend: `sls deploy`
-- Build client: `npm run-script client:build`
-- Deploy client `sls client deploy`
-
 - - - 
-## Running locally
 
-#### Run Client
+## Local Development & Deployment
+
+### Client
+##### Prerequisites for re-building client
+- Node 8.16.2 ([switching between Node versions during dev](https://github.com/tj/n))
+- python2 (needed for npm i node-gyp. You can using `npm config set python /path/to/your/python2`)
+
+##### Step-by-Step:
+- Install npm dependencies: `npm i`
+- Build client: `npm run-script client:build`
+
+##### Run Client locally
 - `npm run-script client:start`
 
 **_Note_**: This will only work if you previously deployed the backend. If this fails, confirm you still have a `be-stack.json` file at the root of this project.
 
-#### Run Backend
-- `npm start`
+![](https://i.imgur.com/ZfjEyiM.png)
+### Backend
 
-If you want to point your local client to your local backend, edit your `be-stack.json` and set `ServiceEndpoint` to `http://localhost:3000`. Note that you will still be using the Cognito pools in AWS.
+##### Prerequisites for building backend
+- [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html)
 
-- - -
-## Email subscription
+##### Step-by-Step:
+- Make desired changes to backend code under backend/functions
+- Make desired changes to your cloudformation template.yml
+- If you need post-deployment changes, you can add files to `backend/deployment/` and use the `backend/deployment/dvsa_init.py` function that runs at the end of the deployment to execute the required actions.
+- to build new code, run `sam build --template <MODIFIED_TEMPLATE.yml> (--parallel)` 
+- - new code will be built into `.aws-sam/` folder
+- - SAM builds automatically when it finds `package.json` and `requirements.txt` so you don't need to build yourself
+
+- Run `sam package --output-template-file <NEW_TEMPLATE_FILE_NAME> --s3-bucket <YOUR_OWNED_S3_BUCKET_TO_HOST_CODE> --profile <AWS_PROFILE_OWNING_BUCKET> --region <AWS_REGION_WHERE_WILL_BE_DEPLOYED>`
+
+- Now you can deploy the <NEW_TEMPLATE_NAME_NAME> through the CloudFormation console. Using **Create Stack** and then uploading the template:
+
+![](https://i.imgur.com/aeBKZav.png)
+
+##### Run Backend locally
+You can use [SAM Local](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-command-reference.html) to start [Lambda functions](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html) and [APIs](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html)
+
+Alternatively, you can use [LocalStack](https://github.com/localstack/localstack)
+
+**_Note_**: If you want to point your local client to your local backend, edit your `be-stack.json` and set `ServiceEndpoint` to `http://localhost:3000`. Note that you will still be using the Cognito pools in AWS.
+
+![](https://i.imgur.com/ZfjEyiM.png)
+#### Email subscription
 
 DVSA sends receipts in the email. You can use the built-in **Inbox** page within the application to get the emails and obtain the receipts. Each user will be automatically assigned an email from `1secmail.com` which will be automatically verified. Real emails will be sent to their account and will appear in the application Inbox page.
 
@@ -77,8 +86,9 @@ If you want users to receive emails to their actual registered email account (e.
 
 - [Request a sending limit increase](https://console.aws.amazon.com/support/v1#/case/create?issueType=service-limit-increase&limitType=service-code-ses). This will allow your entire cloud account to send emails to any address.
 
-
 - - -
+![](https://i.imgur.com/ZfjEyiM.png)
+# Additional Info
 ## Presentation
 [Download](OWASP_DC_SLS_Top10.pdf)
 
