@@ -58,8 +58,8 @@ We do not take responsibility for the way in which any one uses this application
 - Make desired changes to your cloudformation template.yml
 - If you need post-deployment changes, you can add files to `backend/deployment/` and use the `backend/deployment/dvsa_init.py` function that runs at the end of the deployment to execute the required actions.
 - to build new code, run `sam build --template <MODIFIED_TEMPLATE.yml> (--parallel)` 
-- - new code will be built into `.aws-sam/` folder
-- - SAM builds automatically when it finds `package.json` and `requirements.txt` so you don't need to build yourself
+  - new code will be built into `.aws-sam/` folder
+  - SAM builds automatically when it finds `package.json` and `requirements.txt` so you don't need to build yourself
 
 - Run `sam package --output-template-file <NEW_TEMPLATE_FILE_NAME> --s3-bucket <YOUR_OWNED_S3_BUCKET_TO_HOST_CODE> --profile <AWS_PROFILE_OWNING_BUCKET> --region <AWS_REGION_WHERE_WILL_BE_DEPLOYED>`
 
