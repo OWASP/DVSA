@@ -6,7 +6,7 @@
 #    ██████╔╝ ╚████╔╝ ███████║██║  ██║
 #    ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝
 #  Damn Vulnerable SERVERLESS Application                                                    
-#       Tal Melamed (4ppsec), OWASP
+#      Tal Melamed (@4ppsec), OWASP
 #
 
 AWSTemplateFormatVersion: '2010-09-09'
@@ -22,7 +22,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['serverless', 'security', 'vulnerable', 'owasp', 'dvsa']
     HomePageUrl: https://owasp.org/www-project-dvsa/
-    SemanticVersion: 2.1.7
+    SemanticVersion: 3.0.52
     SourceCodeUrl: https://github.com/owasp/DVSA
 
 Parameters:
@@ -236,22 +236,6 @@ Resources:
                 requestTemplates:
                   application/json: "{\"statusCode\": 200}"
                 type: mock
-            get:
-              produces:
-                - application/json
-              responses:
-                '200':
-                  description: 200 response
-                  schema:
-                    $ref: "#/definitions/Empty"
-              x-amazon-apigateway-integration:
-                responses:
-                  default:
-                    statusCode: 200
-                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AdminOrdersMysqlFunction.Arn}/invocations
-                passthroughBehavior: when_no_match
-                httpMethod: GET
-                type: aws_proxy
             post:
               produces:
                 - application/json
@@ -406,7 +390,7 @@ Resources:
               StringEquals:
                 'cognito-identity.amazonaws.com:aud':
                   Ref: CognitoIdentityPool
-              'ForAnyValue:StringLike':
+              ForAnyValue:StringLike:
                 'cognito-identity.amazonaws.com:amr': authenticated
   # endregion Cognito
 
@@ -447,24 +431,6 @@ Resources:
           ProvisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
-
-  InventoryTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: DVSA-INVENTORY-DB
-      AttributeDefinitions:
-        - AttributeName: itemId
-          AttributeType: S
-        - AttributeName: category
-          AttributeType: S
-      KeySchema:
-        - AttributeName: itemId
-          KeyType: HASH
-        - AttributeName: category
-          KeyType: RANGE
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
 
   UsersTable:
     Type: AWS::DynamoDB::Table
@@ -628,14 +594,14 @@ Resources:
   
   # region Lambda
 
-  # Order-Manager
+  ## Order-Manager
   OrderManagerFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: DVSA-ORDER-MANAGER
       Handler: order-manager.handler
-      Runtime: nodejs12.x
-      CodeUri: backend/src/functions/order-manager/
+      Runtime: nodejs18.x
+      CodeUri: backend/functions/order-manager/
       Environment:
         Variables:
           userpoolid:
@@ -661,7 +627,7 @@ Resources:
       FunctionName: DVSA-ORDER-NEW
       Handler: new_order.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/order/new_order.py
+      CodeUri: backend/functions/order/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
@@ -677,7 +643,7 @@ Resources:
       FunctionName: DVSA-ORDER-CANCEL
       Handler: cancel_order.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/order/cancel_order.py
+      CodeUri: backend/functions/order/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
@@ -693,7 +659,7 @@ Resources:
       FunctionName: DVSA-ORDER-GET
       Handler: get_order.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/order/get_order.py
+      CodeUri: backend/functions/order/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
@@ -709,7 +675,7 @@ Resources:
       FunctionName: DVSA-ORDER-ORDERS
       Handler: get_orders.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/order/get_orders.py
+      CodeUri: backend/functions/order/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
@@ -725,7 +691,7 @@ Resources:
       FunctionName: DVSA-ORDER-SHIPPING
       Handler: order_shipping.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/order/order_shipping.py
+      CodeUri: backend/functions/order/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
@@ -741,7 +707,7 @@ Resources:
       FunctionName: DVSA-ORDER-UPDATE
       Handler: update_order.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/order/update_order.py
+      CodeUri: backend/functions/order/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
@@ -757,10 +723,11 @@ Resources:
       FunctionName: DVSA-ORDER-BILLING
       Handler: order_billing.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/order/order_billing.py
+      CodeUri: backend/functions/order/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
+          CLIENT_BUCKET: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}
           GET_CART_TOTAL: !Sub https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/dvsa/total
           PAYMENT_PROCESS_URL: !Sub https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/dvsa/payment
           SQS_URL: !Sub https://sqs.${AWS::Region}.amazonaws.com/${AWS::AccountId}/dvsa-order-paid-sqs
@@ -769,26 +736,11 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: DVSA-ORDERS-DB
+        - S3CrudPolicy:
+            BucketName: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}
         - SQSSendMessagePolicy:
             QueueName: dvsa-order-paid-sqs
   
-  OrderCompleteFunction:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-ORDER-COMPLETE
-      Handler: order_complete.lambda_handler
-      Runtime: python3.8
-      CodeUri: backend/src/functions/order/order_complete.py
-      Environment:
-        Variables:
-          ORDERS_TABLE: DVSA-ORDERS-DB
-          INVENTORY_TABLE: DVSA-INVENTORY-DB
-      MemorySize: 128
-      Timeout: 10
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: '*'      
-
   ## Processing
   PaymentProcessorFunction:
     Type: 'AWS::Serverless::Function'
@@ -796,12 +748,9 @@ Resources:
       FunctionName: DVSA-PAYMENT-PROCESSOR
       Handler: payment_processing.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/processing/payment_processing.py
+      CodeUri: backend/functions/processing/
       MemorySize: 128
       Timeout: 30
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: DVSA-INVENTORY-DB
       Events:
         PaymentProcessorApi:
           Type: Api
@@ -816,15 +765,15 @@ Resources:
       FunctionName: DVSA-GET-CART-TOTAL
       Handler: get_cart_total.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/processing/get_cart_total.py
+      CodeUri: backend/functions/processing/
       Environment:
         Variables:
-          INVENTORY_TABLE: DVSA-INVENTORY-DB
+          CLIENT_BUCKET: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}
       MemorySize: 128
       Timeout: 10
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: DVSA-INVENTORY-DB
+        - S3CrudPolicy:
+            BucketName: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}
       Events:
         CartTotalApi:
           Type: Api
@@ -839,10 +788,9 @@ Resources:
       FunctionName: DVSA-CREATE-RECEIPT
       Handler: create_receipt.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/processing/create_receipt.py
+      CodeUri: backend/functions/processing/
       Environment:
         Variables:
-          INVENTORY_TABLE: DVSA-INVENTORY-DB
           ORDERS_TABLE: DVSA-ORDERS-DB
           RECEIPTS_BUCKET: !Sub dvsa-receipts-bucket-${AWS::AccountId}-${AWS::Region}
       MemorySize: 128
@@ -865,7 +813,7 @@ Resources:
       FunctionName: DVSA-SEND-RECEIPT-EMAIL
       Handler: send_receipt_email.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/processing/send_receipt_email.py
+      CodeUri: backend/functions/processing/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
@@ -902,7 +850,7 @@ Resources:
       FunctionName: DVSA-FEEDBACK-UPLOADS
       Handler: feedback_uploads.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/processing/feedback_uploads.py
+      CodeUri: backend/functions/processing/
       Environment:
         Variables:
           FEEDBACK_BUCKET: !Sub dvsa-feedback-bucket-${AWS::AccountId}-${AWS::Region}
@@ -920,14 +868,14 @@ Resources:
             Bucket: !Ref S3FeedbackBucket
             Events: s3:ObjectCreated:*
 
-  ## Crons
+  ## Cron-Jobs
   CronProcessorFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: DVSA-CRON-PROCESSOR
       Handler: cron_processor.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/cronjobs/cron_processor.py
+      CodeUri: backend/functions/cronjobs/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
@@ -948,7 +896,7 @@ Resources:
       FunctionName: DVSA-CRON-ORDER-CLEANER
       Handler: cron_cleaner.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/cronjobs/cron_cleaner.py
+      CodeUri: backend/functions/cronjobs/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
@@ -970,7 +918,7 @@ Resources:
       FunctionName: DVSA-CRON-JOB-UPDATE
       Handler: cron_update.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/cronjobs/cron_update.py
+      CodeUri: backend/functions/cronjobs/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
@@ -986,14 +934,14 @@ Resources:
           Properties:
             Schedule: rate(1 day)
 
-  ## Users
+  ## Users-Mgmt
   UserCreateFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: DVSA-USER-CREATE
       Handler: user_create.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/user/user_create.py
+      CodeUri: backend/functions/user/
       Environment:
         Variables:
           USERS_TABLE: DVSA-USERS-DB
@@ -1018,7 +966,7 @@ Resources:
       FunctionName: DVSA-USER-ACCOUNT
       Handler: user_account.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/user/user_account.py
+      CodeUri: backend/functions/user/
       Environment:
         Variables:
           USERS_TABLE: DVSA-USERS-DB
@@ -1034,7 +982,7 @@ Resources:
       FunctionName: DVSA-USER-PROFILE
       Handler: user_profile.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/user/user_profile.py
+      CodeUri: backend/functions/user/
       Environment:
         Variables:
           USERS_TABLE: DVSA-USERS-DB
@@ -1050,7 +998,7 @@ Resources:
       FunctionName: DVSA-USER-INBOX
       Handler: user_inbox.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/user/user_inbox.py
+      CodeUri: backend/functions/user/
       Environment:
         Variables:
           USERS_TABLE: DVSA-USERS-DB
@@ -1073,7 +1021,7 @@ Resources:
       FunctionName: DVSA-ADMIN-GET-ORDERS
       Handler: admin_get_orders.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/admin/admin_get_orders.py
+      CodeUri: backend/functions/admin/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
@@ -1089,7 +1037,7 @@ Resources:
       FunctionName: DVSA-ADMIN-GET-RECEIPT
       Handler: admin_get_receipts.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/admin/admin_get_receipts.py
+      CodeUri: backend/functions/admin/
       Environment:
         Variables:
           RECEIPTS_BUCKET: !Sub dvsa-receipts-bucket-${AWS::AccountId}-${AWS::Region}
@@ -1105,26 +1053,10 @@ Resources:
       FunctionName: DVSA-ADMIN-UPDATE-ORDERS
       Handler: admin_update_orders.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/src/functions/admin/admin_update_orders.py
+      CodeUri: backend/functions/admin/
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
-      MemorySize: 128
-      Timeout: 10
-      Policies:
-        - AWSLambda_FullAccess
-        - AmazonDynamoDBFullAccess
-
-  AdminUpdateInventoryFunction:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-ADMIN-UPDATE-INVENTORY
-      Handler: admin_update_inventory.lambda_handler
-      Runtime: python3.8
-      CodeUri: backend/src/functions/admin/admin_update_inventory.py
-      Environment:
-        Variables:
-          INVENTORY_TABLE: DVSA-INVENTORY-DB
       MemorySize: 128
       Timeout: 10
       Policies:
@@ -1136,8 +1068,8 @@ Resources:
     Properties:
       FunctionName: DVSA-ADMIN-SHELL
       Handler: admin_shell.handler
-      Runtime: nodejs12.x
-      CodeUri: backend/src/functions/admin/admin_shell.js
+      Runtime: nodejs18.x
+      CodeUri: backend/functions/admin/
       Environment:
         Variables:
           userpoolid: !Ref CognitoUserPoolDvsaUserPool
@@ -1155,31 +1087,6 @@ Resources:
         - AWSLambda_FullAccess
         - AmazonDynamoDBFullAccess
   
-  AdminOrdersMysqlFunction:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      FunctionName: DVSA-ADMIN-ORDERS-MYSQL
-      Handler: admin_orders_mysql.handler
-      Runtime: nodejs12.x
-      CodeUri: code_zip/AdminOrdersMysqlFunction.zip
-      Environment:
-        Variables:
-          db_name: bvl1zuoffpflrto3zdrt
-          db_pw: lQ8PQBkxAqFFCizNI5vt
-          db_url: bvl1zuoffpflrto3zdrt-mysql.services.clever-cloud.com
-          db_user: uk7kkjxwjxurqudy
-      MemorySize: 256
-      Timeout: 30
-      Events:
-        AdminApi:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ApiGatewayApi
-            Path: /admin
-            Method: GET
-      Policies:
-        - AWSLambda_FullAccess
-  
   # endregion Lambda
 
   # region Custom-Resource
@@ -1194,7 +1101,7 @@ Resources:
       FunctionName: DVSA-INIT
       Handler: dvsa_init.lambda_handler
       Runtime: python3.8
-      CodeUri: backend/serverless/scripts/
+      CodeUri: backend/deployment/
       Environment:
         Variables:
           ACCOUNT_ID: 

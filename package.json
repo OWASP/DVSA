@@ -1,10 +1,10 @@
 {
   "name": "dvsa",
-  "version": "1.2.2",
+  "version": "3.0.0",
   "description": "DVSA - Damn Vulneravle SERVERLESSS Application",
   "main": "index.js",
   "scripts": {
-    "postinstall": "cd client && npm i && cd ../backend/src/functions/order-api && npm i",
+    "postinstall": "cd client && npm i",
     "client:build": "cd client && npm run-script build",
     "client:start": "cd client && npm start",
     "client:start:local": "cd client && npm run-script start:local",
@@ -26,15 +26,15 @@
     "url": "https://github.com/owasp/DVSA/issues"
   },
   "homepage": "https://github.com/owasp/DVSA#readme",
-  "devDependencies": {
-    "serverless-attach-managed-policy": "^0.0.7",
-    "serverless-finch": "^4.0.2",
-    "serverless-plugin-log-retention": "^2.0.0",
-    "serverless-scriptable-plugin": "^0.8.0",
-    "serverless-stack-output": "^0.2.3"
-  },
   "dependencies": {
-    "serverless": "^3.26.0",
-    "serverless-offline": "^5.3.3"
+    "@aws-amplify/ui-react": "^4.6.4",
+    "aws-amplify": "^5.2.4",
+    "node-gyp": "^9.3.1"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.22.3",
+    "sass": "^1.62.1",
+    "webpack": "^5.85.0",
+    "webpack-cli": "^5.1.1"
   }
 }

@@ -1,63 +1,27 @@
 # Backend Structure
 
-### /Resources (serverless/resources)
-
-YAML files of cloud resources to be deployed using the Serverless framework
-
-- **api-gateway.yml**
-  - Authorizer: used to validate incoming api calls against cognito user pools
-
-
-- **cognito-indentity-pool.yml**
-  - Used to create a pool name based on the stage and to prevent unauthenticated users
-  - Link to cognito user pool
-  - Specify the role user for authenticated users
-
-
-- **cognito-user-pool.yml**
-  - Sets email as user alias
-  - Generate pool and client name based on stage
-  - Print out the Id and user pool for client
-
-
-- **dynamodb-tables.yml**:  Create the 3 DB tables used by the DVSA app:
-  - DVSA-INVENTORY-DB: Holds all store items
-  - DVSA-USERS-DB: Holds user profile information (email, avatar, address). Used by client
-  - DVSA-ORDERS-DB: Holds orders made by users
-
-
-- **funtion-roles.yml**: Defines roles for functions in the applications:
-  - dvsaOrderRole: used by most functions. Allows any action on any dynamodb table (dynamodb:*)
-  - dvsaAdminRole: used by the admin functions. Permissions to db and to the s3 bucket
-  - dvsaCronjobsRole: used by the cornjob functions. Permissions to dbs and invoking functions
-
-- **s3-bucket.yml**: Defines the S3 bucket to be created in the app
-  - dvsa-receipts-bucket-{accountId}: used to hold all the receipts created per paid orders. 
-  - A link is sent to the email to download the receipt from this bucket
-
-
-
-### /Scripts (serverless/scripts)
+### deployment/scripts
 
 - **onstart.py**: Disclaimer
 
 - **vars.js**: Get AWS Account Id for bucket naming
 
+- **dist_s3/**: contains data to associate deployment resources with the static website (e.g., Congnito user-pool)
+
 - **verifysesaccount.py**: 
 
 A script to verify the dvsa.noreply@1secmail.com email for the account. This is used to send the receipts to the users.
 
-- **create-inventory-data.json**
+- **create-orders-data.json**
 
-This file is used to fill-in the inventory database after deployment.
+This file is used to fill-in random orders into the database after deployment.
+
 
 - - - 
 ## Source Code (src/functions)
 
 ### /admin
-Administration functions (backoffice). Unconnected to any UI at the moment. But can be invoked directly.
-
-All folders hold an **sls.yml** file, used by the Serverless framework to delpoy.
+Administration functions (backoffice). Some functions are not connected to any UI at the moment. But can be invoked directly.
 
 - **admin_get_orders.py**
 

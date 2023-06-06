@@ -14,6 +14,11 @@ module.exports = {
                 use: ['babel-loader']
             },
             {
+              test: /\.mjs$/,
+              include: /node_modules/,
+              type: "javascript/auto",
+            },
+            {
                 test: /\.s?css$/,
                 use: CSSExtract.extract({
                     use: [
@@ -41,6 +46,9 @@ module.exports = {
         path: __dirname + '/dist',
         publicPath: '/',
         filename: 'bundle.js',
+    },
+    externals: {
+      'graphql': 'commonjs graphql'
     },
     plugins: [
         CSSExtract,
