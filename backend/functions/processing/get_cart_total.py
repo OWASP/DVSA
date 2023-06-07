@@ -68,18 +68,23 @@ def lambda_handler(event, context):
         if not isinstance(cart, list):
             cart = [cart]
         for obj in cart:
-            for key in obj.keys():
-                qty = int(obj[key])
-                item_id = key
-                res = cur.execute("SELECT itemId, price, quantity FROM inventory WHERE itemId = " + item_id + ";")
+            item_id = obj["itemId"]
+            qty = int(obj["quantity"])
+            res = cur.execute("SELECT itemId, price, quantity FROM inventory WHERE itemId = " + item_id + ";")
+            try:
                 item_id, price, quantity = res.fetchone()
                 print(f"Found item: {item_id}. Price: {price}, Quantity: {quantity}.")
+            except:
+                return {
+                    'statusCode': 404,
+                    'body': json.dumps('Item not found')
+                }
                 
-                if quantity < qty:
-                    missing[obj] = qty - quantity
-                    qty = quantity
+            if quantity < qty:
+                missing[obj] = qty - quantity
+                qty = quantity
                 
-                total = total + (qty*price)
+            total = total + (qty*price)
             
         res = {"status": "ok", "total": float(total), "missing": missing}  
 
