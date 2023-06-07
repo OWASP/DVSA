@@ -22,7 +22,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['serverless', 'security', 'vulnerable', 'owasp', 'dvsa']
     HomePageUrl: https://owasp.org/www-project-dvsa/
-    SemanticVersion: 3.0.57
+    SemanticVersion: 3.0.58
     SourceCodeUrl: https://github.com/owasp/DVSA
 
 Parameters:
@@ -532,7 +532,7 @@ Resources:
   S3WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}
+      BucketName: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}-${AWS::Region}
       # Set Public Access after new changes in s3 at April 2023
       PublicAccessBlockConfiguration:
         BlockPublicAcls: false
@@ -564,7 +564,7 @@ Resources:
   S3WebsiteBucketPermissions:
       Type: AWS::S3::BucketPolicy
       Properties:
-        Bucket: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}
+        Bucket: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}-${AWS::Region}
         PolicyDocument:
           Statement:
             -
@@ -573,7 +573,7 @@ Resources:
               Action:
                 - s3:GetObject
               Effect: Allow
-              Resource: !Sub 'arn:aws:s3:::${WebsiteBucketPrefix}-${AWS::AccountId}/*'
+              Resource: !Sub 'arn:aws:s3:::${WebsiteBucketPrefix}-${AWS::AccountId}-${AWS::Region}/*'
             -
               Sid: "AdminBucketAccessStatement"
               Principal:
@@ -581,7 +581,7 @@ Resources:
               Action:
                 - s3:*
               Effect: Allow
-              Resource: !Sub 'arn:aws:s3:::${WebsiteBucketPrefix}-${AWS::AccountId}'
+              Resource: !Sub 'arn:aws:s3:::${WebsiteBucketPrefix}-${AWS::AccountId}-${AWS::Region}'
             -
               Sid: "AdminResourceAccessStatement"
               Principal:
@@ -589,7 +589,7 @@ Resources:
               Action:
                 - s3:*
               Effect: Allow
-              Resource: !Sub 'arn:aws:s3:::${WebsiteBucketPrefix}-${AWS::AccountId}/*'
+              Resource: !Sub 'arn:aws:s3:::${WebsiteBucketPrefix}-${AWS::AccountId}-${AWS::Region}/*'
   # endregion S3
   
   # region Lambda
@@ -727,7 +727,7 @@ Resources:
       Environment:
         Variables:
           ORDERS_TABLE: DVSA-ORDERS-DB
-          CLIENT_BUCKET: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}
+          CLIENT_BUCKET: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}-${AWS::Region}
           GET_CART_TOTAL: !Sub https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/dvsa/total
           PAYMENT_PROCESS_URL: !Sub https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/dvsa/payment
           SQS_URL: !Sub https://sqs.${AWS::Region}.amazonaws.com/${AWS::AccountId}/dvsa-order-paid-sqs
@@ -737,7 +737,7 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: DVSA-ORDERS-DB
         - S3CrudPolicy:
-            BucketName: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}
+            BucketName: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}-${AWS::Region}
         - SQSSendMessagePolicy:
             QueueName: dvsa-order-paid-sqs
 
@@ -756,7 +756,7 @@ Resources:
       Timeout: 10
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: '*'      
+            TableName: '*'
   
   ## Processing
   PaymentProcessorFunction:
@@ -785,12 +785,12 @@ Resources:
       CodeUri: backend/functions/processing/
       Environment:
         Variables:
-          CLIENT_BUCKET: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}
+          CLIENT_BUCKET: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}-${AWS::Region}
       MemorySize: 128
       Timeout: 10
       Policies:
         - S3CrudPolicy:
-            BucketName: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}
+            BucketName: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}-${AWS::Region}
       Events:
         CartTotalApi:
           Type: Api
@@ -1131,7 +1131,7 @@ Resources:
             Ref: CognitoIdentityPool
           ORDER_API: !Sub https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/dvsa
           ADMIN_EMAIL: !Sub ${AdminEmail}
-          CLIENT_BUCKET: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}
+          CLIENT_BUCKET: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}-${AWS::Region}
           RECEIPTS_BUCKET: !Sub dvsa-receipts-bucket-${AWS::AccountId}-${AWS::Region}
           FEEDBACK_BUCKET: !Sub dvsa-feedback-bucket-${AWS::AccountId}-${AWS::Region}
       MemorySize: 512
@@ -1153,4 +1153,4 @@ Resources:
 Outputs:
   WebsiteURL:
     Description: DVSA Website URL
-    Value: !Sub http://${WebsiteBucketPrefix}-${AWS::AccountId}.s3-website.${AWS::Region}.amazonaws.com
+    Value: !Sub http://${WebsiteBucketPrefix}-${AWS::AccountId}-${AWS::Region}.s3-website.${AWS::Region}.amazonaws.com

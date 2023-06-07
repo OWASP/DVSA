@@ -49,6 +49,12 @@ def lambda_handler(event, context):
 
     status = int(json.dumps(response["Item"]['orderStatus'], cls=DecimalEncoder))
     if status < 120:
+        data_dict = []
+        for key, value in response["Item"]['itemList'].items():
+            data_dict.append({
+                "itemId": key,
+                "quantity": value
+            })    
         data = json.dumps(response["Item"]['itemList'], cls=DecimalEncoder)
 
         # GET TOTAL FOR BILLING
