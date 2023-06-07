@@ -3,6 +3,7 @@ import time
 import boto3
 import os
 from botocore.exceptions import ClientError
+from botocore.client import Config
 import uuid
 from urllib import parse
 
@@ -10,7 +11,7 @@ from urllib import parse
 def lambda_handler(event, context):
     print(json.dumps(event))
     if "file" in event:
-        s3 = boto3.client('s3')
+        s3 = boto3.client('s3', region_name=os.environ["AWS_REGION"], endpoint_url=f'https://s3.{os.environ["AWS_REGION"]}.amazonaws.com', config=Config(s3={'addressing_style': 'virtual'}))
         uuidv4 = str(uuid.uuid4())
         try:
             response = s3.generate_presigned_post(os.environ["FEEDBACK_BUCKET"], 
