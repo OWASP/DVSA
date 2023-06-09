@@ -1,7 +1,7 @@
 
 const productsReducerDefaultState = [
     {
-        id: '12',
+        id: '1200',
         title: 'Ring King',
         //type: 'Game',
         category: 'Games',
@@ -13,7 +13,7 @@ const productsReducerDefaultState = [
             {url: '/images/RK10.jpg'}
         ]
     },{
-        id: '13',
+        id: '1300',
         title: 'Pac-Man',
         //type: 'Game',
         category: 'Games',
@@ -25,7 +25,7 @@ const productsReducerDefaultState = [
             {url: '/images/PM10.jpg'}
         ]
     },{
-        id: '14',
+        id: '1400',
         title: 'Rampage',
         //type: 'Game',
         category: 'Games',
@@ -37,7 +37,7 @@ const productsReducerDefaultState = [
             {url: '/images/RP20.jpg'}
         ]
     },{
-        id: '16',
+        id: '1600',
         title: 'Super Mario',
         //type: 'Game',
         category: 'Games',
@@ -49,7 +49,7 @@ const productsReducerDefaultState = [
             {url: '/images/SM10.jpg'}
         ]
     },{
-        id: '17',
+        id: '1700',
         title: 'Super Mario 2',
         //type: 'Game',
         category: 'Games',
@@ -61,7 +61,7 @@ const productsReducerDefaultState = [
             {url: '/images/SM20.jpg'}
         ]
     },{
-        id: '18',
+        id: '1800',
         title: 'Super Mario 3',
         //type: 'Game',
         category: 'Games',
@@ -73,7 +73,7 @@ const productsReducerDefaultState = [
             {url: '/images/SM30.jpg'}
         ]
     },{
-        id: '19',
+        id: '1900',
         title: 'Mrs. Pac-Man',
         //type: 'Game',
         category: 'Games',
@@ -85,7 +85,7 @@ const productsReducerDefaultState = [
             {url: '/images/PM20.jpg'}
         ]
     },{
-        id: '20',
+        id: '2000',
         title: 'Zelda',
         //type: 'Game',
         category: 'Games',
@@ -97,7 +97,7 @@ const productsReducerDefaultState = [
             {url: '/images/ZD10.jpg'}
         ]
     },{
-        id: '21',
+        id: '2100',
         title: 'Emperor',
         //type: 'Game',
         category: 'Games',
@@ -109,7 +109,7 @@ const productsReducerDefaultState = [
             {url: '/images/DN10.jpg'}
         ]
     },{
-        id: '11',
+        id: '1100',
         title: 'Dune 2000',
         //type: 'Game',
         category: 'Games',
@@ -121,7 +121,7 @@ const productsReducerDefaultState = [
             {url: '/images/DN20.jpg'}
         ]
     },{
-        id: '10',
+        id: '1000',
         title: 'Double Dragon',
         //type: 'Game',
         category: 'Games',
@@ -133,7 +133,7 @@ const productsReducerDefaultState = [
             {url: '/images/DD10.jpg'}
         ]
     },{
-        id: '9',
+        id: '9000',
         title: 'Space Invaders',
         //type: 'Game',
         category: 'Games',
@@ -145,7 +145,7 @@ const productsReducerDefaultState = [
             {url: '/images/SI10.jpg'}
         ]
     },{
-        id: '8',
+        id: '8000',
         title: 'Donkey Kong',
         //type: 'Game',
         category: 'Games',
@@ -157,7 +157,7 @@ const productsReducerDefaultState = [
             {url: '/images/DK10.jpg'}
         ]
     },{
-        id: '7',
+        id: '7000',
         title: 'Jungle Strike',
         //type: 'Game',
         category: 'Games',
@@ -169,7 +169,7 @@ const productsReducerDefaultState = [
             {url: '/images/JS10.jpg'}
         ]
     },{
-        id: '15',
+        id: '1500',
         title: 'Rampart',
         //type: 'Game',
         category: 'Games',
