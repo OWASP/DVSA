@@ -65,13 +65,23 @@ def lambda_handler(event, context):
         res = {"status": "error", "message": "could not connect to inventory db."}
     else:
         cur = conn.cursor()
-        if not isinstance(cart, list):
-            cart = [cart]
-        for obj in cart:
+
+        cart_items = []
+        if isinstance(cart, list):
+            # [{\"itemId\": \"14000\", \"quantity\": 1}]
+            cart_items = cart
+        
+        elif isinstance(cart, dict):
+            # {\"14000\": {\"quantity\": 1}}
+            for k, v in cart.items():
+                cart_items.append({ "itemId": v["itemId"], "quantity": v["quantity"] })
+        print(cart_items)
+        
+        for obj in cart_items:
             item_id = obj["itemId"]
             qty = int(obj["quantity"])
-            res = cur.execute("SELECT itemId, price, quantity FROM inventory WHERE itemId = " + item_id + ";")
             try:
+                res = cur.execute("SELECT itemId, price, quantity FROM inventory WHERE itemId = " + item_id + ";")
                 item_id, price, quantity = res.fetchone()
                 print(f"Found item: {item_id}. Price: {price}, Quantity: {quantity}.")
             except:

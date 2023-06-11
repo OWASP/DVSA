@@ -49,14 +49,11 @@ def lambda_handler(event, context):
 
     status = int(json.dumps(response["Item"]['orderStatus'], cls=DecimalEncoder))
     if status < 120:
-        data_dict = []
+        data_dict = {}
         for key, value in response["Item"]['itemList'].items():
-            data_dict.append({
-                "itemId": key,
-                "quantity": value
-            })    
-        data = json.dumps(response["Item"]['itemList'], cls=DecimalEncoder)
-
+            data_dict[key] = {"itemId": key, "quantity": value}
+        data = json.dumps(data_dict, cls=DecimalEncoder)
+        
         # GET TOTAL FOR BILLING
         url = os.environ["GET_CART_TOTAL"]
         clen = len(data)
