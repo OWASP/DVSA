@@ -22,7 +22,7 @@ Metadata:
     ReadmeUrl: README.md
     Labels: ['serverless', 'security', 'vulnerable', 'owasp', 'dvsa']
     HomePageUrl: https://owasp.org/www-project-dvsa/
-    SemanticVersion: 3.0.83
+    SemanticVersion: 3.0.84
     SourceCodeUrl: https://github.com/owasp/DVSA
 
 Parameters:
@@ -1114,6 +1114,7 @@ Resources:
       - S3FeedbackBucket
       - S3ReceiptsBucket
     DeletionPolicy: Retain
+    UpdateReplacePolicy : Retain
     Properties:
       FunctionName: DVSA-INIT
       Handler: dvsa_init.lambda_handler

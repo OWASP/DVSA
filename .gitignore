@@ -8,12 +8,15 @@ CONTENT
 client/node_modules
 client/build
 client/dist
+client/.DS_Store
 build
 client/src/be-stack.json
 backend/functions/order-manager/node_modules
 backend/functions/.DS_Store
 backend/deployment/.DS_Store
+backend/deployment/dist_s3
 node_modules
 sam_packaged.yml
+packaged-template.yml
 sam.py
 DVSA.code-workspace
