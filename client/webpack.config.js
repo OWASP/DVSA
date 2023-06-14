@@ -47,9 +47,6 @@ module.exports = {
         publicPath: '/',
         filename: 'bundle.js',
     },
-    externals: {
-      'graphql': 'commonjs graphql'
-    },
     plugins: [
         CSSExtract,
         new webpack.HotModuleReplacementPlugin(),
