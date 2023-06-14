@@ -1,10 +1,12 @@
 .idea
 .aws-sam/
-client/node_modules/
-client/build/
+client/node_modules
+client/build/**
+client/dist/**
 build/
-backend/functions/order-manager/node_modules/
-node_modules/
+backend/functions/order-manager/node_modules
+backend/deployment/dist_s3/**
+node_modules
 be-stack.json
 COPYING.txt
 favicon.ico
