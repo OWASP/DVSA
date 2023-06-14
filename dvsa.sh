@@ -28,6 +28,7 @@ case $1 in
         echo "If you already deployed a backend, please first run: $ ./dvsa.sh client-connect"
         exit 0
     fi
+    npm i
     npm run-script client:build
     clear
     if grep -rnq "<UserPoolClientId>" $BE_STACK
@@ -53,6 +54,11 @@ case $1 in
     ;;
 
 
+  client-start)
+    npm run-script client:start
+    ;;
+
+   
    *)
     echo "[X] Unknown command."
     echo "Options are: package|connect|update. See github.com/owas/dvsa for more information."

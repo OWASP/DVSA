@@ -9,7 +9,7 @@ def get_args():
     parser.add_argument("-r", "--region", help="Deployment region")
     parser.add_argument("-p", "--profile", help="Deploymen profile")
     parser.add_argument("-t", "--template", help="The template file (default: template.yml)", default="template.yml")
-    parser.add_argument("-s3", "--s3-repo", help="The S3 bucket to store the repo files")
+    parser.add_argument("-s3", "--s3-repo", help="The S3 bucket to store the backend code. If not used - AWS WILL AUTOMATICALLY PROVIDE A MANAGED BUCKET")
     parser.add_argument("-o", "--output-file", help="the packaged yaml file", default="packaged-template.yml")
     parser.add_argument("-v", "--verbose", help="Debug mode", action="store_true")
     parser.add_argument("-f", "--force-upload", help="Force uploading files", action="store_true")

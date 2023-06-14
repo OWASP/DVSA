@@ -11,8 +11,6 @@ The aim of DVSA is to **practice some of the most common serverless vulnerabilit
 Please note, there are both **documented & undocumented vulnerabilities** with this software. This is intentional. You are encouraged to try and discover as many issues as possible.
 
 
-
-
 - - -
 ## Disclaimer
 
@@ -38,14 +36,19 @@ We do not take responsibility for the way in which any one uses this application
 - Node 8.16.2 ([switching between Node versions during dev](https://github.com/tj/n))
 - python2 (needed for npm i node-gyp. You can using `npm config set python /path/to/your/python2`)
 
-##### Step-by-Step:
-- Install npm dependencies: `npm i`
-- Build client: `npm run-script client:build`
+##### Build client
+- `$ ./dvsa.sh client-build`
+
+##### Update client file with previously deployed backend
+- `$ ./dvsa.sh client-connect --stack <STACK_NAME>`
+
+##### Updating deployed client with local changes
+- `$ ./dvsa.sh client-update --stack/--bucket`
+- `$ ./dvsa.sh client-update -h/--help` for more options
 
 ##### Run Client locally
-- `npm run-script client:start`
+- `$ ./dvsa.sh client-start`
 
-**_Note_**: This will only work if you previously deployed the backend. If this fails, confirm you still have a `be-stack.json` file at the root of this project.
 
 ![](https://i.imgur.com/ZfjEyiM.png)
 ### Backend
@@ -57,13 +60,8 @@ We do not take responsibility for the way in which any one uses this application
 - Make desired changes to backend code under backend/functions
 - Make desired changes to your cloudformation template.yml
 - If you need post-deployment changes, you can add files to `backend/deployment/` and use the `backend/deployment/dvsa_init.py` function that runs at the end of the deployment to execute the required actions.
-- to build new code, run `sam build --template <MODIFIED_TEMPLATE.yml> (--parallel)` 
-  - new code will be built into `.aws-sam/` folder
-  - SAM builds automatically when it finds `package.json` and `requirements.txt` so you don't need to build yourself
-
-- Run `sam package --output-template-file <NEW_TEMPLATE_FILE_NAME> --profile <AWS_PROFILE_OWNING_BUCKET> --region <AWS_REGION_WHERE_WILL_BE_DEPLOYED>`  (optional: --s3-bucket <YOUR_OWNED_S3_BUCKET_TO_HOST_CODE>)
-  - if you do not specify the bucket, AWS will provided one automatically and you code will be hosted there.
-- Now you can deploy the <NEW_TEMPLATE_NAME_NAME> through the CloudFormation console. Using **Create Stack** and then uploading the template:
+- `$ ./dvsa.sh package-template` (OPTIONAL: -h/--help for more options)
+- Deploy the output template-file with Cloudformation console/cli
 
 ![](https://i.imgur.com/aeBKZav.png)
 
@@ -72,7 +70,7 @@ You can use [SAM Local](https://docs.aws.amazon.com/serverless-application-model
 
 Alternatively, you can use [LocalStack](https://github.com/localstack/localstack)
 
-**_Note_**: If you want to point your local client to your local backend, edit your `be-stack.json` and set `ServiceEndpoint` to `http://localhost:3000`. Note that you will still be using the Cognito pools in AWS.
+**_Note_**: If you want to point your local client to your local backend, run `$ ./dvsa.sh client-connect` and REPLACE the endpoint of `ServiceEndpoint` with `http://localhost:3000` (It will still be using the Cognito pools in AWS).
 
 ![](https://i.imgur.com/ZfjEyiM.png)
 #### Email subscription
@@ -90,7 +88,7 @@ If you want users to receive emails to their actual registered email account (e.
 ![](https://i.imgur.com/ZfjEyiM.png)
 # Additional Info
 ## Presentation
-[Download](OWASP_DC_SLS_Top10.pdf)
+[Download](CONTENT/OWASP_DC_SLS_Top10.pdf)
 
 
 
@@ -98,9 +96,9 @@ If you want users to receive emails to their actual registered email account (e.
 
 #### AWS ####
 
-see [LESSONS](AWS/LESSONS/README.md) for information about hacking DVSA.
+see [LESSONS](CONTENT/AWS/LESSONS/README.md) for information about hacking DVSA.
 
-see [VIDEOS](AWS/VIDEOS) for how to deploy, use and hack DVSA.
+see [VIDEOS](CONTENT/AWS/VIDEOS) for how to deploy, use and hack DVSA.
 
 
 - - -
