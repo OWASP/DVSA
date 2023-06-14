@@ -66,9 +66,9 @@ We do not take responsibility for the way in which any one uses this application
 ![](https://i.imgur.com/aeBKZav.png)
 
 ##### Run Backend locally
-You can use [SAM Local](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-command-reference.html) to start [Lambda functions](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html) and [APIs](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html)
+- You can use [SAM Local](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-command-reference.html) to start [Lambda functions](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-lambda.html) and [APIs](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-start-api.html)
 
-Alternatively, you can use [LocalStack](https://github.com/localstack/localstack)
+- Alternatively, you can use [LocalStack](https://github.com/localstack/localstack)
 
 **_Note_**: If you want to point your local client to your local backend, run `$ ./dvsa.sh client-connect` and REPLACE the endpoint of `ServiceEndpoint` with `http://localhost:3000` (It will still be using the Cognito pools in AWS).
 
