@@ -68,11 +68,9 @@ def lambda_handler(event, context):
 
         cart_items = []
         if isinstance(cart, list):
-            # [{\"itemId\": \"14000\", \"quantity\": 1}]
             cart_items = cart
         
         elif isinstance(cart, dict):
-            # {\"14000\": {\"quantity\": 1}}
             for k, v in cart.items():
                 cart_items.append({ "itemId": v["itemId"], "quantity": v["quantity"] })
         print(cart_items)
@@ -82,13 +80,22 @@ def lambda_handler(event, context):
             qty = int(obj["quantity"])
             try:
                 res = cur.execute("SELECT itemId, price, quantity FROM inventory WHERE itemId = " + item_id + ";")
-                item_id, price, quantity = res.fetchone()
-                print(f"Found item: {item_id}. Price: {price}, Quantity: {quantity}.")
-            except:
+                if res is not None:
+                    item_id, price, quantity = res.fetchone()
+                    print(f"Found item: {item_id}. Price: {price}, Quantity: {quantity}.")
+                else:
+                    res = {"status": "error", "message": "Item could not be found in database"}  
+                    return {
+                        'statusCode': 200,
+                        'body': json.dumps(res)
+                    } 
+            except Exception as e:
+                print(e)
+                res = {"status": "error", "message": "Item could not be found in database"}  
                 return {
-                    'statusCode': 404,
-                    'body': json.dumps('Item not found')
-                }
+                    'statusCode': 200,
+                    'body': json.dumps(res)
+                } 
                 
             if quantity < qty:
                 missing[obj] = qty - quantity
