@@ -4,6 +4,7 @@ import urllib.parse
 import os
 import datetime
 import decimal
+import uuid
 
 
 def lambda_handler(event, context):
@@ -26,11 +27,10 @@ def lambda_handler(event, context):
 
     s3 = boto3.client('s3')
     # download file to /tmp
-    download_path = '/tmp/' + order.replace(".raw", ".txt")
-
+    
+    download_path = f'/tmp/{str(uuid.uuid4())}.txt'
     date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
-
-    os.system('echo -e "\t----------------------\n\t\tDate: {}" >> {}'.format(date, download_path))
+    os.system(f'echo -e "\t----------------------\n\t\tDate: {date}" >> ' + download_path)
 
     # print download_path
     try:

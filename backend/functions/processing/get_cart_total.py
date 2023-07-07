@@ -104,7 +104,9 @@ def lambda_handler(event, context):
             total = total + (qty*price)
             
         res = {"status": "ok", "total": float(total), "missing": missing}  
-
+    
+    print(f"return value: {json.dumps(res)}")
+    
     return {
         'statusCode': 200,
         'body': json.dumps(res)

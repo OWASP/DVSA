@@ -4,10 +4,22 @@ import os
 import uuid
 import time
 import base64
+import decimal
+import jsonpickle
+
 
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ["ORDERS_TABLE"])
 
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, decimal.Decimal):
+            if o % 1 > 0:
+                return float(o)
+            else:
+                return int(o)
+        return super(DecimalEncoder, self).default(o)
+        
 
 def addItem(user, obj, ts):
     id = str(uuid.uuid4())
@@ -36,7 +48,8 @@ def deleteItem(orderId, user):
 def getItem(orderId, user):
     key = {"orderId": orderId}
     response = table.get_item(Key=key)
-    return {"status": "ok", "msg": "order deleted"}
+    unpickled = jsonpickle.decode(json.dumps(response["Item"], cls=DecimalEncoder))
+    return {"status": "ok", "msg": unpickled}
 
 
 def updateItem(orderId, user, obj, ts):

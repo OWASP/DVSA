@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 import sqlite3
 
+
 INVENTORY_FILE = "inventory.db"
 INVENTORY_PATH = [INVENTORY_FILE, f"/tmp/{INVENTORY_FILE}"]
 
@@ -21,7 +22,7 @@ def create_connection(db_file):
         conn = sqlite3.connect(db_file)
     except Exception as e:
         print(e)
-
+    
     return conn
 
 
@@ -45,7 +46,7 @@ def lambda_handler(event, context):
                 else:
                     return int(o)
             return super(DecimalEncoder, self).default(o)
-    
+    print(event)
     data = json.loads(event["Records"][0]["body"])
     
     orderId = data["orderId"]
@@ -60,6 +61,7 @@ def lambda_handler(event, context):
                 "userId": userId
         }
     )
+    print(response)
     receipt = os.open("/tmp/{}.raw".format(orderId), os.O_RDWR|os.O_CREAT)
     if 'Item' not in response:
         res = { "status": "err", "msg": "could not find order" }
@@ -99,7 +101,8 @@ def lambda_handler(event, context):
             else:
                 cur = conn.cursor()
                 items = ""
-                for item in got_items:
+                for k in got_items.keys():
+                    item = {"itemId": k, "quantity": got_items[k]}
                     item_id = item["itemId"]
                     qty = item["quantity"]
                     res = cur.execute("SELECT itemId, name, price FROM inventory WHERE itemId = " + item_id + ";")
@@ -158,5 +161,5 @@ def lambda_handler(event, context):
             
             res = {"status": "ok", "msg":"order in process"}
 
-    os.close(receipt)
+    os.close(receipt)      
     return res

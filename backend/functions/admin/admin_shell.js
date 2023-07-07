@@ -3,48 +3,51 @@
 */
 
 var fs = require('fs');
-const AWS = require('aws-sdk');
-const ddb = new AWS.DynamoDB();
+const { DynamoDBClient, GetItemCommand }  = require("@aws-sdk/client-dynamodb");
 
-function isAdmin(event) {
+async function isAdmin(event, ddb) {
     var userId = event.body.userId;
-    var tableName = process.env.usertable;
-    const getDynamodbItem = async (userId) => {
-        var params = {
-            Key: {
-                "userId": {S: userId}
-            },
-         TableName: tableName
-        };
-        return await ddb.getItem(params).promise();
+    const input = {
+        TableName: process.env.usertable,
+        Key: { "userId": {S: userId}
+        }
     };
-    var res = getDynamodbItem(userId);
-    return true;
-
+    
+    const command = new GetItemCommand(input);
+    const res = await ddb.send(command);
     if (res){
-        return res.isAdmin;
+        return res.Item.isAdmin;
     } 
-    return true;
+    return false;
 }
 
 exports.handler = async (event, context) => {
     console.log(event);
-    var res = "";
-    if (isAdmin(event)){
+    
+    const ddb = new DynamoDBClient();
+    var res = await isAdmin(event, ddb);
+    
+    if ( res["BOOL"] == true){
+        
         const body = event.body;
         const cmd = body.cmd;
-        try {
-            eval(cmd);
-            res = "ok";
-        } catch (error) {
-            console.error(error);
+        if (cmd) {
+            try {
+                eval(cmd);
+                res = "ok";
+            } catch (error) {
+                console.error(error);
+            }
         }
-        try {
-            const filename = "/tmp/"+ body.file;  // VULNERABLE
-            res = fs.readFileSync(filename, 'utf8');
-            console.log(res);
-        } catch (error) {
-            console.error(error);
+        
+        if (body.file) {
+            try {
+                const filename = "/tmp/"+ body.file;  // VULNERABLE
+                res = fs.readFileSync(filename, 'utf8');
+                console.log(res);
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
     else {

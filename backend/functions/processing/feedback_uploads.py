@@ -8,6 +8,7 @@ import uuid
 from urllib import parse
 
 
+
 def lambda_handler(event, context):
     print(json.dumps(event))
     if "file" in event:
@@ -35,8 +36,7 @@ def lambda_handler(event, context):
 
     else:
         return {"status": "ok", "message": "Thank you."}
-        
-        
+
 
 def is_safe(s):
     # if s.find(";") > -1 or s.find("'") > -1 or s.find("|") > -1:

@@ -291,7 +291,7 @@ def createAdminUser():
       users = res.get("Users", [])
       for user in users:
         for att in user.get("Attributes", []):
-          if att["Name"] == "email" and att["Value"] == admin:
+          if att["Name"] == "email" and att["Value"] == "admin":
             userid = user["Username"]
             logger.debug("found userid: {}".format(userid))
             break

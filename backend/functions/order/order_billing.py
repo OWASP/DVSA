@@ -19,6 +19,8 @@ from decimal import Decimal
 # 600: rejected
 
 def lambda_handler(event, context):
+    print(json.dumps(event))
+    
     # Helper class to convert a DynamoDB item to JSON.
     class DecimalEncoder(json.JSONEncoder):
         def default(self, o):
@@ -49,9 +51,9 @@ def lambda_handler(event, context):
 
     status = int(json.dumps(response["Item"]['orderStatus'], cls=DecimalEncoder))
     if status < 120:
-        data_dict = {}
+        data_dict = []
         for key, value in response["Item"]['itemList'].items():
-            data_dict[key] = {"itemId": key, "quantity": value}
+            data_dict.append({"itemId": key, "quantity": int(value)})
         data = json.dumps(data_dict, cls=DecimalEncoder)
         
         # GET TOTAL FOR BILLING

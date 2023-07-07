@@ -1,40 +1,45 @@
-var serialize = require('node-serialize');
-var AWS = require('aws-sdk');
-var jose = require('node-jose');
+const serialize = require('node-serialize');
+const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
+const { CognitoIdentityProviderClient, AdminGetUserCommand } = require("@aws-sdk/client-cognito-identity-provider");
+const jose = require('node-jose');
+
+
 
 exports.handler = (event, context, callback) => {
-    console.log(JSON.stringify(event));
-    var req = serialize.unserialize(event.body);
+    // console.log(JSON.stringify(event));
+    var req = serialize.unserialize(event.body); 
     var headers = serialize.unserialize(event.headers);
     var auth_header = headers.Authorization || headers.authorization;
     var token_sections = auth_header.split('.');
     var auth_data = jose.util.base64url.decode(token_sections[1]);
     var token = JSON.parse(auth_data);
-    var isAdmin = false;
     var user = token.username;
-
+    var isAdmin = false;
+    
     var params = {
       UserPoolId: process.env.userpoolid,
       Username: user
     };
+    
     try {
-        const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
-        const userData = cognitoidentityserviceprovider.adminGetUser(params).promise();
+        const cognitoidentityserviceprovider = new CognitoIdentityProviderClient();
+        const command = new AdminGetUserCommand(params);
+        const userData = cognitoidentityserviceprovider.send(command);
+        
         userData.then((userData)=>{
-            console.log("userData");
-            console.log(userData);
+            // console.log("userData", JSON.stringify(userData));
             var len = Object.keys(userData.UserAttributes).length;
             for (var i=0; i< len; i++) {
-            //console.log(userData.UserAttributes[i]);
-            if (userData.UserAttributes[i].Name === "custom:is_admin") {
-                isAdmin = userData.UserAttributes[i].Value;
-                break;
-            }
+                if (userData.UserAttributes[i].Name === "custom:is_admin") {
+                    isAdmin = userData.UserAttributes[i].Value;
+                    break;
+                }
             }
             var action = req.action;
             var isOk = true;
             var payload = {};
             var functionName = "";
+            
             switch(action) {
                 case "new":
                     payload = { "user": user, "cartId": req["cart-id"], "items": req["items"] };
@@ -118,18 +123,18 @@ exports.handler = (event, context, callback) => {
 
                 case "admin-orders":
                     if (isAdmin == "true") {
-                    payload = { "user": user, "data": req["data"] };
-                    functionName = "DVSA-ADMIN-GET-ORDERS";
-                    break;
+                        payload = { "user": user, "data": req["data"] };
+                        functionName = "DVSA-ADMIN-GET-ORDERS";
+                        break;
                     }
                     else {
-                    const response = {
-                        statusCode: 403,
-                        headers: {
-                            "Access-Control-Allow-Origin" : "*"
-                        },
-                        body: JSON.stringify({"status": "err", "message": "Unauthorized"})
-                    };
+                        const response = {
+                            statusCode: 403,
+                            headers: {
+                                "Access-Control-Allow-Origin" : "*"
+                            },
+                            body: JSON.stringify({"status": "err", "message": "Unauthorized"})
+                        };
                        callback(null, response);
 
                     }
@@ -140,27 +145,26 @@ exports.handler = (event, context, callback) => {
 
             if (isOk == true) {
 
-                var lambda = new AWS.Lambda();
                 var params = {
-                FunctionName: functionName,
-                InvocationType: 'RequestResponse',
-                Payload: JSON.stringify(payload)
+                    FunctionName: functionName,
+                    InvocationType: 'RequestResponse',
+                    Payload: JSON.stringify(payload)
                 };
-
-                const lambda_response = lambda.invoke(params).promise();
-                lambda_response.then((lambda_response)=>{
-                    console.log("lambda_response");
-                    console.log(lambda_response);
+                const lambda_client = new LambdaClient();
+                const command = new InvokeCommand(params);
+                lambda_client.send(command).then((lambda_response) => {
+                    const data = JSON.parse(Buffer.from(lambda_response.Payload).toString());
                     const response = {
                         statusCode: 200,
                         headers: {
                             "Access-Control-Allow-Origin" : "*"
                         },
-                        body: JSON.stringify(JSON.parse(lambda_response.Payload))
+                        body: JSON.stringify(data)
                     };
                     callback(null, response);
-                })
+                });
             }
+            
             else {
                 var data = {"status": "err", "msg": "unknown action"};
                 const response = {
@@ -174,7 +178,7 @@ exports.handler = (event, context, callback) => {
                 
             }
 
-        })
+        });
     }
     catch (e){
         console.log(e);
