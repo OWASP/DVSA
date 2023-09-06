@@ -29,7 +29,7 @@ def lambda_handler(event, context):
             
     orderId = event["orderId"]
     userId = event["user"]
-    is_admin = json.loads(event.get("isAdmin", "false").lower())
+    is_admin = event.get("isAdmin", False)
     address = "{}"
     
     dynamodb = boto3.resource('dynamodb')
