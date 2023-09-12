@@ -508,6 +508,7 @@ Resources:
 
   S3FeedbackBucketPermissions:
     Type: AWS::S3::BucketPolicy
+    DependsOn: S3FeedbackBucket
     Properties:
       Bucket: !Sub dvsa-feedback-bucket-${AWS::AccountId}-${AWS::Region}
       PolicyDocument:
@@ -563,6 +564,7 @@ Resources:
 
   S3WebsiteBucketPermissions:
       Type: AWS::S3::BucketPolicy
+      DependsOn: S3WebsiteBucket
       Properties:
         Bucket: !Sub ${WebsiteBucketPrefix}-${AWS::AccountId}-${AWS::Region}
         PolicyDocument:
